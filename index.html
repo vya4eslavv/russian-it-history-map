@@ -1,0 +1,458 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<nav class="sidebar">
+    <ul>
+        <li><a href="index.html">🏠 Главная</a></li>
+    </ul>
+</nav>
+
+
+
+
+<button id="menuToggle" style="position: fixed; left: 10px; top: 10px; z-index: 9999; background-color: #c73b3b; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer;">
+    ☰ Меню
+</button>
+
+<nav class="sidebar" id="sidebar">
+    <ul>
+        <li><a href="index.html">🏠 Главная</a></li>
+        <!-- Можно добавить ещё пункты -->
+    </ul>
+</nav>
+
+
+<head>
+    <meta charset="UTF-8">
+    <title>История IT в СССР и России</title>
+    <style>
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -220px; /* спрятано за пределами экрана */
+            width: 200px;
+            height: 100%;
+            background-color: #222;
+            padding-top: 20px;
+            transition: left 0.3s ease;
+            z-index: 9998;
+        }
+
+        .sidebar.open {
+            left: 0; /* выезжает на экран */
+        }
+
+        .sidebar ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .sidebar li {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .sidebar a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+        }
+
+        .sidebar a:hover {
+            color: #c73b3b;
+        }
+
+
+
+
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f5f5f5; }
+        h1 { text-align: center; margin: 20px 0; color: #333; }
+        .map-container { position: relative; max-width: 1000px; margin: 0 auto; }
+        .map-container img { width: 100%; display: block; }
+
+        .marker {
+            position: absolute;
+            width: 32px;
+            height: 32px;
+            background: url('images/markerOne.svg') no-repeat center center;
+            background-size: contain;
+            cursor: pointer;
+        }
+
+        .tooltip {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            border-radius: 8px;
+            padding: 10px;
+            display: none;
+            max-width: 250px;
+            z-index: 999;
+            font-size: 14px;
+            pointer-events: auto;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 200px;
+            height: 100%;
+            background-color: #222;
+            padding-top: 20px;
+        }
+
+        .sidebar ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .sidebar li {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .sidebar a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+        }
+
+        .sidebar a:hover {
+            color: #c73b3b;
+        }
+
+
+        .tooltip button {
+            margin-top: 10px;
+            background-color: #c73b3b;
+            border: none;
+            color: white;
+            padding: 6px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .side-panel {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 400px;
+            height: 100%;
+            background: #222;
+            color: white;
+            overflow-y: auto;
+            box-shadow: -4px 0 12px rgba(0, 0, 0, 0.4);
+            padding: 20px;
+            transition: right 0.5s ease;
+            z-index: 2000;
+        }
+
+        .side-panel.open {
+            right: 0;
+        }
+
+        .side-panel.hovered {
+            right: 0 !important;
+        }
+
+        .side-panel img {
+            max-width: 100%;
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+
+        .side-panel h2 {
+            margin-top: 0;
+            color: #c73b3b;
+        }
+
+        .side-panel.second-level {
+            right: -400px;
+            background: #111;
+            transition: right 0.5s ease;
+        }
+
+
+        .side-panel.second-level.open {
+            right: 0;
+        }
+
+        .main-content {
+            margin-left: 220px; /* отступ для меню слева */
+            padding: 20px;
+        }
+
+        .timeline-card {
+            background: #222;
+            padding: 20px;
+            border-radius: 10px;
+            width: 250px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .timeline-card img {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 10px;
+        }
+
+        .timeline-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.5);
+        }
+
+    </style>
+</head>
+
+
+<body>
+<h1>История IT в СССР и России</h1>
+
+
+
+<div class="map-container" id="map">
+    <img src="images/Vector.svg" alt="Карта России" />
+
+    <!-- Метка Урал-1 -->
+    <div id="marker-ural1" class="marker special" style="left: 11%; top: 64%;" data-name="Урал-1"
+         data-description="«Урал-1» — малая ламповая ЭВМ, разработанная в Пензе в 1956 году."
+         data-image="images/uralEVM.jpg"
+         data-author="Пензенский завод счётно-аналитических машин"
+         data-more="Урал является малой ламповой программно-управляемой вычислительной машиной из семейства ЭВМ «Урал»,
+         предназначенная для решения инженерных задач в научно-исследовательских институтах, конструкторских бюро, в высших учебных заведениях и полигонах.
+         Первая серийно производимая ЭВМ на территории СССР (ранее неё была модель «Стрела», выпущенная в количестве 7 шт.).
+         При занимаемой площади в 70–80 м² машина содержала 1000 ламп и диодно-резисторные вентили, потребляла 7–10 кВт мощности.
+         Большинство инструкций выполнялось за два такта,
+         однако в машине был реализован механизм совмещения выполнения двух инструкций (двухступенчатый конвейер),
+         благодаря чему фактическое быстродействие приближалось к 100 операциям с фиксированной запятой в секунду
+         Ёмкость оперативной памяти составляла 1024 полных машинных слова (около 4,5 кБ).">
+    </div>
+
+    <!-- Метка Baikal-M -->
+    <div id="marker-baikal" class="marker special" style="left: 9.5%; top: 54%;" data-name="Baikal-M"
+         data-description="Процессор Baikal-M — разработка Baikal Electronics в Красногорске."
+         data-image="images/Baikal.jpg"
+         data-author="Baikal Electronics (Красногорск, Московская область)"
+         data-more="Baikal-M — процессор для ПК, ноутбуков и серверов. Основан на архитектуре ARMv8-A. Имеет встроенную графику Mali-T628 и поддерживает работу без видеокарты. Активно используется в компаниях Газпром, Росатом, РЖД. Разработан в 2016–2018 годах.">
+    </div>
+
+</div>
+
+<div class="side-panel" id="authorPanel"></div>
+<div class="tooltip" id="tooltip"></div>
+<div class="side-panel" id="sidePanel"></div>
+
+
+<script>
+    const menuToggle = document.getElementById('menuToggle');
+    const sidebar = document.getElementById('sidebar');
+
+    menuToggle.addEventListener('click', () => {
+        sidebar.classList.toggle('open');
+    });
+
+    // Можно закрывать меню при клике вне его (если надо)
+    document.addEventListener('click', (e) => {
+        if (!sidebar.contains(e.target) && e.target !== menuToggle) {
+            sidebar.classList.remove('open');
+        }
+    });
+</script>
+
+<script>
+    const tooltip = document.getElementById('tooltip');
+    const sidePanel = document.getElementById('sidePanel');
+
+    let tooltipHover = false;
+
+    tooltip.addEventListener('mouseenter', () => tooltipHover = true);
+    tooltip.addEventListener('mouseleave', () => {
+        tooltipHover = false;
+        tooltip.style.display = 'none';
+    });
+
+    document.querySelectorAll('.marker').forEach(marker => {
+        marker.addEventListener('mouseenter', () => {
+            const name = marker.dataset.name;
+            const desc = marker.dataset.description;
+            const img = marker.dataset.image;
+
+
+            tooltip.innerHTML = `
+            <div style="display: flex; align-items: flex-start; gap: 10px;">
+                <img src="${img}" alt="${name}" style="width: 60px; height: 60px; border-radius: 6px; object-fit: cover;">
+                <div>
+                    <strong>${name}</strong><br>${desc}
+                </div>
+            </div>
+            <button>Читать далее</button>
+        `;
+
+            tooltip.style.display = 'block';
+            tooltip.style.left = `calc(${marker.style.left} + 10px)`;
+            tooltip.style.top = `calc(${marker.style.top} + 10px)`;
+
+            tooltip.querySelector('button').onclick = () => {
+                openSidePanel(marker);
+            };
+        });
+
+        marker.addEventListener('mouseleave', () => {
+            setTimeout(() => {
+                if (!tooltipHover) {
+                    tooltip.style.display = 'none';
+                }
+            }, 300);
+        });
+    });
+
+
+    function openSidePanel(marker) {
+        const name = marker.dataset.name;
+        const desc = marker.dataset.description;
+        const img = marker.dataset.image;
+        const author = marker.dataset.author || 'Неизвестный автор';
+        const more = marker.dataset.more || '';
+
+        sidePanel.innerHTML = `
+            <img src="${img}" alt="${name}">
+            <h2>${name}</h2>
+            <p>${desc}</p>
+            <p><strong>Автор/разработчик:</strong> ${author}</p>
+            ${more ? `<p>${more}</p>` : ''}
+            <button id="showAuthor" style="margin-top: 15px; background-color: #c73b3b; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer;">Об авторе ➡️</button>
+        `;
+
+        sidePanel.classList.add('open');
+
+        document.getElementById('showAuthor').onclick = () => {
+            openAuthorPanel(marker.dataset.name);
+        };
+    }
+
+    function openAuthorPanel(productName) {
+        const authorPanel = document.getElementById('authorPanel');
+
+        // Данные для разных продуктов
+        let bio = '';
+        let img = '';
+
+        if (productName === 'Урал-1') {
+            bio = `<strong>Рамеев Б.И.</strong> — советский изобретатель, разработчик первых советских ЭВМ. Доктор технических наук, лауреат Сталинской премии.`;
+            img = `<img src="images/Рамеев_Башир_Искандарович.jpg" alt="Рамеев Б.И." style="max-width: 100%; border-radius: 8px; margin-bottom: 12px;">`;
+        } else if (productName === 'Baikal-M') {
+            bio = `<strong>Baikal Electronics</strong> — российская компания, основанная для создания отечественных процессоров. Разработала Baikal-M в 2016-2018 годах в Красногорске.`;
+            img = `<img src="images/baikal-electronics.jpg" alt="Baikal Electronics" style="max-width: 100%; border-radius: 8px; margin-bottom: 12px;">`;
+        }
+
+        authorPanel.innerHTML = `
+        ${img}
+        <h2>Биография</h2>
+        <p>${bio}</p>
+        <button id="closeAuthor" style="margin-top: 15px; background-color: #555; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer;">⬅️ Назад</button>
+    `;
+
+
+        authorPanel.classList.add('open');
+        authorPanel.classList.add('second-level');
+
+        document.getElementById('closeAuthor').onclick = () => {
+            authorPanel.classList.remove('open');
+        };
+    }
+
+    sidePanel.addEventListener('mouseenter', () => {
+        if (!sidePanel.classList.contains('open')) {
+            sidePanel.classList.add('hovered');
+        }
+    });
+
+    sidePanel.addEventListener('mouseleave', () => {
+        sidePanel.classList.remove('hovered');
+    });
+
+    sidePanel.addEventListener('click', () => {
+        sidePanel.classList.remove('open');
+    });
+</script>
+
+<div style="background: #111; color: whitesmoke; padding: 10px 20px;">
+    <h2 style="text-align: center; color: #c73b3b; margin-bottom: 40px;">Хронология развития IT в России и СССР</h2>
+    <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 30px;">
+
+
+        <!-- Эльбрус -->
+        <div style="background: #222; padding: 20px; border-radius: 10px; width: 250px; text-align: center;">
+            <img src="images/elbrus.jpg" alt="Эльбрус" style="width: 60px; height: 60px; margin-bottom: 10px;">
+            <h3 style="color: #c73b3b;">1973–1978</h3>
+            <p><strong>Эльбрус</strong> — процессорная архитектура от ИТМиВТ. Высокая производительность и защищённость.</p>
+        </div>
+
+        <!-- МВС-1000М -->
+        <div style="background: #222; padding: 20px; border-radius: 10px; width: 250px; text-align: center;">
+            <img src="images/mvs1000m.jpg" alt="МВС-1000М" style="width: 60px; height: 60px; margin-bottom: 10px;">
+            <h3 style="color: #c73b3b;">2000–2001</h3>
+            <p><strong>МВС-1000М</strong> — суперкомпьютер от НИИ «Квант». 1012 операций в секунду для научных задач.</p>
+        </div>
+
+        <!-- Яндекс -->
+        <div style="background: #222; padding: 20px; border-radius: 10px; width: 250px; text-align: center;">
+            <img src="images/yandex.png" alt="Яндекс" style="width: 60px; height: 60px; margin-bottom: 10px;">
+            <h3 style="color: #c73b3b;">2000</h3>
+            <p><strong>Яндекс</strong> — регистрация компании и запуск поиска. Крупнейший IT-игрок в России.</p>
+        </div>
+
+        <!-- Postgres Pro -->
+        <div style="background: #222; padding: 20px; border-radius: 10px; width: 250px; text-align: center;">
+            <img src="images/postgres.svg" alt="Postgres Pro" style="width: 200px; height: 60px; margin-bottom: 10px;">
+            <h3 style="color: #c73b3b;">2015</h3>
+            <p><strong>Postgres Pro</strong> — отечественная СУБД с расширениями на базе PostgreSQL.</p>
+        </div>
+
+        <!-- КАМАЗ -->
+        <div style="background: #222; padding: 20px; border-radius: 10px; width: 250px; text-align: center;">
+            <img src="images/kamaz.png" alt="КАМАЗ" style="width: 60px; height: 60px; margin-bottom: 10px;">
+            <h3 style="color: #c73b3b;">2015</h3>
+            <p><strong>КАМАЗ беспилотные</strong> — первые беспилотные грузовики на трассе М-11, разработаны в Москве.</p>
+        </div>
+
+        <!-- Baikal-M -->
+        <div style="background: #222; padding: 20px; border-radius: 10px; width: 250px; text-align: center;">
+            <img src="images/Baikal.jpg" alt="Baikal-M" style="width: 60px; height: 60px; margin-bottom: 10px;">
+            <h3 style="color: #c73b3b;">2016–2018</h3>
+            <p><strong>Baikal-M</strong> — энергоэффективный процессор ARM для ПК, серверов и промышленности.</p>
+        </div>
+
+        <!-- Kotlin -->
+        <div style="background: #222; padding: 20px; border-radius: 10px; width: 250px; text-align: center;">
+            <img src="images/kotlin.png" alt="Kotlin" style="width: 120px; height: 120px; margin-bottom: 10px;">
+            <h3 style="color: #c73b3b;">2017+</h3>
+            <p><strong>Kotlin</strong> — современный язык программирования, создан в ИТМО. Поддерживает Android и JVM.</p>
+        </div>
+
+        <!-- Kaspersky -->
+        <div style="background: #222; padding: 20px; border-radius: 10px; width: 250px; text-align: center;">
+            <img src="images/kaspersky.png" alt="Kaspersky" style="width: 60px; height: 60px; margin-bottom: 10px;">
+            <h3 style="color: #c73b3b;">1997–2025</h3>
+            <p><strong>Лаборатория Касперского</strong> — ведущая компания в области кибербезопасности.</p>
+        </div>
+
+    </div>
+</div>
+
+
+</body>
+</html>
+
+
+images/elbrus.png
+images/mvs1000m.png
+images/yandex.png
+images/postgres.png
+images/kamaz.png
+images/baikal.png
+images/kotlin.png
+images/kaspersky.png
