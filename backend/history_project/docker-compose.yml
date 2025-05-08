@@ -1,0 +1,13 @@
+version: '3.9'
+
+services:
+  db:
+    image: postgres:15
+    container_name: history_project
+    restart: always
+    environment:
+      POSTGRES_USER: egorikRoot
+      POSTGRES_PASSWORD: RootRoot
+      POSTGRES_DB: pets_and_owners
+    ports:
+      - "5432:5432"
