@@ -1,6 +1,7 @@
 package services
 
 import (
+	"fmt"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
@@ -10,7 +11,7 @@ import (
 var db *sqlx.DB
 
 func InititalizeDB() {
-	dbc := "port=1488 " + "user=slava" + " password=slava" + " dbname=history_project" + " sslmode=disable"
+	dbc := "port=1488 " + "user=slava" + " password=slava" + " dbname=postgres" + " sslmode=disable"
 	conn, err := sqlx.Connect("postgres", dbc)
 	if err != nil {
 		panic(err)
@@ -20,10 +21,12 @@ func InititalizeDB() {
 
 func GetInvention(invId uint) models.Invention {
 	var result models.Invention
-	err := db.Get(&result, "select name, description from inventions where id = $1", invId)
+	err := db.Get(&result, "select name, description, html from inventions where id = $1", invId)
 	if err != nil {
 		panic(err)
 	}
+
+	fmt.Println("Get (GetInvention):", result)
 
 	return result
 }
