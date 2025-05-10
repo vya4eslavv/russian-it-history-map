@@ -1,0 +1,119 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Виртуальный музей-эмулятор Урал-1</title>
+    <style>
+        body { background: #222; color: #fff; font-family: Arial, sans-serif; display: flex; flex-direction: column; align-items: center; padding: 40px; }
+        .description { max-width: 800px; background: #333; padding: 20px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.6); margin-bottom: 30px; }
+        .description h1 { margin-top: 0; color: #c73b3b; }
+        .description p { line-height: 1.5; margin: 10px 0; }
+        .terms { margin-top: 20px; }
+        .terms h2 { color: #c73b3b; font-size: 20px; }
+        .terms ul { margin: 0; padding-left: 20px; }
+        .panel { background: #333; padding: 20px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.6); }
+        .switches, .lights { display: flex; gap: 8px; margin-bottom: 20px; }
+        .switch, .light { width: 30px; height: 50px; border-radius: 4px; position: relative; cursor: pointer; }
+        .switch { background: #444; }
+        .switch::before { content: ''; position: absolute; width: 26px; height: 26px; background: #bbb; border-radius: 4px; left: 2px; top: 2px; transition: top 0.2s; }
+        .switch.on::before { top: 22px; background: #f5a623; }
+        .light { background: #555; }
+        .light.on { background: #a4ea4a; box-shadow: 0 0 8px #a4ea4a; }
+        button { background: #c73b3b; color: #fff; border: none; border-radius: 4px; padding: 8px 16px; font-size: 16px; cursor: pointer; margin-right: 10px; }
+        button:hover { background: #e14e4e; }
+    </style>
+</head>
+<body>
+<!-- Описание эмулятора -->
+<section class="description">
+    <h1>Что такое эмулятор Урал-1?</h1>
+    <p>Эмулятор представляет собой упрощённую модель малой ламповой ЭВМ «Урал-1», разработанной в Пензе в 1956 году. В оригинале машина использовала 1024 слов памяти и декодировала программы с помощью переключателей и ламп для отображения результатов.</p>
+    <h2>Как пользоваться</h2>
+    <ul>
+        <li>Установите нужный набор бит переключателями: щёлкните по переключателю, чтобы включить (нижнее положение) или выключить (верхнее).</li>
+        <li>Нажмите «Загрузить в регистр», чтобы перевести состояние переключателей в регистр ЭВМ.</li>
+        <li>Нажмите «Инкремент», чтобы увеличить значение регистра на 1 (с учётом 8-битного переполнения).</li>
+        <li>Наблюдайте за лампочками: каждая лампочка соответствует одному биту регистра и загорается при значении 1.</li>
+    </ul>
+    <div class="terms">
+        <h2>Термины</h2>
+        <ul>
+            <li><strong>Регистр</strong> – элемент памяти, хранящий число в двоичном формате.</li>
+            <li><strong>Переключатель (Switch)</strong> – входной элемент для установки битов.</li>
+            <li><strong>Лампочка (Light)</strong> – индикатор вывода: светится, если бит = 1.</li>
+            <li><strong>Инкремент</strong> – операция увеличения числа на единицу.</li>
+        </ul>
+    </div>
+</section>
+
+<!-- Панель эмулятора -->
+<div class="panel">
+    <div class="switches" id="switches">
+        <!-- 8 переключателей -->
+        <div class="switch" data-bit="7"></div>
+        <div class="switch" data-bit="6"></div>
+        <div class="switch" data-bit="5"></div>
+        <div class="switch" data-bit="4"></div>
+        <div class="switch" data-bit="3"></div>
+        <div class="switch" data-bit="2"></div>
+        <div class="switch" data-bit="1"></div>
+        <div class="switch" data-bit="0"></div>
+    </div>
+    <button id="loadBtn">Загрузить в регистр</button>
+    <button id="incBtn">Инкремент</button>
+    <div class="lights" id="lights">
+        <!-- 8 ламп -->
+        <div class="light" data-bit="7"></div>
+        <div class="light" data-bit="6"></div>
+        <div class="light" data-bit="5"></div>
+        <div class="light" data-bit="4"></div>
+        <div class="light" data-bit="3"></div>
+        <div class="light" data-bit="2"></div>
+        <div class="light" data-bit="1"></div>
+        <div class="light" data-bit="0"></div>
+    </div>
+</div>
+
+<script>
+    const switches = document.querySelectorAll('.switch');
+    const lights = document.querySelectorAll('.light');
+    let register = 0;
+
+    // Переключаем бит
+    switches.forEach(sw => {
+        sw.addEventListener('click', () => {
+            sw.classList.toggle('on');
+        });
+    });
+
+    // Загрузка в регистр
+    document.getElementById('loadBtn').addEventListener('click', () => {
+        register = 0;
+        switches.forEach(sw => {
+            const bit = Number(sw.dataset.bit);
+            if (sw.classList.contains('on')) register |= (1 << bit);
+        });
+        updateLights();
+    });
+
+    // Инкремент (с учётом переполнения 8 бит)
+    document.getElementById('incBtn').addEventListener('click', () => {
+        register = (register + 1) & 0xFF;
+        updateLights();
+        // Обновляем переключатели
+        switches.forEach(sw => {
+            const bit = Number(sw.dataset.bit);
+            if (register & (1 << bit)) sw.classList.add('on'); else sw.classList.remove('on');
+        });
+    });
+
+    // Обновление ламп
+    function updateLights() {
+        lights.forEach(lt => {
+            const bit = Number(lt.dataset.bit);
+            if (register & (1 << bit)) lt.classList.add('on'); else lt.classList.remove('on');
+        });
+    }
+</script>
+</body>
+</html>

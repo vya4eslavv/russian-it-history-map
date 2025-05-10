@@ -1,0 +1,188 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Квиз – История IT в СССР и России</title>
+    <style>
+        body {
+            background: #f5f5f5;
+            font-family: Arial, sans-serif;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            max-width: 500px;
+            width: 100%;
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        h1 {
+            margin-top: 0;
+            font-size: 24px;
+            text-align: center;
+            color: #c73b3b;
+        }
+        .question-number {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .question-text {
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+        .options {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 20px;
+        }
+        .options li {
+            margin-bottom: 10px;
+        }
+        .options button {
+            width: 100%;
+            padding: 10px 15px;
+            font-size: 16px;
+            border: 2px solid #c73b3b;
+            background: #fff;
+            color: #c73b3b;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+        }
+        .options button.selected {
+            background: #c73b3b;
+            color: #fff;
+        }
+        .options button:disabled {
+            cursor: default;
+            opacity: 0.6;
+        }
+        .actions {
+            text-align: right;
+        }
+        .actions button {
+            padding: 8px 16px;
+            font-size: 16px;
+            background: #c73b3b;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .actions button:disabled {
+            opacity: 0.5;
+            cursor: default;
+        }
+        .result {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Квиз: Проверь свои знания</h1>
+    <div id="quiz">
+        <!-- Контент генерируется скриптом -->
+    </div>
+</div>
+
+<script>
+    const quizData = [
+        {
+            question: 'В каком году была разработана ЭВМ «Урал-1»?',
+            options: ['1950', '1956', '1962', '1968'],
+            correct: 1
+        },
+        {
+            question: 'Кто считается создателем первой советской ЭВМ «Стрела»?',
+            options: ['А. А. Ляпунов', 'С. А. Лебедев', 'Н. Е. Бирман', 'В. М. Глушков'],
+            correct: 2
+        },
+        {
+            question: 'Какая отечественная СУБД основана на PostgreSQL и появилась в 2015 году?',
+            options: ['Линукс Про', 'Postgres Pro', 'Mongo Pro', 'АЗБУКА'],
+            correct: 1
+        },
+        {
+            question: 'В каком периоде разрабатывался процессор Baikal-M?',
+            options: ['2010–2012', '2013–2015', '2016–2018', '2019–2021'],
+            correct: 2
+        }
+    ];
+
+    let currentIndex = 0;
+    let score = 0;
+    let selectedOption = null;
+
+    const quizEl = document.getElementById('quiz');
+
+    function renderQuestion() {
+        const q = quizData[currentIndex];
+        quizEl.innerHTML = `
+        <div class="question-number">Вопрос ${currentIndex + 1} из ${quizData.length}</div>
+        <div class="question-text">${q.question}</div>
+        <ul class="options">
+          ${q.options.map((opt, idx) => `
+            <li>
+              <button data-index="${idx}">${opt}</button>
+            </li>
+          `).join('')}
+        </ul>
+        <div class="actions">
+          <button id="nextBtn" disabled>
+            ${currentIndex + 1 < quizData.length ? 'Дальше' : 'Завершить'}
+          </button>
+        </div>
+      `;
+
+        // Вешаем обработчики на опции
+        document.querySelectorAll('.options button').forEach(btn => {
+            btn.addEventListener('click', () => {
+                if (selectedOption !== null) return;
+                selectedOption = Number(btn.dataset.index);
+                btn.classList.add('selected');
+                document.getElementById('nextBtn').disabled = false;
+            });
+        });
+
+        // Обработчик кнопки «Дальше» / «Завершить»
+        document.getElementById('nextBtn').addEventListener('click', () => {
+            if (selectedOption === quizData[currentIndex].correct) {
+                score++;
+            }
+            selectedOption = null;
+            currentIndex++;
+            if (currentIndex < quizData.length) {
+                renderQuestion();
+            } else {
+                renderResult();
+            }
+        });
+    }
+
+    function renderResult() {
+        quizEl.innerHTML = `
+        <div class="result">
+          <p>Вы правильно ответили на ${score} из ${quizData.length} вопросов.</p>
+          <button id="restartBtn">Пройти ещё раз</button>
+        </div>
+      `;
+        document.getElementById('restartBtn').addEventListener('click', () => {
+            currentIndex = 0;
+            score = 0;
+            selectedOption = null;
+            renderQuestion();
+        });
+    }
+
+    // Запуск
+    renderQuestion();
+</script>
+</body>
+</html>

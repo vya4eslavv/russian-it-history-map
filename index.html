@@ -1,13 +1,19 @@
 ﻿<!DOCTYPE html>
-<html lang="ru">
+
+
+
 
 <head>
+
     <meta charset="UTF-8">
     <link rel="stylesheet" href="style.css">
     <script src="backendFetches.js"></script>
+
 </head>
 
 <body>
+
+
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -35,87 +41,91 @@
     <div class="content">
 
     </div>
-<div class="select-bar">
-    <div class="select-bar-toggle">☰ История IT в СССР и России</div>
-    <ul class="select-bar-list">
-        <li><a href="#home">Главная</a></li>
-        <li><a href="#map">Карта</a></li>
-        <li><a href="#timeline">Хронология</a></li>
-        <li><a href="itmo.html">ИТМО</a></li>
-
-    </ul>
-
-
-</div>
+    <div class="select-bar">
+        <div class="select-bar-toggle">☰ История IT в СССР и России</div>
+        <ul class="select-bar-list">
+            <li><a href="#home">Главная</a></li>
+            <li><a href="#map">Карта</a></li>
+            <li><a href="#timeline">Достижения</a></li>
+            <li><a href="itmo.html">ИТМО</a></li>
+            <li><a href="emulator.html">Эмулятор Урал - 1</a></li>
+            <li><a href="quiz.html">Квиз</a></li>
+            <li><a href="#timeline-slider">Разное</a></li>
 
 
+        </ul>
 
 
-<div class="map-container" id="map">
-    <img src="images/Vector.svg" alt="Карта России" />
-
-
-</div>
-
-<div class="side-panel" id="authorPanel"></div>
-<div class="tooltip" id="tooltip"></div>
-<div class="side-panel" id="sidePanel"></div>
-
-
-<link href="https://fonts.googleapis.com/css2?family=PT+Serif&family=Roboto&display=swap" rel="stylesheet">
-
-
-
-<button id="themeToggle">🌓</button>
-<script>
-    const btn = document.getElementById('themeToggle');
-    btn.onclick = () => {
-        const t = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-        document.documentElement.setAttribute('data-theme', t);
-    };
-</script>
-
-
-<script>
-    const menuToggle = document.getElementById('menuToggle');
-    const sidebar = document.getElementById('sidebar');
-
-    menuToggle.addEventListener('click', () => {
-        sidebar.classList.toggle('open');
-    });
-
-    // Можно закрывать меню при клике вне его (если надо)
-    document.addEventListener('click', (e) => {
-        if (!sidebar.contains(e.target) && e.target !== menuToggle) {
-            sidebar.classList.remove('open');
-        }
-    });
-
-</script>
+    </div>
 
 
 
 
-<script>
-    const tooltip = document.getElementById('tooltip');
-    const sidePanel = document.getElementById('sidePanel');
-
-    let tooltipHover = false;
-
-    tooltip.addEventListener('mouseenter', () => tooltipHover = true);
-    tooltip.addEventListener('mouseleave', () => {
-        tooltipHover = false;
-        tooltip.style.display = 'none';
-    });
-
-    document.querySelectorAll('.marker').forEach(marker => {
-        marker.addEventListener('mouseenter', () => {
-            const name = marker.dataset.name;
-            const desc = marker.dataset.description;
-            const img = marker.dataset.image;
+    <div class="map-container" id="map">
+        <img src="images/Vector.svg" alt="Карта России" />
 
 
-            tooltip.innerHTML = `
+    </div>
+
+    <div class="side-panel" id="authorPanel"></div>
+    <div class="tooltip" id="tooltip"></div>
+    <div class="side-panel" id="sidePanel"></div>
+
+
+    <link href="https://fonts.googleapis.com/css2?family=PT+Serif&family=Roboto&display=swap" rel="stylesheet">
+
+
+
+    <button id="themeToggle">🌓</button>
+    <script>
+        const btn = document.getElementById('themeToggle');
+        btn.onclick = () => {
+            const t = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', t);
+        };
+    </script>
+
+
+    <script>
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('open');
+        });
+
+        // Можно закрывать меню при клике вне его (если надо)
+        document.addEventListener('click', (e) => {
+            if (!sidebar.contains(e.target) && e.target !== menuToggle) {
+                sidebar.classList.remove('open');
+            }
+        });
+
+    </script>
+
+
+
+
+    <script>
+        const tooltip = document.getElementById('tooltip');
+        const sidePanel = document.getElementById('sidePanel');
+
+        let tooltipHover = false;
+
+        tooltip.addEventListener('mouseenter', () => tooltipHover = true);
+        tooltip.addEventListener('mouseleave', () => {
+            tooltipHover = false;
+            tooltip.style.display = 'none';
+        });
+
+        document.querySelectorAll('.marker').forEach(marker => {
+            marker.addEventListener('mouseenter', () => {
+                const name = marker.dataset.name;
+                const desc = marker.dataset.description;
+                const img = marker.dataset.image;
+
+
+                tooltip.innerHTML = `
             <div style="display: flex; align-items: flex-start; gap: 10px;">
                 <img src="${img}" alt="${name}" style="width: 60px; height: 60px; border-radius: 6px; object-fit: cover;">
                 <div>
@@ -125,34 +135,34 @@
             <button>Читать далее</button>
         `;
 
-            tooltip.style.display = 'block';
-            tooltip.style.left = `calc(${marker.style.left} + 10px)`;
-            tooltip.style.top = `calc(${marker.style.top} + 10px)`;
+                tooltip.style.display = 'block';
+                tooltip.style.left = `calc(${marker.style.left} + 10px)`;
+                tooltip.style.top = `calc(${marker.style.top} + 10px)`;
 
-            tooltip.querySelector('button').onclick = () => {
-                openSidePanel(marker);
-            };
+                tooltip.querySelector('button').onclick = () => {
+                    openSidePanel(marker);
+                };
+            });
+
+            marker.addEventListener('mouseleave', () => {
+                setTimeout(() => {
+                    if (!tooltipHover) {
+                        tooltip.style.display = 'none';
+                    }
+                }, 300);
+            });
         });
 
-        marker.addEventListener('mouseleave', () => {
-            setTimeout(() => {
-                if (!tooltipHover) {
-                    tooltip.style.display = 'none';
-                }
-            }, 300);
-        });
-    });
 
 
+        function openSidePanel(marker) {
+            const name = marker.dataset.name;
+            const desc = marker.dataset.description;
+            const img = marker.dataset.image;
+            const author = marker.dataset.author || 'Неизвестный автор';
+            const more = marker.dataset.more || '';
 
-    function openSidePanel(marker) {
-        const name = marker.dataset.name;
-        const desc = marker.dataset.description;
-        const img = marker.dataset.image;
-        const author = marker.dataset.author || 'Неизвестный автор';
-        const more = marker.dataset.more || '';
-
-        sidePanel.innerHTML = `
+            sidePanel.innerHTML = `
             <img src="${img}" alt="${name}">
             <h2>${name}</h2>
             <p>${desc}</p>
@@ -161,29 +171,29 @@
             <button id="showAuthor" style="margin-top: 15px; background-color: #c73b3b; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer;">Об авторе ➡️</button>
         `;
 
-        sidePanel.classList.add('open');
+            sidePanel.classList.add('open');
 
-        document.getElementById('showAuthor').onclick = () => {
-            openAuthorPanel(marker.dataset.name);
-        };
-    }
-
-    function openAuthorPanel(productName) {
-        const authorPanel = document.getElementById('authorPanel');
-
-        // Данные для разных продуктов
-        let bio = '';
-        let img = '';
-
-        if (productName === 'Урал-1') {
-            bio = `<strong>Рамеев Б.И.</strong> — советский изобретатель, разработчик первых советских ЭВМ. Доктор технических наук, лауреат Сталинской премии.`;
-            img = `<img src="images/Рамеев_Башир_Искандарович.jpg" alt="Рамеев Б.И." style="max-width: 100%; border-radius: 8px; margin-bottom: 12px;">`;
-        } else if (productName === 'Baikal-M') {
-            bio = `<strong>Baikal Electronics</strong> — российская компания, основанная для создания отечественных процессоров. Разработала Baikal-M в 2016-2018 годах в Красногорске.`;
-            img = `<img src="images/baikal-electronics.jpg" alt="Baikal Electronics" style="max-width: 100%; border-radius: 8px; margin-bottom: 12px;">`;
+            document.getElementById('showAuthor').onclick = () => {
+                openAuthorPanel(marker.dataset.name);
+            };
         }
 
-        authorPanel.innerHTML = `
+        function openAuthorPanel(productName) {
+            const authorPanel = document.getElementById('authorPanel');
+
+            // Данные для разных продуктов
+            let bio = '';
+            let img = '';
+
+            if (productName === 'Урал-1') {
+                bio = `<strong>Рамеев Б.И.</strong> — советский изобретатель, разработчик первых советских ЭВМ. Доктор технических наук, лауреат Сталинской премии.`;
+                img = `<img src="images/Рамеев_Башир_Искандарович.jpg" alt="Рамеев Б.И." style="max-width: 100%; border-radius: 8px; margin-bottom: 12px;">`;
+            } else if (productName === 'Baikal-M') {
+                bio = `<strong>Baikal Electronics</strong> — российская компания, основанная для создания отечественных процессоров. Разработала Baikal-M в 2016-2018 годах в Красногорске.`;
+                img = `<img src="images/baikal-electronics.jpg" alt="Baikal Electronics" style="max-width: 100%; border-radius: 8px; margin-bottom: 12px;">`;
+            }
+
+            authorPanel.innerHTML = `
         ${img}
         <h2>Биография</h2>
         <p>${bio}</p>
@@ -191,114 +201,202 @@
     `;
 
 
-        authorPanel.classList.add('open');
-        authorPanel.classList.add('second-level');
+            authorPanel.classList.add('open');
+            authorPanel.classList.add('second-level');
 
-        document.getElementById('closeAuthor').onclick = () => {
-            authorPanel.classList.remove('open');
-        };
-    }
-
-    sidePanel.addEventListener('mouseenter', () => {
-        if (!sidePanel.classList.contains('open')) {
-            sidePanel.classList.add('hovered');
+            document.getElementById('closeAuthor').onclick = () => {
+                authorPanel.classList.remove('open');
+            };
         }
-    });
 
-    sidePanel.addEventListener('mouseleave', () => {
-        sidePanel.classList.remove('hovered');
-    });
+        sidePanel.addEventListener('mouseenter', () => {
+            if (!sidePanel.classList.contains('open')) {
+                sidePanel.classList.add('hovered');
+            }
+        });
 
-    sidePanel.addEventListener('click', () => {
-        sidePanel.classList.remove('open');
-    });
-</script>
+        sidePanel.addEventListener('mouseleave', () => {
+            sidePanel.classList.remove('hovered');
+        });
 
-
-
-<div id="timeline" style="background: #111; color: #cdcccc; padding: 10px 20px; margin-top: 40px;">
-    <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 30px;">
-        <!-- карточки -->
-    </div>
-</div>
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const bar = document.querySelector('.select-bar');
-        const toggle = bar.querySelector('.select-bar-toggle');
-        toggle.addEventListener('click', () => bar.classList.toggle('expanded'));
-        document.addEventListener('click', (e) => { if (!bar.contains(e.target)) bar.classList.remove('expanded'); });
-    });
-</script>
-
-<div style="background: #000000; color: #cdcccc; padding: 10px 20px;">
-    <h2 style="text-align: center; color: #c73b3b; margin-bottom: 40px;">Хронология развития IT в России и СССР</h2>
-    <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 30px;">
+        sidePanel.addEventListener('click', () => {
+            sidePanel.classList.remove('open');
+        });
+    </script>
 
 
-        <!-- Эльбрус -->
-        <div style="background: #222; padding: 20px; border-radius: 10px; width: 250px; text-align: center;">
-            <img src="images/elbrus.jpg" alt="Эльбрус" style="width: 60px; height: 60px; margin-bottom: 10px;">
-            <h3 style="color: #c73b3b;">1973–1978</h3>
-            <p><strong>Эльбрус</strong> — процессорная архитектура от ИТМиВТ. Высокая производительность и защищённость.</p>
+
+
+
+    <!-- Секция хронологии -->
+    <div id="timeline" style="background: #000; color: #cdcccc; padding: 10px 20px;">
+        <h2 style="text-align: center; color: #c73b3b; margin-bottom: 40px;">
+            Хронология развития IT в России и СССР
+        </h2>
+        <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 30px;">
+            <!-- Эльбрус -->
+            <div class="timeline-card" style="background: #222; padding: 20px; border-radius: 10px; width: 250px; text-align: center;">
+                <img src="images/elbrus.jpg" alt="Эльбрус" style="width: 60px; height: 60px; margin-bottom: 10px;">
+                <h3 style="color: #c73b3b;">1973–1978</h3>
+                <p><strong>Эльбрус</strong> — процессорная архитектура от ИТМиВТ. Высокая производительность и защищённость.</p>
+            </div>
+            <!-- МВС-1000М -->
+            <div class="timeline-card" style="background: #222; padding: 20px; border-radius: 10px; width: 250px; text-align: center;">
+                <img src="images/mvs1000m.jpg" alt="МВС-1000М" style="width: 60px; height: 60px; margin-bottom: 10px;">
+                <h3 style="color: #c73b3b;">2000–2001</h3>
+                <p><strong>МВС-1000М</strong> — суперкомпьютер от НИИ «Квант». 10¹² операций в секунду.</p>
+            </div>
+            <!-- Яндекс -->
+            <div class="timeline-card" style="background: #222; padding: 20px; border-radius: 10px; width: 250px; text-align: center;">
+                <img src="images/yandex.png" alt="Яндекс" style="width: 60px; height: 60px; margin-bottom: 10px;">
+                <h3 style="color: #c73b3b;">2000</h3>
+                <p><strong>Яндекс</strong> — запуск поиска и регистрация компании.</p>
+            </div>
+            <!-- Postgres Pro -->
+            <div class="timeline-card" style="background: #222; padding: 20px; border-radius: 10px; width: 250px; text-align: center;">
+                <img src="images/postgres.svg" alt="Postgres Pro" style="width: 200px; height: 60px; margin-bottom: 10px;">
+                <h3 style="color: #c73b3b;">2015</h3>
+                <p><strong>Postgres Pro</strong> — отечественная СУБД на базе PostgreSQL.</p>
+            </div>
+            <!-- Baikal-M -->
+            <div class="timeline-card" style="background: #222; padding: 20px; border-radius: 10px; width: 250px; text-align: center;">
+                <img src="images/Baikal.jpg" alt="Baikal-M" style="width: 60px; height: 60px; margin-bottom: 10px;">
+                <h3 style="color: #c73b3b;">2016–2018</h3>
+                <p><strong>Baikal-M</strong> — ARM-процессор для ПК и серверов.</p>
+            </div>
+            <!-- Kotlin -->
+            <div class="timeline-card" style="background: #222; padding: 20px; border-radius: 10px; width: 250px; text-align: center;">
+                <img src="images/kotlin.png" alt="Kotlin" style="width: 120px; height: 120px; margin-bottom: 10px;">
+                <h3 style="color: #c73b3b;">2017+ </h3>
+                <p><strong>Kotlin</strong> — язык программирования от JetBrains, поддерживается ИТМО.</p>
+            </div>
+            <!-- Лаборатория Касперского -->
+            <div class="timeline-card" style="background: #222; padding: 20px; border-radius: 10px; width: 250px; text-align: center;">
+                <img src="images/kaspersky.png" alt="Kaspersky" style="width: 60px; height: 60px; margin-bottom: 10px;">
+                <h3 style="color: #c73b3b;">1997–2025</h3>
+                <p><strong>Лаборатория Касперского</strong> — кибербезопасность.</p>
+            </div>
         </div>
-
-        <!-- МВС-1000М -->
-        <div style="background: #222; padding: 20px; border-radius: 10px; width: 250px; text-align: center;">
-            <img src="images/mvs1000m.jpg" alt="МВС-1000М" style="width: 60px; height: 60px; margin-bottom: 10px;">
-            <h3 style="color: #c73b3b;">2000–2001</h3>
-            <p><strong>МВС-1000М</strong> — суперкомпьютер от НИИ «Квант». 1012 операций в секунду для научных задач.</p>
-        </div>
-
-        <!-- Яндекс -->
-        <div style="background: #222; padding: 20px; border-radius: 10px; width: 250px; text-align: center;">
-            <img src="images/yandex.png" alt="Яндекс" style="width: 60px; height: 60px; margin-bottom: 10px;">
-            <h3 style="color: #c73b3b;">2000</h3>
-            <p><strong>Яндекс</strong> — регистрация компании и запуск поиска. Крупнейший IT-игрок в России.</p>
-        </div>
-
-        <!-- Postgres Pro -->
-        <div style="background: #222; padding: 20px; border-radius: 10px; width: 250px; text-align: center;">
-            <img src="images/postgres.svg" alt="Postgres Pro" style="width: 200px; height: 60px; margin-bottom: 10px;">
-            <h3 style="color: #c73b3b;">2015</h3>
-            <p><strong>Postgres Pro</strong> — отечественная СУБД с расширениями на базе PostgreSQL.</p>
-        </div>
-
-        <!-- КАМАЗ -->
-        <div style="background: #222; padding: 20px; border-radius: 10px; width: 250px; text-align: center;">
-            <img src="images/kamaz.png" alt="КАМАЗ" style="width: 60px; height: 60px; margin-bottom: 10px;">
-            <h3 style="color: #c73b3b;">2015</h3>
-            <p><strong>КАМАЗ беспилотные</strong> — первые беспилотные грузовики на трассе М-11, разработаны в Москве.</p>
-        </div>
-
-        <!-- Baikal-M -->
-        <div style="background: #222; padding: 20px; border-radius: 10px; width: 250px; text-align: center;">
-            <img src="images/Baikal.jpg" alt="Baikal-M" style="width: 60px; height: 60px; margin-bottom: 10px;">
-            <h3 style="color: #c73b3b;">2016–2018</h3>
-            <p><strong>Baikal-M</strong> — энергоэффективный процессор ARM для ПК, серверов и промышленности.</p>
-        </div>
-
-        <!-- Kotlin -->
-        <div style="background: #222; padding: 20px; border-radius: 10px; width: 250px; text-align: center;">
-            <img src="images/kotlin.png" alt="Kotlin" style="width: 120px; height: 120px; margin-bottom: 10px;">
-            <h3 style="color: #c73b3b;">2017+</h3>
-            <p><strong>Kotlin</strong> — современный язык программирования, создан в ИТМО. Поддерживает Android и JVM.</p>
-        </div>
-
-        <!-- Kaspersky -->
-        <div style="background: #222; padding: 20px; border-radius: 10px; width: 250px; text-align: center;">
-            <img src="images/kaspersky.png" alt="Kaspersky" style="width: 60px; height: 60px; margin-bottom: 10px;">
-            <h3 style="color: #c73b3b;">1997–2025</h3>
-            <p><strong>Лаборатория Касперского</strong> — ведущая компания в области кибербезопасности.</p>
-        </div>
-
     </div>
 </div>
 
-
-
-
-</div>
 <div id="cardTooltip" class="card-tooltip"></div>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const cards = Array.from(document.querySelectorAll('.timeline-card'));
+
+        // проставляем для каждой карточки собственную задержку
+        cards.forEach((card, i) => {
+            card.style.setProperty('--delay', `${i * 100}ms`);
+        });
+
+        const observer = new IntersectionObserver((entries, obs) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    obs.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        cards.forEach(card => observer.observe(card));
+    });
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const cards = Array.from(document.querySelectorAll('.timeline-card'));
+
+        // Проставляем задержку для каскадного появления
+        cards.forEach((card, i) => {
+            card.style.setProperty('--delay', `${i * 100}ms`);
+        });
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                } else {
+                    entry.target.classList.remove('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        cards.forEach(card => observer.observe(card));
+    });
+</script>
+
+<section id="timeline-slider" style="margin:40px auto; max-width:900px;">
+    <h2 style="font-family: Arial, sans-serif; color: #c73b3b; text-align:center; margin-bottom:20px;">Интерактивная временная шкала</h2>
+    <div class="slider-container">
+        <button class="slider-btn prev-btn">◀</button>
+        <div class="slider-track">
+            <div class="slide">1956<br><span>Урал-1</span></div>
+            <div class="slide">1973–1978<br><span>Эльбрус</span></div>
+            <div class="slide">1997–2025<br><span>Касперский</span></div>
+            <div class="slide">2000<br><span>Яндекс</span></div>
+            <div class="slide">2015<br><span>Postgres Pro</span></div>
+            <div class="slide">2016–2018<br><span>Baikal-M</span></div>
+            <div class="slide">2017+<br><span>Kotlin</span></div>
+        </div>
+        <button class="slider-btn next-btn">▶</button>
+    </div>
+</section>
+
+<style>
+    .slider-container { display: flex; align-items: center; position: relative; }
+    .slider-track { display: flex; overflow: hidden; scroll-behavior: smooth; width: 100%; }
+    .slide { min-width: 200px; margin: 0 10px; background: #333; color: #fff; padding: 20px; border-radius: 8px; text-align: center; flex-shrink: 0; }
+    .slide span { display: block; margin-top: 8px; font-size: 14px; color: #c73b3b; }
+    .slider-btn { background: none; border: none; font-size: 24px; cursor: pointer; color: #c73b3b; }
+    .slider-btn:disabled { opacity: 0.3; cursor: default; }
+</style>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const track     = document.querySelector('.slider-track');
+        const prevBtn   = document.querySelector('.prev-btn');
+        const nextBtn   = document.querySelector('.next-btn');
+        const slideEl   = document.querySelector('.slide');
+        const slideWidth = slideEl.offsetWidth + 20; // ширина + margin
+
+        prevBtn.addEventListener('click', () => {
+            track.scrollBy({ left: -slideWidth, behavior: 'smooth' });
+        });
+        nextBtn.addEventListener('click', () => {
+            track.scrollBy({ left:  slideWidth, behavior: 'smooth' });
+        });
+
+        // === Автопрокрутка каждые 3 секунды ===
+        setInterval(() => {
+            // если до конца не долистали — листаем дальше
+            if (track.scrollLeft + track.clientWidth < track.scrollWidth - 5) {
+                track.scrollBy({ left: slideWidth, behavior: 'smooth' });
+            } else {
+                // иначе — возвращаемся наверх (в начало)
+                track.scrollTo({ left: 0, behavior: 'smooth' });
+            }
+        }, 1000);
+    });
+</script>
+
+
+<section id="podcast" style="margin:40px auto; max-width:800px; text-align:center;">
+    <h2 style="font-family: Arial, sans-serif; color: #c73b3b; margin-bottom:20px;">Интервью и подкасты</h2>
+    <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
+        <iframe src="https://www.youtube.com/embed/K-nb8UPEePQ"
+                title="YouTube video player"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen
+                style="position: absolute; top:0; left:0; width:100%; height:100%;">
+        </iframe>
+    </div>
+</section>
+
+
+
 
 </body>
 </html>
