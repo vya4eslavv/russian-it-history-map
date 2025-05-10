@@ -10,7 +10,7 @@ import (
 var db *sqlx.DB
 
 func InititalizeDB() {
-	dbc := "user=egorikRoot" + " password=RootRoot" + " dbname=postgres" + " sslmode=disable"
+	dbc := "port=1488 " + "user=slava" + " password=slava" + " dbname=history_project" + " sslmode=disable"
 	conn, err := sqlx.Connect("postgres", dbc)
 	if err != nil {
 		panic(err)
