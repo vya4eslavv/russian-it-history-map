@@ -1,1 +1,18 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M16 144a144 144 0 1 1 288 0A144 144 0 1 1 16 144zM160 80c8.8 0 16-7.2 16-16s-7.2-16-16-16c-53 0-96 43-96 96c0 8.8 7.2 16 16 16s16-7.2 16-16c0-35.3 28.7-64 64-64zM128 480l0-162.9c10.4 1.9 21.1 2.9 32 2.9s21.6-1 32-2.9L192 480c0 17.7-14.3 32-32 32s-32-14.3-32-32z"/></svg>
+<svg width="295" height="508" viewBox="0 0 295 508" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g filter="url(#filter0_d_1_3)">
+<path d="M7 147C7 108.809 22.1714 72.1819 49.1766 45.1766C76.1819 18.1714 112.809 3 151 3C189.191 3 225.818 18.1714 252.823 45.1766C279.829 72.1819 295 108.809 295 147C295 185.191 279.829 221.818 252.823 248.823C225.818 275.829 189.191 291 151 291C112.809 291 76.1819 275.829 49.1766 248.823C22.1714 221.818 7 185.191 7 147ZM151 83C159.8 83 167 75.8 167 67C167 58.2 159.8 51 151 51C98 51 55 94 55 147C55 155.8 62.2 163 71 163C79.8 163 87 155.8 87 147C87 111.7 115.7 83 151 83ZM119 483V320.1C129.4 322 140.1 323 151 323C161.9 323 172.6 322 183 320.1V483C183 500.7 168.7 515 151 515C133.3 515 119 500.7 119 483Z" fill="#D4AF37" fill-opacity="0.84" shape-rendering="crispEdges"/>
+<path d="M173.5 483C173.5 495.453 163.453 505.5 151 505.5C138.547 505.5 128.5 495.453 128.5 483V331.142C135.887 332.035 143.397 332.5 151 332.5C158.603 332.5 166.113 332.035 173.5 331.142V483ZM151 12.5C186.672 12.5 220.882 26.6709 246.105 51.8945C271.329 77.1182 285.5 111.328 285.5 147C285.5 182.672 271.329 216.882 246.105 242.105C220.882 267.329 186.672 281.5 151 281.5C115.328 281.5 81.1182 267.329 55.8945 242.105C30.6709 216.882 16.5 182.672 16.5 147C16.5 111.328 30.6709 77.1182 55.8945 51.8945C81.1182 26.6709 115.328 12.5 151 12.5ZM151 41.5C92.7533 41.5 45.5 88.7533 45.5 147C45.5 161.047 56.9533 172.5 71 172.5C85.0467 172.5 96.5 161.047 96.5 147C96.5 116.947 120.947 92.5 151 92.5C165.047 92.5 176.5 81.0467 176.5 67C176.5 52.9533 165.047 41.5 151 41.5Z" stroke="black" stroke-width="19" shape-rendering="crispEdges"/>
+</g>
+<defs>
+<filter id="filter0_d_1_3" x="0" y="0" width="302" height="526" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dy="4"/>
+<feGaussianBlur stdDeviation="3.5"/>
+<feComposite in2="hardAlpha" operator="out"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_1_3"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_1_3" result="shape"/>
+</filter>
+</defs>
+</svg>
