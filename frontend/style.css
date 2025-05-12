@@ -525,6 +525,73 @@ h1 { text-align: center; margin: 20px 0; color: #333; }
 
 
 
+.select-bar-list {
+    display: flex;
+}
 
+.select-bar-list li {
+    flex: 1;                  /* все элементы одинаково растягиваются */
+}
 
+.select-bar-list li a {
+    display: block;
+    width: 100%;              /* займёт всю ширину родителя */
+    text-align: center;
+    padding: 8px 0;
+}
 
+/* либо даём отступ всему списку кнопок снизу */
+.select-bar-list {
+    margin-bottom: 8px;   /* регулируй величину по вкусу */
+}
+
+/* либо ставим отступ у каждой кнопки */
+.select-bar-list li a {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 8px 0;
+    margin-bottom: 4px;   /* небольшой отступ под каждой кнопкой */
+}
+
+.select-bar {
+    padding-bottom: 8px;  /* отступ внутри панели под кнопками */
+}
+/* Применяем Press Start 2P ко всем элементам */
+html, body, div, section, header, footer,
+h1, h2, h3, h4, h5, h6,
+p, span, a, li, ul, button,
+input, textarea, select {
+    font-family: 'Press Start 2P', monospace;
+}
+
+/* Если хочешь быть ещё жёстче — можно так: */
+* {
+    font-family: 'Press Start 2P', monospace !important;
+}
+
+/* глобально для всего тела страницы */
+body {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 12px;       /* <-- здесь ставьте удобное значение */
+    line-height: 1.4;
+}
+
+/* или, если хотите точечно — для навигации */
+.select-bar-toggle,
+.select-bar-list a {
+    font-size: 20px;       /* чуть больше базового, но меньше дефолтного */
+}
+
+/* и внутри карточек */
+.timeline-card h2 {
+    font-size: 14px;
+}
+.timeline-card p {
+    font-size: 10px;
+}
+.select-bar-list li a {
+    font-size: 12px;       /* поставь то, что тебе нужно */
+    line-height: 1.2;      /* чтобы не было слишком много места */
+    padding: 6px 8px;      /* можно чуть сократить отступы */
+}
