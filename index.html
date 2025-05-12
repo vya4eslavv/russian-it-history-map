@@ -1,19 +1,12 @@
 ﻿<!DOCTYPE html>
-
-
-
-
 <head>
-
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="style.css">
     <script src="backendFetches.js"></script>
+    <link rel="stylesheet" href="frontend/style.css">
 
 </head>
 
 <body>
-
-
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -47,9 +40,9 @@
             <li><a href="#home">Главная</a></li>
             <li><a href="#map">Карта</a></li>
             <li><a href="#timeline">Достижения</a></li>
-            <li><a href="itmo.html">ИТМО</a></li>
-            <li><a href="emulator.html">Эмулятор Урал - 1</a></li>
-            <li><a href="quiz.html">Квиз</a></li>
+            <li><a href="frontend/itmo.html">ИТМО</a></li>
+            <li><a href="frontend/emulator.html">Эмулятор Урал - 1</a></li>
+            <li><a href="frontend/quiz.html">Квиз</a></li>
             <li><a href="#timeline-slider">Разное</a></li>
 
 
@@ -64,6 +57,21 @@
     <div class="map-container" id="map">
         <img src="images/Vector.svg" alt="Карта России" />
 
+        <!-- Метка Урал-1 -->
+        <div id="marker-ural" class="marker special" style="left: 8%; top: 64%;" data-name="Урал-1"
+             data-description="«Урал-1» — малая ламповая ЭВМ, разработанная в Пензе в 1956 году."
+             data-image="images/uralEVM.jpg"
+             data-author="Пензенский завод счётно-аналитических машин"
+             data-more="Урал является малой ламповой программно-управляемой вычислительной машиной из семейства ЭВМ «Урал»,
+         предназначенная для решения инженерных задач в научно-исследовательских институтах, конструкторских бюро, в высших учебных заведениях и полигонах.
+         Первая серийно производимая ЭВМ на территории СССР (ранее неё была модель «Стрела», выпущенная в количестве 7 шт.).
+         При занимаемой площади в 70–80 м² машина содержала 1000 ламп и диодно-резисторные вентили, потребляла 7–10 кВт мощности.
+         Большинство инструкций выполнялось за два такта,
+         однако в машине был реализован механизм совмещения выполнения двух инструкций (двухступенчатый конвейер),
+         благодаря чему фактическое быстродействие приближалось к 100 операциям с фиксированной запятой в секунду
+         Ёмкость оперативной памяти составляла 1024 полных машинных слова (около 4,5 кБ).">
+        </div>
+
 
     </div>
 
@@ -72,18 +80,10 @@
     <div class="side-panel" id="sidePanel"></div>
 
 
-    <link href="https://fonts.googleapis.com/css2?family=PT+Serif&family=Roboto&display=swap" rel="stylesheet">
-
-
-
-    <button id="themeToggle">🌓</button>
-    <script>
-        const btn = document.getElementById('themeToggle');
-        btn.onclick = () => {
-            const t = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-            document.documentElement.setAttribute('data-theme', t);
-        };
-    </script>
+    <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
+    />
 
 
     <script>
@@ -166,7 +166,7 @@
             <img src="${img}" alt="${name}">
             <h2>${name}</h2>
             <p>${desc}</p>
-            <p><strong>Автор/разработчик:</strong> ${author}</p>
+            <p><strong>Место разработки:</strong> ${author}</p>
             ${more ? `<p>${more}</p>` : ''}
             <button id="showAuthor" style="margin-top: 15px; background-color: #c73b3b; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer;">Об авторе ➡️</button>
         `;
@@ -186,7 +186,8 @@
             let img = '';
 
             if (productName === 'Урал-1') {
-                bio = `<strong>Рамеев Б.И.</strong> — советский изобретатель, разработчик первых советских ЭВМ. Доктор технических наук, лауреат Сталинской премии.`;
+                bio = `<strong>Рамеев Б.И.</strong> — советский изобретатель, разработчик первых советских ЭВМ. Доктор технических наук, лауреат Сталинской премии. В Пензе, в сентябре 2013 года был открыт Технопарк высоких технологий «Рамеев», названный в честь первого в России создателя ЭВМ.
+`;
                 img = `<img src="images/Рамеев_Башир_Искандарович.jpg" alt="Рамеев Б.И." style="max-width: 100%; border-radius: 8px; margin-bottom: 12px;">`;
             } else if (productName === 'Baikal-M') {
                 bio = `<strong>Baikal Electronics</strong> — российская компания, основанная для создания отечественных процессоров. Разработала Baikal-M в 2016-2018 годах в Красногорске.`;
@@ -230,51 +231,61 @@
 
     <!-- Секция хронологии -->
     <div id="timeline" style="background: #000; color: #cdcccc; padding: 10px 20px;">
-        <h2 style="text-align: center; color: #c73b3b; margin-bottom: 40px;">
-            Хронология развития IT в России и СССР
+        <h2 style="text-align: center; color: #c73b3b; margin-bottom: 30px;">
+            Достижения отечественного IT - продукта.
         </h2>
-        <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 30px;">
+        <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 40px;">
             <!-- Эльбрус -->
             <div class="timeline-card" style="background: #222; padding: 20px; border-radius: 10px; width: 250px; text-align: center;">
-                <img src="images/elbrus.jpg" alt="Эльбрус" style="width: 60px; height: 60px; margin-bottom: 10px;">
-                <h3 style="color: #c73b3b;">1973–1978</h3>
-                <p><strong>Эльбрус</strong> — процессорная архитектура от ИТМиВТ. Высокая производительность и защищённость.</p>
+                <img src="images/unnamed.png" alt="Эльбрус" style="width: 235px; height: 130px; margin-bottom: 0px;">
+                <h2 style="color: #c73b3b;">MCST</h2>
+                <p><strong></strong>Российская частная компания, специализирующаяся на разработке универсальных микропроцессоров и операционных систем.
+                    Имеет опыт разработки супер-ЭВМ «Эльбрус».</p>
             </div>
-            <!-- МВС-1000М -->
+            <!-- Selectel -->
             <div class="timeline-card" style="background: #222; padding: 20px; border-radius: 10px; width: 250px; text-align: center;">
-                <img src="images/mvs1000m.jpg" alt="МВС-1000М" style="width: 60px; height: 60px; margin-bottom: 10px;">
-                <h3 style="color: #c73b3b;">2000–2001</h3>
-                <p><strong>МВС-1000М</strong> — суперкомпьютер от НИИ «Квант». 10¹² операций в секунду.</p>
+                <img src="images/short-1.svg" alt="МВС-1000М" style="width: 100px; height: 130px; margin-bottom: 0px;">
+                <h2 style="color: #c73b3b;">Selectel</h2>
+                <p><strong></strong>Российская технологическая компания, предоставляющая облачные инфраструктурные сервисы и услуги дата-центров. В 2025 году Selectel вошёл в топ-20 самых дорогих компаний Рунета по версии Forbes с общей стоимостью в $680 миллионов.</p>
             </div>
             <!-- Яндекс -->
             <div class="timeline-card" style="background: #222; padding: 20px; border-radius: 10px; width: 250px; text-align: center;">
-                <img src="images/yandex.png" alt="Яндекс" style="width: 60px; height: 60px; margin-bottom: 10px;">
-                <h3 style="color: #c73b3b;">2000</h3>
-                <p><strong>Яндекс</strong> — запуск поиска и регистрация компании.</p>
+                <img src="images/Yandex_icon.svg.png" alt="Яндекс" style="width: 130px; height: 130px; margin-bottom: 1px;">
+                <h2 style="color: #c73b3b;">Yandex</h2>
+                <p><strong></strong>Российская компания в отрасли информационных технологий, владеющая одноимённой системой поиска в интернете,
+                    интернет-порталом и веб-службами в нескольких странах.
+                    Наиболее важное положение занимает на рынках России, Беларуси и Казахстана.</p>
             </div>
             <!-- Postgres Pro -->
             <div class="timeline-card" style="background: #222; padding: 20px; border-radius: 10px; width: 250px; text-align: center;">
-                <img src="images/postgres.svg" alt="Postgres Pro" style="width: 200px; height: 60px; margin-bottom: 10px;">
-                <h3 style="color: #c73b3b;">2015</h3>
-                <p><strong>Postgres Pro</strong> — отечественная СУБД на базе PostgreSQL.</p>
+                <img src="images/postgres.svg" alt="Postgres Pro" style="width: 150px; height: 170px; margin-bottom: -36px;">
+                <h2 style="color: #c73b3b;">Postgres Pro</h2>
+                <p><strong></strong>Крупнейший российский разработчик СУБД и других продуктов для работы с данными, усовершенствовавший вариант системы управления базами данных PostgreSQL.</p>
             </div>
-            <!-- Baikal-M -->
-            <div class="timeline-card" style="background: #222; padding: 20px; border-radius: 10px; width: 250px; text-align: center;">
-                <img src="images/Baikal.jpg" alt="Baikal-M" style="width: 60px; height: 60px; margin-bottom: 10px;">
-                <h3 style="color: #c73b3b;">2016–2018</h3>
-                <p><strong>Baikal-M</strong> — ARM-процессор для ПК и серверов.</p>
+            <!-- Astra-linux -->
+            <div class="timeline-card" style="background: #222; padding: -30px; border-radius: 10px; width: 250px; text-align: center;">
+                <img src="images/astra_linux.png" alt="ASTRA-LINUX" style="width: 170px; height: 120px; margin-bottom: -15px;">
+                <h2 style="color: #c73b3b;">Astra Linux</h2>
+                <p><strong></strong>Операционная система на базе ядра Linux, которая внедряется в России в качестве альтернативы Microsoft Windows в государственных организациях.
+                    Обеспечивает степень защиты обрабатываемой информации до уровня государственной тайны «особой важности» включительно.
+                    Включена в Единый реестр российских программ Минкомсвязи России.</p>
             </div>
             <!-- Kotlin -->
-            <div class="timeline-card" style="background: #222; padding: 20px; border-radius: 10px; width: 250px; text-align: center;">
-                <img src="images/kotlin.png" alt="Kotlin" style="width: 120px; height: 120px; margin-bottom: 10px;">
-                <h3 style="color: #c73b3b;">2017+ </h3>
-                <p><strong>Kotlin</strong> — язык программирования от JetBrains, поддерживается ИТМО.</p>
+            <div class="timeline-card" style="background: #222; padding: 15px; border-radius: 10px; width: 250px; text-align: center;">
+                <img src="images/kotlin.png" alt="Kotlin" style="width: 120px; height: 120px; margin-bottom: -10px;">
+                <h2 style="color: #c73b3b;">Kotlin</h2>
+                <p><strong></strong>Язык программирования, разрабатываемый с 2010 года под руководством Андрея Бреслава. Назван в честь российского острова Котлин в Финском заливе,
+                    на котором расположен город Кронштадт</p>
             </div>
             <!-- Лаборатория Касперского -->
             <div class="timeline-card" style="background: #222; padding: 20px; border-radius: 10px; width: 250px; text-align: center;">
-                <img src="images/kaspersky.png" alt="Kaspersky" style="width: 60px; height: 60px; margin-bottom: 10px;">
-                <h3 style="color: #c73b3b;">1997–2025</h3>
-                <p><strong>Лаборатория Касперского</strong> — кибербезопасность.</p>
+                <img src="images/rounded-in-photoretrica.png" alt="Kaspersky" style="width: 105px; height: 105px; margin-bottom: 1px;">
+                <h2 style="color: #c73b3b;">Касперский</h2>
+                <p><strong></strong>Международная компания из России, специализирующаяся на разработке систем защиты от компьютерных вирусов, спама,
+                    хакерских атак и прочих киберугроз.
+                    Компания ведёт свою деятельность более чем в 200 странах и территориях мира.
+                    Центральный офис «Лаборатории Касперского» находится в Москве.
+                    </p>
             </div>
         </div>
     </div>

@@ -4,34 +4,19 @@ html, body {
     margin: 0;
     padding: 0;
     height: 100%;
-    font-family: 'Rubik', sans-serif;
-
-
-
+    font-family: 'MyPixelFont', 'Rubik', sans-serif;
 
 }
 
-
-.select-bar-toggle {
-    font-family: 'Press Start 2P', cursive;
-    letter-spacing: 2px; /* можно подстроить межбуквенный интервал */
-    font-size: 1rem;     /* при необходимости увеличить или уменьшить */
+/* только для навигации */
+.select-bar-toggle,
+.select-bar-list a {
+    font-family: 'Rubik', sans-serif;;
 }
-
-.select-bar-list li a {
-    font-family: 'Press Start 2P', cursive;
-    text-transform: uppercase; /* если нужно */
-    letter-spacing: 1px;       /* можно настроить */
-    font-size: 0.9rem;         /* ваш выбор */
-}
-
 
 
 
 /* исходное состояние: прозрачны и смещены вниз */
-
-
-
 
 .timeline-card {
     opacity: 0;
@@ -65,7 +50,7 @@ html, body {
     background-color: #ffffff;
 
     /* ваше фоновое изображение */
-    background-image: url('images/raritet_big-0000 (2).jpg');
+    background-image: url('../images/raritet_big-0000 (2).jpg');
     background-repeat: no-repeat;
     background-position: top center; /* картинка по центру сверху */
     /* вариант масштабирования:
@@ -117,7 +102,7 @@ html, body {
 body {
     margin: 0;
     padding: 0;
-    font-family: Arial, sans-serif;
+    font-family: 'Press Start 2P', monospace;;
     background-color: var(--bg);
     color: var(--fg);
 }
@@ -250,7 +235,7 @@ h1 { text-align: center; margin: 20px 0; color: #333; }
     position: absolute;
     width: 32px;
     height: 32px;
-    background: url('images/markerOne.svg') no-repeat center center;
+    background: url('../images/markerOne.svg') no-repeat center center;
     background-size: contain;
     cursor: pointer;
 }
@@ -302,7 +287,7 @@ h1 { text-align: center; margin: 20px 0; color: #333; }
     position: absolute;
     width: 32px;
     height: 32px;
-    background: url('images/markerOne.svg') no-repeat center center;
+    background: url('../images/markerOne.svg') no-repeat center center;
     background-size: contain;
     cursor: pointer;
 }
@@ -337,6 +322,7 @@ h1 { text-align: center; margin: 20px 0; color: #333; }
 .timeline-card:hover {
     transform: translateY(-10px);
     box-shadow: 0 12px 24px rgba(0,0,0,0.5);
+    animation: bounce 0.7s ;
 }
 /* Стили для верхнего select-bar */
 .select-bar {
@@ -478,6 +464,10 @@ h1 { text-align: center; margin: 20px 0; color: #333; }
     height: 60px;
     margin-bottom: 10px;
 }
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-8px); }
+}
 
 .card-tooltip {
     position: absolute;
@@ -537,9 +527,4 @@ h1 { text-align: center; margin: 20px 0; color: #333; }
 
 
 
-
-/* Общий текст — оставим Arial, чтобы было читаемо */
-body {
-    font-family: Arial, sans-serif;
-}
 
