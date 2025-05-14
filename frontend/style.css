@@ -595,3 +595,177 @@ body {
     line-height: 1.2;      /* чтобы не было слишком много места */
     padding: 6px 8px;      /* можно чуть сократить отступы */
 }
+.map-kz {
+    position: absolute;
+    transform: scale(0.3); /* уменьшили в 2 раза */
+    transform-origin: top left; /* точка привязки масштаба */
+    left: 450px;
+    top: -50px;
+}
+
+.map-kz {
+    display: block;
+    width: 100%;
+    height: auto;
+    cursor: pointer; /* чтобы было понятно, что интерактивная */
+}
+
+.tooltip-kz {
+    position: absolute;
+    bottom: 109%;            /* над картинкой */
+    left: 60%;
+    transform: translateX(-50%) translateY(-8px);
+    background: rgba(0, 0, 0, 0.75);
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+}
+.kz-wrapper:hover .tooltip-kz {
+    opacity: 1;
+}
+.map-container {
+    position: relative;
+    margin-top: 80px;
+}
+
+/* обёртка с СССР */
+.ussr-wrapper {
+    position: relative;       /* для абсолютных вложенных tooltip */
+    display: inline-block;    /* чтобы размеры совпадали с картинкой */
+}
+
+/* сама карта СССР */
+.map-ussr {
+    display: block;
+    width: 100%;  /* или фикс. ширина */
+    height: auto;
+    cursor: pointer;
+}
+.tooltip-ussr {
+    position: absolute;
+    bottom: 70%;            /* чуть выше нижнего края картинки */
+    left: 20%;
+    transform: translateX(-50%) translateY(-8px);
+    background: rgba(4, 0, 0, 0.85);
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 14px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+}
+
+/* при наведении на .ussr-wrapper — показываем .tooltip-ussr */
+.ussr-wrapper:hover .tooltip-ussr {
+    opacity: 1;
+}
+
+.map-container {
+    position: relative;
+    margin-top: 90px;
+}
+
+.by-wrapper {
+    position: absolute;
+    left: 140px;     /* подстройте X-координату */
+    top: -55px;      /* подстройте Y-координату */
+    transform: scale(0.25);  /* задайте нужный масштаб */
+    transform-origin: top left;
+}
+
+.map-by {
+    display: block;
+    width: 100%;
+    height: auto;
+    cursor: pointer;
+}
+
+.tooltip-by {
+    position: absolute;
+    bottom: 105%;
+    left: 60%;
+    transform: translateX(-50%) translateY(-8px);
+    background: rgba(0, 0, 0, 0.75);
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 50px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+}
+
+.by-wrapper:hover .tooltip-by {
+    opacity: 1;
+}
+
+.ua-wrapper {
+    position: absolute;
+    left: -180px;      /* подберите X-координату */
+    top: 50px;       /* подберите Y-координату */
+    transform: scale(0.25);  /* масштаб для нужного размера */
+    transform-origin: top left;
+}
+
+.map-ua {
+    display: block;
+    width: 100%;
+    height: auto;
+    cursor: pointer;
+}
+
+.tooltip-ua {
+    position: absolute;
+    bottom: 105%;
+    left: 60%;
+    transform: translateX(-50%) translateY(-8px);
+    background: rgba(0, 0, 0, 0.75);
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 50px;    /* можно увеличить по желанию */
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+}
+
+.ua-wrapper:hover .tooltip-ua {
+    opacity: 1;
+}
+.tooltip {
+    /* фиксированная ширина, чтобы переносы были одинаковые */
+    width: 250px;            /* подберите под свой макет */
+    /* пиксельный шрифт с чётким рендером */
+    font-family: 'Press Start 2P', monospace;
+    font-size:      10px;    /* или то, что вам нужно */
+    line-height:    1.2em;   /* фиксированный отступ между строками */
+    white-space:    normal;  /* чтобы работали переносы */
+    word-wrap:      break-word;
+    box-sizing:     border-box;
+    padding:        15px;    /* отступ внутри */
+
+}
+
+.tooltip img {
+    display:        block;   /* чтобы текст начинался ровно под картинкой */
+    margin-bottom:  9px;     /* отступ до текста */
+}
+.tooltip button {
+    display:        inline-block;
+    margin-top:     10px;
+}
+
+#daily-question {
+    border-bottom: 1px solid rgb(14, 14, 14);
+}
+#daily-question input:focus { outline: none; }
+#daily-question button:hover { opacity: 0.9; }
