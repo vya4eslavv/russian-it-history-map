@@ -12,21 +12,62 @@ function insertMarkers(htmlString) {
 }
 
 // 2. Делегирование событий для .marker
+// function setupMarkerDelegation() {
+//     const container = document.getElementById('map');
+//     const tooltip   = document.getElementById('tooltip');
+//     const sidePanel = document.getElementById('sidePanel');
+//     let tooltipHover = false;
+//
+//     // тултип: наведено на него?
+//     tooltip.addEventListener('mouseenter', () => tooltipHover = true);
+//     tooltip.addEventListener('mouseleave', () => {
+//         tooltipHover = false;
+//         tooltip.style.display = 'none';
+//     });
+//
+//     // делегируем mouseenter/mouseleave от контейнера
+//     container.addEventListener('mouseover', e => {
+//         const marker = e.target.closest('.marker');
+//         if (!marker) return;
+//
+//         const { name, description: desc, image: img } = marker.dataset;
+//         tooltip.innerHTML = `
+//       <div style="display:flex;align-items:flex-start;gap:10px">
+//         <img src="${img}" alt="${name}" style="width:60px;height:60px;border-radius:6px;object-fit:cover">
+//         <div><strong>${name}</strong><br>${desc}</div>
+//       </div>
+//       <button>Читать далее</button>
+//     `;
+//         tooltip.style.display = 'block';
+//         tooltip.style.left  = `calc(${marker.style.left} + 200px)`;
+//         tooltip.style.top   = `calc(${marker.style.top} + 100px)`;
+//         tooltip.querySelector('button').onclick = () => openSidePanel(marker);
+//     });
+//
+//     container.addEventListener('mouseout', e => {
+//         const marker = e.target.closest('.marker');
+//         if (!marker) return;
+//         setTimeout(() => {
+//             if (!tooltipHover) tooltip.style.display = 'none';
+//         }, 200);
+//     });
+// }
+
 function setupMarkerDelegation() {
     const container = document.getElementById('map');
     const tooltip   = document.getElementById('tooltip');
-    const sidePanel = document.getElementById('sidePanel');
     let tooltipHover = false;
 
-    // тултип: наведено на него?
+    tooltip.style.position = 'absolute';
+    tooltip.style.pointerEvents = 'auto'; // чтобы mouseenter/leave работали
+
     tooltip.addEventListener('mouseenter', () => tooltipHover = true);
     tooltip.addEventListener('mouseleave', () => {
         tooltipHover = false;
         tooltip.style.display = 'none';
     });
 
-    // делегируем mouseenter/mouseleave от контейнера
-    container.addEventListener('mouseover', e => {
+    container.addEventListener('mouseover', async e => {
         const marker = e.target.closest('.marker');
         if (!marker) return;
 
@@ -39,8 +80,30 @@ function setupMarkerDelegation() {
       <button>Читать далее</button>
     `;
         tooltip.style.display = 'block';
-        tooltip.style.left  = `calc(${marker.style.left} + 10px)`;
-        tooltip.style.top   = `calc(${marker.style.top} + 10px)`;
+        tooltip.style.visibility = 'hidden'; // на время измерений
+
+        // Дадим браузеру время вставить контент и посчитать размеры
+        await new Promise(r => requestAnimationFrame(r));
+
+        const markerRect = marker.getBoundingClientRect();
+        const ttRect     = tooltip.getBoundingClientRect();
+        const padding    = 8; // отступ от маркера
+
+        // Центральная позиция относительно маркера
+        let left = markerRect.left + (markerRect.width - ttRect.width) / 2;
+        // Не вылазим влево/вправо
+        left = Math.max(padding, Math.min(left, window.innerWidth - ttRect.width - padding));
+
+        // Сначала пытаемся показать снизу, иначе сверху
+        let top = markerRect.bottom + padding;
+        if (top + ttRect.height > window.innerHeight - padding) {
+            top = markerRect.top - ttRect.height - padding;
+        }
+
+        tooltip.style.left = `${left}px`;
+        tooltip.style.top  = `${top}px`;
+        tooltip.style.visibility = 'visible';
+
         tooltip.querySelector('button').onclick = () => openSidePanel(marker);
     });
 
@@ -64,8 +127,7 @@ function openSidePanel(marker) {
     <p>${desc}</p>
     <p><strong>Место разработки:</strong> ${author || 'Неизвестный автор'}</p>
     ${more ? `<p>${more}</p>` : ''}
-    <button id="showAuthor" class="btn-author">Об авторе ➡️</button>
-  `;
+    <button id="showAuthor" class="btn-author">Об авторе ➡️</button>`;
     sidePanel.classList.add('open');
 
     document.getElementById('showAuthor')
@@ -111,6 +173,48 @@ document.addEventListener('DOMContentLoaded', () => {
         .catch(console.error);
 
     fetchData('http://localhost:8080/api/invention/get/13')
+        .then(data => {
+            insertMarkers(data.html_code);
+            // после вставки маркеры «оживут» автоматически через делегирование
+        })
+        .catch(console.error);
+
+    fetchData('http://localhost:8080/api/invention/get/14')
+        .then(data => {
+            insertMarkers(data.html_code);
+            // после вставки маркеры «оживут» автоматически через делегирование
+        })
+        .catch(console.error);
+
+    fetchData('http://localhost:8080/api/invention/get/15')
+        .then(data => {
+            insertMarkers(data.html_code);
+            // после вставки маркеры «оживут» автоматически через делегирование
+        })
+        .catch(console.error);
+
+    fetchData('http://localhost:8080/api/invention/get/16')
+        .then(data => {
+            insertMarkers(data.html_code);
+            // после вставки маркеры «оживут» автоматически через делегирование
+        })
+        .catch(console.error);
+
+    fetchData('http://localhost:8080/api/invention/get/17')
+        .then(data => {
+            insertMarkers(data.html_code);
+            // после вставки маркеры «оживут» автоматически через делегирование
+        })
+        .catch(console.error);
+
+    fetchData('http://localhost:8080/api/invention/get/18')
+        .then(data => {
+            insertMarkers(data.html_code);
+            // после вставки маркеры «оживут» автоматически через делегирование
+        })
+        .catch(console.error);
+
+    fetchData('http://localhost:8080/api/invention/get/19')
         .then(data => {
             insertMarkers(data.html_code);
             // после вставки маркеры «оживут» автоматически через делегирование
