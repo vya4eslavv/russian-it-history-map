@@ -3,16 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <title>Квиз – История IT в СССР и России</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link
+            href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
+            rel="stylesheet"
+    />
     <style>
+        /* ===== ГЛОБАЛЬНЫЕ СБРОСЫ ===== */
+        * {
+            box-sizing: border-box;
+            margin: 0px;
+            padding: 0;
+            font-family: 'Press Start 2P', monospace;
+        }
         body {
-            background: #f5f5f5;
-            font-family: Arial, sans-serif;
+            background: #c73b3b;
             color: #333;
             margin: 0;
-            padding: 20px;
+            padding: 100px 20px 20px; /* отступ под select-bar */
             display: flex;
             justify-content: center;
         }
+
+        /* ===== СТИЛИ SELECT-БАРА ===== */
+        .select-bar {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%;
+            background-color: #333;
+            overflow: hidden;
+            max-height: 50px;
+            transition: max-height 0.5s ease-out;
+            z-index: 1500;
+        }
+        .select-bar.expanded {
+            max-height: 200px;
+        }
+        .select-bar-toggle {
+            color: #fff;
+            padding: 15px;
+            cursor: pointer;
+            user-select: none;
+            font-size: 12px;
+        }
+        .select-bar-list {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: opacity 0.5s ease-out 0.2s, transform 0.5s ease-out 0.2s;
+            pointer-events: none;
+            margin-bottom: 10px;
+        }
+        .select-bar.expanded .select-bar-list {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+        .select-bar-list li {
+            margin: 5px;
+        }
+        .select-bar-list li a {
+            display: inline-block;
+            padding: 6px 12px;
+            background-color: #c73b3b;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 10px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .select-bar-list li a:hover {
+            background-color: #fff;
+            color: #333;
+        }
+
+        /* ===== СТИЛИ КВИЗА ===== */
         .container {
             max-width: 500px;
             width: 100%;
@@ -23,7 +91,7 @@
         }
         h1 {
             margin-top: 0;
-            font-size: 24px;
+            font-size: 18px;
             text-align: center;
             color: #c73b3b;
         }
@@ -33,7 +101,7 @@
         }
         .question-text {
             margin-bottom: 20px;
-            font-size: 18px;
+            font-size: 14px;
         }
         .options {
             list-style: none;
@@ -45,8 +113,8 @@
         }
         .options button {
             width: 100%;
-            padding: 10px 15px;
-            font-size: 16px;
+            padding: 8px 12px;
+            font-size: 12px;
             border: 2px solid #c73b3b;
             background: #fff;
             color: #c73b3b;
@@ -66,8 +134,8 @@
             text-align: right;
         }
         .actions button {
-            padding: 8px 16px;
-            font-size: 16px;
+            padding: 6px 12px;
+            font-size: 12px;
             background: #c73b3b;
             color: #fff;
             border: none;
@@ -81,18 +149,45 @@
         }
         .result {
             text-align: center;
+            font-size: 14px;
         }
     </style>
 </head>
 <body>
+
+<!-- SELECT-BAR -->
+<div class="select-bar">
+    <div class="select-bar-toggle">☰ История IT в СССР и России</div>
+    <ul class="select-bar-list">
+        <li><a href="../index.html">Главная</a></li>
+        <li><a href="../index.html#map">Карта</a></li>
+        <li><a href="../index.html#timeline">Достижения</a></li>
+        <li><a href="itmo.html">ИТМО</a></li>
+        <li><a href="emulator.html">Эмулятор ЭВМ</a></li>
+        <li><a href="quiz.html">Квиз</a></li>
+        <li><a href="../index.html#timeline-slider">Разное</a></li>
+    </ul>
+</div>
+
 <div class="container">
     <h1>Квиз: Проверь свои знания</h1>
-    <div id="quiz">
-        <!-- Контент генерируется скриптом -->
-    </div>
+    <div id="quiz"></div>
 </div>
 
 <script>
+    // Select-bar toggle
+    document.addEventListener('DOMContentLoaded', () => {
+        const bar    = document.querySelector('.select-bar');
+        const toggle = document.querySelector('.select-bar-toggle');
+        toggle.addEventListener('click', () => bar.classList.toggle('expanded'));
+        document.addEventListener('click', e => {
+            if (!bar.contains(e.target) && e.target !== toggle) {
+                bar.classList.remove('expanded');
+            }
+        });
+    });
+
+    // Quiz logic
     const quizData = [
         {
             question: 'В каком году была разработана ЭВМ «Урал-1»?',
@@ -116,32 +211,26 @@
         }
     ];
 
-    let currentIndex = 0;
-    let score = 0;
-    let selectedOption = null;
-
+    let currentIndex = 0, score = 0, selectedOption = null;
     const quizEl = document.getElementById('quiz');
 
     function renderQuestion() {
         const q = quizData[currentIndex];
         quizEl.innerHTML = `
-        <div class="question-number">Вопрос ${currentIndex + 1} из ${quizData.length}</div>
-        <div class="question-text">${q.question}</div>
-        <ul class="options">
-          ${q.options.map((opt, idx) => `
-            <li>
-              <button data-index="${idx}">${opt}</button>
-            </li>
-          `).join('')}
-        </ul>
-        <div class="actions">
-          <button id="nextBtn" disabled>
-            ${currentIndex + 1 < quizData.length ? 'Дальше' : 'Завершить'}
-          </button>
-        </div>
-      `;
+                <div class="question-number">Вопрос ${currentIndex + 1} из ${quizData.length}</div>
+                <div class="question-text">${q.question}</div>
+                <ul class="options">
+                  ${q.options.map((opt, idx) => `
+                    <li><button data-index="${idx}">${opt}</button></li>
+                  `).join('')}
+                </ul>
+                <div class="actions">
+                  <button id="nextBtn" disabled>
+                    ${currentIndex + 1 < quizData.length ? 'Дальше' : 'Завершить'}
+                  </button>
+                </div>
+            `;
 
-        // Вешаем обработчики на опции
         document.querySelectorAll('.options button').forEach(btn => {
             btn.addEventListener('click', () => {
                 if (selectedOption !== null) return;
@@ -151,37 +240,27 @@
             });
         });
 
-        // Обработчик кнопки «Дальше» / «Завершить»
         document.getElementById('nextBtn').addEventListener('click', () => {
-            if (selectedOption === quizData[currentIndex].correct) {
-                score++;
-            }
+            if (selectedOption === quizData[currentIndex].correct) score++;
             selectedOption = null;
             currentIndex++;
-            if (currentIndex < quizData.length) {
-                renderQuestion();
-            } else {
-                renderResult();
-            }
+            currentIndex < quizData.length ? renderQuestion() : renderResult();
         });
     }
 
     function renderResult() {
         quizEl.innerHTML = `
-        <div class="result">
-          <p>Вы правильно ответили на ${score} из ${quizData.length} вопросов.</p>
-          <button id="restartBtn">Пройти ещё раз</button>
-        </div>
-      `;
+                <div class="result">
+                  <p>Вы правильно ответили на ${score} из ${quizData.length} вопросов.</p>
+                  <button id="restartBtn">Пройти ещё раз</button>
+                </div>
+            `;
         document.getElementById('restartBtn').addEventListener('click', () => {
-            currentIndex = 0;
-            score = 0;
-            selectedOption = null;
+            currentIndex = 0; score = 0; selectedOption = null;
             renderQuestion();
         });
     }
 
-    // Запуск
     renderQuestion();
 </script>
 </body>
