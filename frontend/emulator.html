@@ -2,30 +2,220 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <title>Виртуальный музей-эмулятор Урал-1</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <style>
-        body { background: #222; color: #fff; font-family: Arial, sans-serif; display: flex; flex-direction: column; align-items: center; padding: 40px; }
-        .description { max-width: 800px; background: #333; padding: 20px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.6); margin-bottom: 30px; }
-        .description h1 { margin-top: 0; color: #c73b3b; }
-        .description p { line-height: 1.5; margin: 10px 0; }
-        .terms { margin-top: 20px; }
-        .terms h2 { color: #c73b3b; font-size: 20px; }
-        .terms ul { margin: 0; padding-left: 20px; }
-        .panel { background: #333; padding: 20px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.6); }
-        .switches, .lights { display: flex; gap: 8px; margin-bottom: 20px; }
-        .switch, .light { width: 30px; height: 50px; border-radius: 4px; position: relative; cursor: pointer; }
-        .switch { background: #444; }
-        .switch::before { content: ''; position: absolute; width: 26px; height: 26px; background: #bbb; border-radius: 4px; left: 2px; top: 2px; transition: top 0.2s; }
-        .switch.on::before { top: 22px; background: #f5a623; }
-        .light { background: #555; }
-        .light.on { background: #a4ea4a; box-shadow: 0 0 8px #a4ea4a; }
-        button { background: #c73b3b; color: #fff; border: none; border-radius: 4px; padding: 8px 16px; font-size: 16px; cursor: pointer; margin-right: 10px; }
-        button:hover { background: #e14e4e; }
+        /* ===== СТИЛИ СЕЛЕКТ-БАРА ===== */
+        .select-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgb(51, 51, 51);
+            overflow: hidden;
+            max-height: 50px;
+            transition: max-height 0.5s ease-out;
+            z-index: 1500;
+        }
+        * {
+            font-family: 'Press Start 2P', monospace;
+        }
+        body {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 10px; /* Можно варьировать */
+            line-height: 1.4;
+            background: #222;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 100px 20px 40px;
+        }
+
+        .select-bar.expanded {
+            max-height: 200px;
+        }
+
+        .select-bar-toggle {
+            color: #fff;
+            padding: 15px;
+            cursor: pointer;
+            user-select: none;
+            font-size: 18px;
+        }
+
+        .select-bar-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: opacity 0.5s ease-out 0.2s, transform 0.5s ease-out 0.2s;
+            pointer-events: none;
+        }
+
+        .select-bar.expanded .select-bar-list {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        .select-bar-list li {
+            margin: 5px;
+        }
+
+        .select-bar-list li a {
+            display: inline-block;
+            padding: 8px 16px;
+            background-color: #c73b3b;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 14px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .select-bar-list li a:hover {
+            background-color: #fff;
+            color: #333;
+        }
+
+        /* ===== ОСНОВНОЙ СТИЛЬ ЭМУЛЯТОРА ===== */
+        body {
+            background: #222;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 100px 20px 40px; /* отступ сверху под селект-бар */
+        }
+
+        .description {
+            max-width: 800px;
+            background: #333;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+            margin-bottom: 30px;
+        }
+
+        .description h1 {
+            margin-top: 0;
+            color: #c73b3b;
+        }
+
+        .description p {
+            line-height: 1.5;
+            margin: 10px 0;
+        }
+
+        .terms {
+            margin-top: 20px;
+        }
+
+        .terms h2 {
+            color: #c73b3b;
+            font-size: 20px;
+        }
+
+        .terms ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .panel {
+            background: #333;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+        }
+
+        .switches,
+        .lights {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+
+        .switch,
+        .light {
+            width: 30px;
+            height: 50px;
+            border-radius: 4px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .switch {
+            background: #444;
+        }
+
+        .switch::before {
+            content: '';
+            position: absolute;
+            width: 26px;
+            height: 26px;
+            background: #bbb;
+            border-radius: 4px;
+            left: 2px;
+            top: 2px;
+            transition: top 0.2s;
+        }
+
+        .switch.on::before {
+            top: 22px;
+            background: #f5a623;
+        }
+
+        .light {
+            background: #555;
+        }
+
+        .light.on {
+            background: #a4ea4a;
+            box-shadow: 0 0 8px #a4ea4a;
+        }
+
+        button {
+            background: #c73b3b;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 16px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        button:hover {
+            background: #e14e4e;
+        }
     </style>
 </head>
 <body>
+
+<!-- СЕЛЕКТ-БАР -->
+<div class="select-bar">
+    <div class="select-bar-toggle">☰ История IT в СССР и России</div>
+    <ul class="select-bar-list">
+        <li><a href="../index.html">Главная</a></li>
+        <li><a href="../index.html#map">Карта</a></li>
+        <li><a href="../index.html#timeline">Достижения</a></li>
+        <li><a href="itmo.html">ИТМО</a></li>
+        <li><a href="emulator.html">Эмулятор ЭВМ</a></li>
+        <li><a href="quiz.html">Квиз</a></li>
+        <li><a href="../index.html#timeline-slider">Разное</a></li>
+    </ul>
+</div>
+
+
 <!-- Описание эмулятора -->
-<section class="description">
+<section class="description" id="description">
     <h1>Что такое эмулятор Урал-1?</h1>
     <p>Эмулятор представляет собой упрощённую модель малой ламповой ЭВМ «Урал-1», разработанной в Пензе в 1956 году. В оригинале машина использовала 1024 слов памяти и декодировала программы с помощью переключателей и ламп для отображения результатов.</p>
     <h2>Как пользоваться</h2>
@@ -47,9 +237,8 @@
 </section>
 
 <!-- Панель эмулятора -->
-<div class="panel">
+<div class="panel" id="emulator">
     <div class="switches" id="switches">
-        <!-- 8 переключателей -->
         <div class="switch" data-bit="7"></div>
         <div class="switch" data-bit="6"></div>
         <div class="switch" data-bit="5"></div>
@@ -59,10 +248,11 @@
         <div class="switch" data-bit="1"></div>
         <div class="switch" data-bit="0"></div>
     </div>
-    <button id="loadBtn">Загрузить в регистр</button>
-    <button id="incBtn">Инкремент</button>
+    <div style="text-align: center; margin-bottom: 20px;">
+        <button id="loadBtn">Загрузить в регистр</button>
+        <button id="incBtn">Инкремент</button>
+    </div>
     <div class="lights" id="lights">
-        <!-- 8 ламп -->
         <div class="light" data-bit="7"></div>
         <div class="light" data-bit="6"></div>
         <div class="light" data-bit="5"></div>
@@ -74,19 +264,32 @@
     </div>
 </div>
 
+<!-- Скрипты -->
 <script>
+    // Меню-бар
+    document.addEventListener('DOMContentLoaded', () => {
+        const bar = document.querySelector('.select-bar');
+        const toggle = document.querySelector('.select-bar-toggle');
+        toggle.addEventListener('click', () => {
+            bar.classList.toggle('expanded');
+        });
+        document.addEventListener('click', (e) => {
+            if (!bar.contains(e.target) && e.target !== toggle) {
+                bar.classList.remove('expanded');
+            }
+        });
+    });
+
     const switches = document.querySelectorAll('.switch');
     const lights = document.querySelectorAll('.light');
     let register = 0;
 
-    // Переключаем бит
     switches.forEach(sw => {
         sw.addEventListener('click', () => {
             sw.classList.toggle('on');
         });
     });
 
-    // Загрузка в регистр
     document.getElementById('loadBtn').addEventListener('click', () => {
         register = 0;
         switches.forEach(sw => {
@@ -96,24 +299,24 @@
         updateLights();
     });
 
-    // Инкремент (с учётом переполнения 8 бит)
     document.getElementById('incBtn').addEventListener('click', () => {
         register = (register + 1) & 0xFF;
         updateLights();
-        // Обновляем переключатели
         switches.forEach(sw => {
             const bit = Number(sw.dataset.bit);
-            if (register & (1 << bit)) sw.classList.add('on'); else sw.classList.remove('on');
+            if (register & (1 << bit)) sw.classList.add('on');
+            else sw.classList.remove('on');
         });
     });
 
-    // Обновление ламп
     function updateLights() {
         lights.forEach(lt => {
             const bit = Number(lt.dataset.bit);
-            if (register & (1 << bit)) lt.classList.add('on'); else lt.classList.remove('on');
+            if (register & (1 << bit)) lt.classList.add('on');
+            else lt.classList.remove('on');
         });
     }
 </script>
+
 </body>
 </html>
