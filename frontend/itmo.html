@@ -4,49 +4,115 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Университет ИТМО</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+    <link
+            href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
+            rel="stylesheet"
+    />
     <style>
+        /* ===== ГЛОБАЛЬНЫЕ СБРОСЫ ===== */
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            font-family: 'Press Start 2P', monospace;
+        }
+        body {
+            background: #222;
+            color: #fff;
+            line-height: 1.4;
+            padding: 100px 20px 40px; /* отступ под select-bar */
         }
 
+        /* ===== СТИЛИ SEL﻿ECT-БАРА (как в эмуляторе) ===== */
+        .select-bar {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%;
+            background-color: #333;
+            overflow: hidden;
+            max-height: 50px;
+            transition: max-height 0.5s ease-out;
+            z-index: 1500;
+        }
+        .select-bar.expanded {
+            max-height: 200px;
+        }
+        .select-bar-toggle {
+            color: #fff;
+            padding: 15px;
+            cursor: pointer;
+            user-select: none;
+            font-size: 14px;
+        }
+        .select-bar-list {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: opacity 0.5s ease-out 0.2s, transform 0.5s ease-out 0.2s;
+            pointer-events: none;
+            margin-bottom: 10px;
+        }
+        .select-bar.expanded .select-bar-list {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+        .select-bar-list li {
+            margin: 5px;
+        }
+        .select-bar-list li a {
+            display: inline-block;
+            padding: 6px 12px;
+            background-color: #c73b3b;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 10px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .select-bar-list li a:hover {
+            background-color: #fff;
+            color: #333;
+        }
+
+        /* ===== СТИЛИ СТРАНИЦЫ ИКСКЛЮЗИВНО ITMO ===== */
         body {
             font-family: 'Montserrat', sans-serif;
             background: linear-gradient(to right, #1a1a1a, #222);
-            color: #fff;
-            line-height: 1.6;
         }
-
         header {
             background: #c73b3b;
             padding: 20px;
             text-align: center;
+            position: relative; /* чтобы select-bar внутри */
         }
-
         header h1 {
             font-size: 32px;
             letter-spacing: 1px;
+            color: #fff;
         }
-
         .container {
             max-width: 1200px;
             margin: auto;
             padding: 40px 20px;
         }
-
         .intro {
             text-align: center;
             margin-bottom: 40px;
         }
-
-        .intro p {
-            font-size: 18px;
-            max-width: 700px;
-            margin: 10px auto 0;
+        .intro h2 {
+            color: #c73b3b;
+            margin-bottom: 10px;
         }
-
+        .intro p {
+            font-size: 14px;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
         .faculties {
             display: flex;
             flex-wrap: wrap;
@@ -54,188 +120,98 @@
             justify-content: center;
             margin-bottom: 40px;
         }
-
         .faculty-card {
             background: #333;
             padding: 20px;
             border-radius: 12px;
             width: 250px;
             text-align: center;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: transform 0.3s, box-shadow 0.3s;
         }
-
         .faculty-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 8px 24px rgba(0,0,0,0.4);
         }
-
-        .faculty-card h3 {
-            margin-bottom: 10px;
-            color: #c73b3b;
-        }
+        .faculty-card h3 { color: #c73b3b; margin-bottom: 10px; font-size: 12px; }
+        .faculty-card p { font-size: 10px; line-height: 1.4; }
 
         .gallery {
             display: flex;
             flex-wrap: wrap;
             gap: 20px;
             justify-content: center;
-            margin-bottom: 40px;
+            margin-bottom: 50px;
         }
-
         .gallery img {
-            width: 300px;
-            border-radius: 12px;
-            object-fit: cover;
-        }
-
+             width: 30%;
+             max-width: 200px;   /* чтобы не было слишком растянутых крупных картинок */
+             height: auto;
+             border-radius: 12px;
+             object-fit: cover;
+         }
         .btn {
             display: inline-block;
             background: #c73b3b;
-            color: white;
-            padding: 12px 24px;
+            color: #fff;
+            padding: 10px 20px;
             border-radius: 8px;
             text-decoration: none;
-            font-weight: bold;
+            font-size: 10px;
             transition: background 0.3s;
         }
-
-        .btn:hover {
-            background: #a93030;
-        }
+        .btn:hover { background: #a93030; }
 
         footer {
             background: #111;
             text-align: center;
             padding: 20px;
-            font-size: 14px;
+            font-size: 8px;
         }
 
         @media (max-width: 768px) {
-            .gallery img {
-                width: 100%;
-            }
-
-            .faculty-card {
+            .faculty-card, .gallery img {
                 width: 100%;
             }
         }
-        .select-bar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            background-color: rgba(244, 24, 24, 0.89);
-            overflow: hidden;
-            max-height: 50px;
-            transition: max-height 0.5s ease-out;
-            z-index: 1500;
-        }
-
-        .select-bar.expanded {
-            max-height: 200px;
-        }
-
-        .select-bar-toggle {
-            color: #fff;
-            padding: 15px;
-            cursor: pointer;
-            user-select: none;
-            font-size: 18px;
-        }
-
-        .select-bar-list {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            opacity: 0;
-            transform: translateY(-10px);
-            transition: opacity 0.5s ease-out 0.2s, transform 0.5s ease-out 0.2s;
-            pointer-events: none;
-        }
-
-        .select-bar.expanded .select-bar-list {
-            opacity: 1;
-            transform: translateY(0);
-            pointer-events: auto;
-        }
-
-        .select-bar-list li {
-            margin: 5px;
-        }
-
-        .select-bar-list li a {
-            display: inline-block;
-            padding: 8px 16px;
-            background-color: #c73b3b;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 4px;
-            font-size: 14px;
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
-
-        .select-bar-list li a:hover {
-            background-color: #fff;
-            color: #333;
-        }
-
-        body {
-            padding-top: 60px; /* чтобы контент не наезжал на меню */
-        }
-
     </style>
 </head>
 <body>
 
+
+<!-- СЕЛЕКТ-БАР -->
+<div class="select-bar">
+    <div class="select-bar-toggle">☰ История IT в СССР и России</div>
+    <ul class="select-bar-list">
+        <li><a href="../index.html">Главная</a></li>
+        <li><a href="../index.html#map">Карта</a></li>
+        <li><a href="../index.html#timeline">Достижения</a></li>
+        <li><a href="itmo.html">ИТМО</a></li>
+        <li><a href="emulator.html">Эмулятор ЭВМ</a></li>
+        <li><a href="quiz.html">Квиз</a></li>
+        <li><a href="../index.html#timeline-slider">Разное</a></li>
+    </ul>
+</div>
+
 <header>
     <h1>Университет ИТМО</h1>
-    <div class="select-bar">
-        <div class="select-bar-toggle">☰ Меню</div>
-        <ul class="select-bar-list">
-            <li><a href="../index.html">На главную</a></li>
-            <li><a href="#faculties">Факультеты</a></li>
-            <li><a href="#gallery">Галерея</a></li>
-            <li><a href="https://itmo.ru" target="_blank">Официальный сайт</a></li>
-        </ul>
-    </div>
 </header>
 
 <div class="container">
     <div class="intro">
         <h2>Инновации, технологии и знания</h2>
-        <p>ИТМО — ведущий технический университет России, специализирующийся на IT, кибербезопасности, фотонике и искусственном интеллекте. Здесь рождаются идеи будущего.</p>
+        <p>ИТМО — ведущий технический университет России, специализирующийся на IT, кибербезопасности, фотонике и искусственном интеллекте. Здесь рождаются идеи будущего. И да, мы студенты ИТМО!</p>
     </div>
 
-    <h2 style="text-align:center; color:#c73b3b; margin-bottom: 20px;">Факультеты</h2>
-    <div class="faculties">
-        <div class="faculty-card">
-            <h3>Факультет Инфокоммуникационных Технологий</h3>
-            <p>Обучение в области сетей, связи и информационных систем.</p>
-        </div>
-        <div class="faculty-card">
-            <h3>Факультет Программной Инженерии</h3>
-            <p>Разработка, архитектура, DevOps и создание ПО мирового уровня.</p>
-        </div>
-        <div class="faculty-card">
-            <h3>Факультет Безопасности Информационных Технологий</h3>
-            <p>Кибербезопасность, защита данных, криптография.</p>
-        </div>
-        <div class="faculty-card">
-            <h3>Факультет Фотоники</h3>
-            <p>Исследования в области лазеров, света и оптики нового поколения.</p>
-        </div>
+
+
+    <h2 style="text-align:center; color:#c73b3b; margin:40px 0 20px; font-size:20px;">Достижения ИТМО</h2>
+    <div id="gallery" class="gallery">
+        <img src="/images/kotlin.png" alt="Kotlin">
+        <img src="/images/vizion.png"     alt="Life at ITMO">
+        <img src="/images/icpc_logo.png"     alt="Labs and Research">
     </div>
 
-    <h2 style="text-align:center; color:#c73b3b; margin: 40px 0 20px;">Кампус и Студенческая жизнь</h2>
-    <div class="gallery">
-        <img src="https://itmo.ru/file/pages/183/gallery/1224.jpg" alt="ITMO Campus">
-        <img src="https://en.itmo.ru/file/pages/299/gallery/1576.jpg" alt="Life at ITMO">
-        <img src="https://itmo.ru/file/pages/183/gallery/1227.jpg" alt="Labs and Research">
-    </div>
-
-    <div style="text-align:center; margin-top: 40px;">
+    <div style="text-align:center;">
         <a class="btn" href="https://itmo.ru" target="_blank">Официальный сайт ИТМО</a>
     </div>
 </div>
@@ -245,21 +221,17 @@
 </footer>
 
 <script>
+    // Управление select-bar
     document.addEventListener('DOMContentLoaded', () => {
-        const bar = document.querySelector('.select-bar');
+        const bar    = document.querySelector('.select-bar');
         const toggle = document.querySelector('.select-bar-toggle');
-
-        toggle.addEventListener('click', () => {
-            bar.classList.toggle('expanded');
-        });
-
-        document.addEventListener('click', (e) => {
+        toggle.addEventListener('click', () => bar.classList.toggle('expanded'));
+        document.addEventListener('click', e => {
             if (!bar.contains(e.target) && e.target !== toggle) {
                 bar.classList.remove('expanded');
             }
         });
     });
 </script>
-
 </body>
 </html>
