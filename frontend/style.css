@@ -14,8 +14,6 @@ html, body {
     font-family: 'Rubik', sans-serif;;
 }
 
-
-
 /* исходное состояние: прозрачны и смещены вниз */
 
 .timeline-card {
@@ -205,8 +203,6 @@ body {
     color: #333;
 }
 
-/* Отступ под панель */
-.map-container { margin-top: 80px; }
 
 .sidebar ul {
     list-style-type: none;
@@ -228,8 +224,6 @@ body {
 
 body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f5f5f5; }
 h1 { text-align: center; margin: 20px 0; color: #333; }
-.map-container { position: relative; max-width: 1000px; margin: 0 auto; }
-.map-container img { width: 100%; display: block; }
 
 .marker {
     position: absolute;
@@ -281,8 +275,6 @@ h1 { text-align: center; margin: 20px 0; color: #333; }
 }
 body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f5f5f5; }
 h1 { text-align: center; margin: 20px 0; color: #333; }
-.map-container { position: relative; max-width: 1000px; margin: 80px auto 0; /* учтён отступ под select-bar */ }
-.map-container img { width: 100%; display: block; }
 .marker {
     position: absolute;
     width: 32px;
@@ -628,24 +620,40 @@ body {
 .kz-wrapper:hover .tooltip-kz {
     opacity: 1;
 }
+
 .map-container {
-    position: relative;
+    width: 100%;
     margin-top: 80px;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 50px;
 }
 
-/* обёртка с СССР */
-.ussr-wrapper {
-    position: relative;       /* для абсолютных вложенных tooltip */
-    display: inline-block;    /* чтобы размеры совпадали с картинкой */
-}
+
+
 
 /* сама карта СССР */
-.map-ussr {
-    display: block;
-    width: 100%;  /* или фикс. ширина */
+.svg-ussr{
+    width:1500px;
     height: auto;
-    cursor: pointer;
 }
+
+svg path{
+    stroke: #050101;
+    stroke-width: 1px;
+    transition: .3s;
+    fill: #c73b3b;
+    
+}
+
+svg path:hover{
+    fill: #cdcccc;
+    cursor: pointer;
+    filter: drop-shadow(0 2px 6px rgba(0,0,0,.25));
+    transform-box: fill-box;
+}
+
+
 .tooltip-ussr {
     position: absolute;
     bottom: 70%;            /* чуть выше нижнего края картинки */
@@ -662,15 +670,6 @@ body {
     transition: opacity 0.2s ease;
 }
 
-/* при наведении на .ussr-wrapper — показываем .tooltip-ussr */
-.ussr-wrapper:hover .tooltip-ussr {
-    opacity: 1;
-}
-
-.map-container {
-    position: relative;
-    margin-top: 90px;
-}
 
 .by-wrapper {
     position: absolute;
@@ -769,3 +768,67 @@ body {
 }
 #daily-question input:focus { outline: none; }
 #daily-question button:hover { opacity: 0.9; }
+
+/* вроде как стили слайдер */
+.slider-container { display: flex; align-items: center; position: relative; }
+.slider-track { display: flex; overflow: hidden; scroll-behavior: smooth; width: 100%; }
+.slide { min-width: 200px; margin: 0 10px; background: #333; color: #fff; padding: 20px; border-radius: 8px; text-align: center; flex-shrink: 0; }
+.slide span { display: block; margin-top: 8px; font-size: 14px; color: #c73b3b; }
+.slider-btn { background: none; border: none; font-size: 24px; cursor: pointer; color: #c73b3b; }
+.slider-btn:disabled { opacity: 0.3; cursor: default; }
+
+
+
+.region-layout{
+  display:grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap:16px;
+  align-items:start;
+}
+
+.region-left, .region-right{
+  background: rgba(10,10,10,.65);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 16px;
+  padding: 16px;
+}
+
+.region-preview{
+  margin-top: 10px;
+  border-radius: 14px;
+  background: rgba(255,255,255,.03);
+  border: 1px solid rgba(255,255,255,.06);
+  padding: 12px;
+}
+
+#regionPreviewSvg{
+  width: 100%;
+  height: 260px;
+  display:block;
+}
+
+.muted{ opacity:.85; }
+
+.achievements{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  margin-top: 10px;
+}
+
+.achievement{
+  padding: 12px;
+  border-radius: 12px;
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.06);
+}
+
+.achievement .top{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  align-items:baseline;
+  margin-bottom: 6px;
+}
+
+.achievement .year{ opacity:.75; font-size: 0.95em; }
