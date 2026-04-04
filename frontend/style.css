@@ -626,7 +626,7 @@ body {
     margin-top: 80px;
     display: flex;
     justify-content: center;
-    margin-bottom: 50px;
+    margin-bottom: 0px;
 }
 
 
@@ -634,7 +634,7 @@ body {
 
 /* сама карта СССР */
 .svg-ussr{
-    width:1500px;
+    width:1600px;
     height: auto;
 }
 
@@ -784,6 +784,9 @@ svg path:hover{
   grid-template-columns: 1fr 1.2fr;
   gap:16px;
   align-items:start;
+  padding-left: 20px;
+  padding-right: 20px;
+  margin-bottom: 20px;
 }
 
 .region-left, .region-right{
@@ -793,12 +796,20 @@ svg path:hover{
   padding: 16px;
 }
 
+.region-right h3{
+    color: #cdcccc;
+}
+
 .region-preview{
   margin-top: 10px;
   border-radius: 14px;
   background: rgba(255,255,255,.03);
   border: 1px solid rgba(255,255,255,.06);
   padding: 12px;
+}
+
+#regionTitle{
+    color: #cdcccc;
 }
 
 #regionPreviewSvg{
@@ -832,3 +843,19 @@ svg path:hover{
 }
 
 .achievement .year{ opacity:.75; font-size: 0.95em; }
+
+#regionHoverLabel{
+  position: fixed;
+  z-index: 99999;
+  display: none;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: rgba(15,15,15,.92);
+  color: #fff;
+  font-size: 14px;
+  line-height: 1.1;
+  box-shadow: 0 10px 25px rgba(0,0,0,.35);
+  pointer-events: none; /* чтобы не мешала hover */
+  width: auto;
+  white-space: nowrap;
+}

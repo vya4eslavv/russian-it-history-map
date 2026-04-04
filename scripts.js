@@ -95,6 +95,3 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-
-
-// КАРТА logic НЕ ТРОГАТЬ НИ В КОЕМ СЛУЧАЕ

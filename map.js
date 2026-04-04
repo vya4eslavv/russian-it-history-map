@@ -100,7 +100,7 @@ function showRegionPreview(previewSvg, originalPath) {
 
   // стили клона (можешь настроить)
   const computed = getComputedStyle(originalPath);
-  clone.style.fill = computed.fill && computed.fill !== 'none' ? computed.fill : '#666';
+  clone.style.fill = computed.fill && computed.fill !== 'none' ? computed.fill : '#047dff';
   clone.style.stroke = '#fff';
   clone.style.strokeWidth = '2';
   clone.style.filter = 'drop-shadow(0 10px 20px rgba(0,0,0,.35))';
@@ -132,6 +132,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   assignFallbackKeys(svg);
+  setupRegionHoverLabel(svg);
 
   const titleEl = document.getElementById('regionTitle');
   const descEl = document.getElementById('regionDesc');
