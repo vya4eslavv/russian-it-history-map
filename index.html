@@ -2,11 +2,39 @@
 <head>
     <meta charset="UTF-8">
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
-    <script src="backendFetches.js"></script>
+    <script src="js/backendFetches.js"></script>
     <script src="map.js"></script>
-    <script src="regionNameHover.js"></script>
+    <script src="js/regionNameHover.js"></script>
     <link rel="stylesheet" href="frontend/style.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"/>
+    <style>
+        .select-bar-list li a.active {
+            position: relative;
+            background: linear-gradient(180deg, #ff6a6a 0%, #c73b3b 100%) !important;
+            color: #fff !important;
+            border: 1px solid rgba(255,255,255,0.18);
+            box-shadow:
+                    0 0 0 1px rgba(255,255,255,0.05) inset,
+                    0 8px 24px rgba(199, 59, 59, 0.35),
+                    0 0 18px rgba(223, 80, 80, 0.22);
+            transform: translateY(-2px) scale(1.02);
+        }
+
+        .select-bar-list li a.active::after {
+            content: "●";
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            font-size: 8px;
+            color: #ffd6d6;
+            text-shadow: 0 0 8px rgba(255,255,255,0.45);
+        }
+
+        .select-bar-list li a.active:hover {
+            background: linear-gradient(180deg, #ff7474 0%, #cf3d3d 100%) !important;
+        }
+    </style>
 </head>
 <body>
     <div class="page">
@@ -16,15 +44,13 @@
     <div class="select-bar">
         <div class="select-bar-toggle">☰ История IT в СССР и России</div>
         <ul class="select-bar-list">
-            <li><a href="#map">Главная</a></li>
+            <li><a href="index.html">Главная</a></li>
             <li><a href="#map">Карта</a></li>
             <li><a href="#timeline">Достижения</a></li>
             <li><a href="frontend/itmo.html">ИТМО</a></li>
             <li><a href="frontend/emulator.html">Эмулятор ЭВМ</a></li>
             <li><a href="frontend/quiz.html">Квиз</a></li>
             <li><a href="#timeline-slider">Разное</a></li>
-
-
         </ul>
     </div>
 
@@ -34,7 +60,7 @@
     <div class="map-container" id="map">
         <div class="ussr-wrapper">
         <svg id="svg-ussr" class="svg-ussr" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.2" baseProfile="tiny" x="0px" y="0px" viewBox="0 0 1000 600" xml:space="preserve" xmlns:xml="http://www.w3.org/XML/1998/namespace"> 
-        <path d="m 130.24729,259.26463 -0.71301,-1.3323 -0.83965,1.13893 -1.20312,0.61639 -0.3652,1.98343 -2.7566,-1.20341 -1.29507,1.2557 -1.79887,-1.96928 -0.51738,2.08913 -1.70104,0.51357 0.48353,2.36036 1.41813,-1.06374 1.07846,1.34199 2.31013,-0.11587 0.63117,-1.4221 0.77636,1.28888 1.63087,-0.86752 1.60105,1.08107 2.52028,-0.21377 0.38854,-1.63667 -0.76508,-2.45949 0.30997,-0.96605 c -0.75062,0.0982 -0.83803,-0.13605 -1.19347,-0.41925 z" data-title="Москва" data-code="RU-MOW"></path>
+        <path d="m 130.24729,259.26463 -0.71301,    -1.3323 -0.83965,1.13893 -1.20312,0.61639 -0.3652,1.98343 -2.7566,-1.20341 -1.29507,1.2557 -1.79887,-1.96928 -0.51738,2.08913 -1.70104,0.51357 0.48353,2.36036 1.41813,-1.06374 1.07846,1.34199 2.31013,-0.11587 0.63117,-1.4221 0.77636,1.28888 1.63087,-0.86752 1.60105,1.08107 2.52028,-0.21377 0.38854,-1.63667 -0.76508,-2.45949 0.30997,-0.96605 c -0.75062,0.0982 -0.83803,-0.13605 -1.19347,-0.41925 z" data-title="Москва" data-code="RU-MOW"></path>
         <path d="m 136.30673,181.67516 -2.95955,-0.98651 -3.94605,0.98651 -0.98652,3.94606 0.98652,2.95954 3.94605,1.97303 2.95955,-1.97303 1.97302,-2.95954 -1.97302,-3.94606 z" data-title="Санкт-Петербург" data-code="RU-SPE"></path>
         <path d="m 305.00066,165.89094 -4.93257,0 -3.94605,3.94605 0.98651,3.94606 4.93257,0.98651 0.98652,0 0.98651,-0.98651 0.98651,0 0,0 0.98652,-0.98651 0,0.98651 0,0 -0.98652,0.98651 0,0 0.98652,0 0.98651,-0.98651 0,-3.94606 -1.97303,-3.94605 z m 45.37966,22.68982 1.97303,0.98652 0,0.98651 0,0.98652 0,0.98651 2.95954,1.97303 1.97303,-2.95954 -0.98652,-2.95955 -0.98651,-2.95954 0,0 0,-1.97303 -0.98651,-1.97303 -1.97303,0 0,1.97303 -0.98652,0 -0.98651,0 0,4.93257 z m -27.6224,-0.98651 -2.95954,-0.98651 -3.94606,-0.98652 -4.93257,0.98652 0,0 0.98651,0.98651 0,1.97303 -1.97303,0 -0.98651,-0.98652 0,-0.98651 0.98651,-0.98651 -2.95954,-0.98652 -2.95954,0 -0.98651,0 -0.98652,-0.98651 -5.91908,0.98651 -5.91909,-0.98651 -0.98651,-0.98652 0,-0.98651 0,0.98651 0,0 0,0.98652 -0.98652,0 0,0.98651 0,1.97303 0,0 -0.98651,-1.97303 -1.97303,-0.98651 -0.98652,-0.98652 -3.94605,2.95955 -3.94606,3.94605 -4.93257,-1.97303 -3.94606,-2.95954 0.98652,-2.95954 0.98651,-1.97303 -0.98651,-1.97303 -0.98652,-1.97303 3.94606,-1.97303 2.95954,-0.98651 4.93257,2.95954 0.98652,-0.98651 0.98651,-0.98652 0,-0.98651 0.98652,0 0,-2.95954 0,-2.95955 -2.95955,-3.94605 -3.94605,-2.95955 -0.98652,-2.95954 -0.98651,-0.98651 0,2.95954 0,4.93257 -5.91909,4.93257 -4.93257,3.94606 0,2.95954 0,2.95955 -3.94606,2.95954 -1.97302,1.97303 0,0.98651 0,1.97303 3.94605,5.91908 2.95954,5.91909 0.98652,1.97303 0.98651,0.98651 0,0.98652 1.97303,0 0,0 0,-0.98652 1.97303,-0.98651 1.97303,0 1.97303,0.98651 1.97303,1.97303 0,0 6.9056,0 7.89211,0.98652 1.97303,-0.98652 0.98651,-0.98651 0.98652,0.98651 0,0.98652 1.97303,-0.98652 1.97302,0 4.93258,3.94606 5.91908,4.93257 29.59543,17.75726 0.98651,0.98651 0.98652,0.98652 5.91908,-0.98652 6.9056,-1.97303 0,-0.98651 0.98652,-1.97303 0.98651,0.98651 0.98651,0 1.97303,-0.98651 1.97303,-0.98651 1.97303,-0.98652 1.97303,-0.98651 0.98651,-0.98652 0.98652,0 0.98651,0 1.97303,0.98652 1.97303,-2.95955 0,-1.97302 -0.98652,-0.98652 -1.97302,-2.95954 0.98651,-0.98652 0.98651,-0.98651 1.97303,-1.97303 0,-1.97303 -2.95954,-4.93257 -3.94606,-3.94606 -4.93257,-3.94605 -0.98651,-0.98652 -0.98652,-0.98651 -0.98651,0.98651 -0.98652,0.98652 0,0 -0.98651,-0.98652 -0.98651,0 -0.98652,0.98652 0,5.91908 -0.98651,5.91909 0,0 0,0 -0.98652,-0.98652 -0.98651,0 -1.97303,0.98652 -1.97303,-0.98652 -0.98651,0 -0.98652,1.97303 -2.95954,0.98652 -0.98651,-1.97303 0.98651,-1.97303 1.97303,-0.98651 0.98651,0 0,-1.97303 -0.98651,-1.97303 0.98651,0 -6.9056,-0.98652 -5.91908,0.98652 -1.97303,-2.95954 -5.91909,-1.97303 -3.94605,0.98651 0,0.98652 -0.98652,0.98651 -0.98651,-1.97303 -1.97303,0 -0.98651,0.98652 -0.98652,0 0,0 0.98652,-0.98652 0,-0.98651 0,-0.98652 -1.97303,-0.98651 -1.97303,0 0.98651,-0.98652 0,-0.98651 0.98652,0 0.98651,0 1.97303,0.98651 0.98651,-1.97302 0.98652,-1.97303 0.98651,0 0.98652,-0.98652 0,-0.98651 -0.98652,0 1.97303,0 1.97303,0 0,0 z" data-title="Ненецкий АО" data-code="RU-NEN"></path>
         <path d="m 157.02353,237.90648 0.98651,-0.98652 -2.95954,-0.98651 -0.98652,0.98651 0.98652,0.98652 1.97303,0 z m 6.9056,0.98651 -0.98652,0 -0.98651,0.98651 -2.95955,-1.97302 0,3.94605 -0.98651,2.95955 -1.97303,1.97302 0,-0.98651 0,-0.98651 0,-0.98652 -2.95954,0.98652 -0.98652,-0.98652 0.98652,-0.98651 0.98651,0 -0.98651,-5.91909 -1.97303,0 -1.97303,0.98652 0.98652,0.98651 -0.98652,0.98651 -0.98651,0.98652 -1.97303,0 0,0.98651 0,0.98652 -0.98652,1.97303 0,2.95954 0,1.97303 0.98652,0.98651 -2.95954,1.97303 -2.95955,2.95954 0,0.98652 0,0.98651 0,1.97303 2.95955,2.95954 2.95954,-0.98651 5.91908,-1.97303 4.93258,1.97303 5.91908,-3.94606 6.9056,-2.95954 0,-0.98652 0.98651,-1.97302 -3.94605,-4.93258 0,-4.93257 -2.95954,-2.95954 z" data-title="Ярославская область" data-code="RU-YAR"></path>
@@ -234,18 +260,21 @@
 </section>
 
 
-<section id="podcast" style="margin:40px auto; max-width:800px; text-align:center;">
-    <h2 style="font-family: Arial, sans-serif; color: #c73b3b; margin-bottom:20px;">Документальный фильм</h2>
-    <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
-        <iframe src="https://www.youtube.com/embed/K-nb8UPEePQ"
-                title="YouTube video player"
-                frameborder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowfullscreen
-                style="position: absolute; top:0; left:0; width:100%; height:100%;">
-        </iframe>
-    </div>
-</section>
+    <section id="podcast" style="margin:40px auto; max-width:800px; text-align:center;">
+        <h2 style="font-family: Arial, sans-serif; color: #c73b3b; margin-bottom:20px;">
+            Документальный фильм
+        </h2>
+
+        <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
+            <iframe
+                    src="https://rutube.ru/play/embed/6a21d2ccd0c98ac6ed5beec9cc4fa26c"
+                    frameborder="0"
+                    allow="clipboard-write; autoplay"
+                    allowfullscreen
+                    style="position:absolute; top:0; left:0; width:100%; height:100%;">
+            </iframe>
+        </div>
+    </section>
 
 
 
@@ -257,5 +286,32 @@
     <h2>Дата выпуска - 15.05.2004</h2>
     <h2>Создание и разработка - Еремин Вячеслав, Прокофьев Егор, Пивнев Захар.</h2>
 </section>
-<script src="scripts.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const navLinks = document.querySelectorAll('.select-bar-list a');
+        const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+
+        navLinks.forEach(link => {
+            const href = link.getAttribute('href');
+            const cleanHref = href.split('#')[0].split('/').pop();
+
+            if (currentPage === 'index.html' && link.textContent.trim() === 'Главная') {
+                link.classList.add('active');
+            }
+
+            if (currentPage === 'itmo.html' && cleanHref === 'itmo.html') {
+                link.classList.add('active');
+            }
+
+            if (currentPage === 'emulator.html' && cleanHref === 'emulator.html') {
+                link.classList.add('active');
+            }
+
+            if (currentPage === 'quiz.html' && cleanHref === 'quiz.html') {
+                link.classList.add('active');
+            }
+        });
+    });
+</script>
+<script src="js/scripts.js"></script>
 </html>

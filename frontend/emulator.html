@@ -1,205 +1,563 @@
 ﻿<!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <meta charset="UTF-8" />
     <title>Виртуальный музей-эмулятор Урал-1</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap" rel="stylesheet" />
+
     <style>
-        /* ===== СТИЛИ СЕЛЕКТ-БАРА ===== */
-        .select-bar {
+        :root{
+            --bg-main: #0d0f12;
+            --bg-soft: #15181d;
+            --panel-solid: #1a1d22;
+            --text-main: #f2f2f2;
+            --text-soft: #c9c9c9;
+            --text-dim: #9ea4ad;
+            --accent: #c73b3b;
+            --accent-hover: #df5050;
+            --border: rgba(255,255,255,0.08);
+            --shadow: 0 10px 30px rgba(0,0,0,0.35);
+            --shadow-hover: 0 16px 36px rgba(0,0,0,0.42);
+            --nav-height: 64px;
+            --radius-md: 14px;
+            --radius-lg: 18px;
+        }
+
+        *{
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html{
+            scroll-behavior: smooth;
+        }
+
+        body{
+            min-height: 100%;
+            padding: calc(var(--nav-height) + 28px) 20px 24px;
+            background:
+                    radial-gradient(circle at top, rgba(199, 59, 59, 0.10), transparent 28%),
+                    linear-gradient(180deg, #111317 0%, #0c0e12 100%);
+            color: var(--text-main);
+            font-family: 'Rubik', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3,
+        .select-bar-toggle,
+        .select-bar-list a,
+        .emu-btn{
+            font-family: 'Press Start 2P', monospace;
+        }
+
+        /* ===== SELECT BAR ===== */
+        .select-bar{
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
-            background-color: rgb(51, 51, 51);
-            overflow: hidden;
-            max-height: 50px;
-            transition: max-height 0.5s ease-out;
             z-index: 1500;
+            overflow: hidden;
+            max-height: var(--nav-height);
+            padding-bottom: 10px;
+            background: rgba(17, 19, 24, 0.94);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+            transition: max-height 0.35s ease, background 0.25s ease;
         }
-        * {
-            font-family: 'Press Start 2P', monospace;
+
+        .select-bar.expanded{
+            max-height: 220px;
         }
-        body {
-            font-family: 'Press Start 2P', monospace;
-            font-size: 10px; /* Можно варьировать */
-            line-height: 1.4;
-            background: #222;
-            color: #fff;
+
+        .select-bar-toggle{
             display: flex;
-            flex-direction: column;
             align-items: center;
-            padding: 100px 20px 40px;
-        }
-
-        .select-bar.expanded {
-            max-height: 200px;
-        }
-
-        .select-bar-toggle {
+            width: 100%;
+            min-height: var(--nav-height);
+            padding: 0 22px;
             color: #fff;
-            padding: 15px;
+            font-size: 18px;
+            line-height: 1;
             cursor: pointer;
             user-select: none;
-            font-size: 18px;
         }
 
-        .select-bar-list {
+        .select-bar-list{
             list-style: none;
             margin: 0;
-            padding: 0;
+            padding: 6px 16px 14px;
             display: flex;
+            flex-wrap: wrap;
             justify-content: center;
+            gap: 12px;
             opacity: 0;
-            transform: translateY(-10px);
-            transition: opacity 0.5s ease-out 0.2s, transform 0.5s ease-out 0.2s;
+            transform: translateY(-8px);
             pointer-events: none;
+            transition: opacity 0.28s ease, transform 0.28s ease;
         }
 
-        .select-bar.expanded .select-bar-list {
+        .select-bar.expanded .select-bar-list{
             opacity: 1;
             transform: translateY(0);
             pointer-events: auto;
         }
 
-        .select-bar-list li {
-            margin: 5px;
-        }
-
-        .select-bar-list li a {
-            display: inline-block;
-            padding: 8px 16px;
-            background-color: #c73b3b;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 4px;
-            font-size: 14px;
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
-
-        .select-bar-list li a:hover {
-            background-color: #fff;
-            color: #333;
-        }
-
-        /* ===== ОСНОВНОЙ СТИЛЬ ЭМУЛЯТОРА ===== */
-        body {
-            background: #222;
-            color: #fff;
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 100px 20px 40px; /* отступ сверху под селект-бар */
-        }
-
-        .description {
-            max-width: 800px;
-            background: #333;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
-            margin-bottom: 30px;
-        }
-
-        .description h1 {
-            margin-top: 0;
-            color: #c73b3b;
-        }
-
-        .description p {
-            line-height: 1.5;
-            margin: 10px 0;
-        }
-
-        .terms {
-            margin-top: 20px;
-        }
-
-        .terms h2 {
-            color: #c73b3b;
-            font-size: 20px;
-        }
-
-        .terms ul {
+        .select-bar-list li{
             margin: 0;
-            padding-left: 20px;
         }
 
-        .panel {
-            background: #333;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+        .select-bar-list li a{
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 170px;
+            height: 46px;
+            padding: 0 16px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 12px;
+            line-height: 1.2;
+            border-radius: 10px;
+            background: linear-gradient(180deg, var(--accent) 0%, #b33232 100%);
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.08);
+            box-shadow: 0 6px 14px rgba(199, 59, 59, 0.18);
+            transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+        }
+
+        .select-bar-list li a:hover{
+            background: linear-gradient(180deg, var(--accent-hover) 0%, #c73b3b 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(199, 59, 59, 0.22);
+        }
+
+        /* ===== LAYOUT ===== */
+        .page-wrap{
+            max-width: 1180px;
+            margin: 0 auto;
+        }
+
+        .hero-title{
+            text-align: center;
+            margin-bottom: 28px;
+            padding: 26px 18px;
+            background: var(--accent);
+            color: #fff;
+            box-shadow: var(--shadow);
+        }
+
+        .hero-title h1{
+            font-size: clamp(22px, 3.8vw, 42px);
+            line-height: 1.25;
+            margin: 0;
+        }
+
+        .description{
+            max-width: 980px;
+            margin: 0 auto 28px;
+            background: linear-gradient(180deg, rgba(27, 30, 37, 0.92) 0%, rgba(19, 21, 27, 0.96) 100%);
+            padding: 28px 24px;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+        }
+
+        .description h2{
+            color: var(--accent-hover);
+            margin: 22px 0 14px;
+            font-size: clamp(16px, 2.6vw, 24px);
+            line-height: 1.35;
+        }
+
+        .description h2:first-of-type{
+            margin-top: 0;
+        }
+
+        .description p,
+        .description li{
+            color: var(--text-soft);
+            font-size: 16px;
+            line-height: 1.75;
+        }
+
+        .description ul{
+            margin: 8px 0 0 20px;
+        }
+
+        .description li + li{
+            margin-top: 10px;
+        }
+
+        .terms{
+            margin-top: 24px;
+            padding-top: 18px;
+            border-top: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .panel{
+            max-width: 980px;
+            margin: 0 auto;
+            background: linear-gradient(180deg, rgba(27, 30, 37, 0.92) 0%, rgba(19, 21, 27, 0.96) 100%);
+            padding: 28px 24px 30px;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+        }
+
+        .panel-title{
+            text-align: center;
+            color: var(--accent-hover);
+            margin-bottom: 22px;
+            font-size: clamp(16px, 2.8vw, 24px);
+        }
+
+        .emu-grid{
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 22px;
+        }
+
+        .emu-row{
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 14px;
+            padding: 18px;
+        }
+
+        .emu-row h3{
+            color: #fff;
+            font-size: 14px;
+            margin-bottom: 16px;
+            text-align: center;
         }
 
         .switches,
-        .lights {
+        .lights{
             display: flex;
-            gap: 8px;
-            margin-bottom: 20px;
+            gap: 10px;
             justify-content: center;
+            flex-wrap: wrap;
         }
 
         .switch,
-        .light {
-            width: 30px;
-            height: 50px;
-            border-radius: 4px;
+        .light{
+            width: 42px;
+            height: 72px;
+            border-radius: 8px;
             position: relative;
+        }
+
+        .switch{
+            background: linear-gradient(180deg, #3b4048 0%, #2a2e35 100%);
+            border: 1px solid rgba(255,255,255,0.08);
             cursor: pointer;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
+            transition: transform 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease;
         }
 
-        .switch {
-            background: #444;
+        .switch:hover{
+            transform: translateY(-2px);
+            border-color: rgba(199,59,59,0.28);
         }
 
-        .switch::before {
+        .switch::before{
             content: '';
             position: absolute;
-            width: 26px;
-            height: 26px;
-            background: #bbb;
-            border-radius: 4px;
-            left: 2px;
-            top: 2px;
-            transition: top 0.2s;
+            left: 4px;
+            top: 4px;
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            background: linear-gradient(180deg, #d4d4d4 0%, #9a9a9a 100%);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.28);
+            transition: top 0.2s ease, background 0.2s ease;
         }
 
-        .switch.on::before {
-            top: 22px;
-            background: #f5a623;
+        .switch.on::before{
+            top: 36px;
+            background: linear-gradient(180deg, #ffb347 0%, #e58e17 100%);
         }
 
-        .light {
-            background: #555;
+        .bit-labels{
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 12px;
         }
 
-        .light.on {
-            background: #a4ea4a;
-            box-shadow: 0 0 8px #a4ea4a;
+        .bit-label{
+            width: 42px;
+            text-align: center;
+            color: var(--text-dim);
+            font-size: 11px;
+            font-family: 'Press Start 2P', monospace;
         }
 
-        button {
-            background: #c73b3b;
-            color: #fff;
+        .controls{
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 14px;
+        }
+
+        .emu-btn{
+            min-width: 220px;
+            height: 48px;
+            padding: 0 16px;
             border: none;
-            border-radius: 4px;
-            padding: 8px 16px;
-            font-size: 16px;
+            border-radius: 10px;
+            background: linear-gradient(180deg, var(--accent) 0%, #b33232 100%);
+            color: #fff;
+            font-size: 11px;
             cursor: pointer;
-            margin-right: 10px;
+            box-shadow: 0 6px 14px rgba(199, 59, 59, 0.18);
+            transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
         }
 
-        button:hover {
-            background: #e14e4e;
+        .emu-btn:hover{
+            background: linear-gradient(180deg, var(--accent-hover) 0%, #c73b3b 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(199, 59, 59, 0.22);
+        }
+
+        .lights{
+            gap: 12px;
+        }
+
+        .light{
+            background: linear-gradient(180deg, #2e3137 0%, #1e2126 100%);
+            border: 1px solid rgba(255,255,255,0.08);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.03);
+        }
+
+        .light::before{
+            content: '';
+            position: absolute;
+            inset: 9px;
+            border-radius: 6px;
+            background: rgba(255,255,255,0.05);
+        }
+
+        .light.on{
+            background: linear-gradient(180deg, #96f145 0%, #57b317 100%);
+            box-shadow:
+                    0 0 12px rgba(164, 234, 74, 0.55),
+                    0 0 24px rgba(164, 234, 74, 0.28);
+            border-color: rgba(164, 234, 74, 0.55);
+        }
+
+        .register-box{
+            text-align: center;
+            margin-top: 8px;
+            padding: 16px;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .register-label{
+            color: var(--text-dim);
+            font-size: 12px;
+            margin-bottom: 10px;
+            font-family: 'Press Start 2P', monospace;
+        }
+
+        .register-value{
+            color: #fff;
+            font-family: 'Press Start 2P', monospace;
+            font-size: clamp(14px, 2vw, 20px);
+            letter-spacing: 1px;
+            word-break: break-all;
+        }
+
+        @media (max-width: 992px){
+            .select-bar-list li a{
+                min-width: 150px;
+                font-size: 11px;
+            }
+
+            .switch,
+            .light{
+                width: 38px;
+                height: 66px;
+            }
+
+            .switch::before{
+                width: 28px;
+                height: 28px;
+                left: 4px;
+            }
+
+            .switch.on::before{
+                top: 34px;
+            }
+
+            .bit-label{
+                width: 38px;
+                font-size: 10px;
+            }
+        }
+
+        @media (max-width: 768px){
+            body{
+                padding: calc(var(--nav-height) + 18px) 14px 16px;
+            }
+
+            .select-bar{
+                max-height: 58px;
+            }
+
+            .select-bar.expanded{
+                max-height: 320px;
+            }
+
+            .select-bar-toggle{
+                min-height: 58px;
+                font-size: 15px;
+                padding: 0 16px;
+            }
+
+            .select-bar-list{
+                gap: 10px;
+                padding: 4px 12px 14px;
+            }
+
+            .select-bar-list li a{
+                min-width: 138px;
+                height: 42px;
+                font-size: 10px;
+                padding: 0 10px;
+            }
+
+            .hero-title{
+                padding: 22px 14px;
+            }
+
+            .description,
+            .panel{
+                padding: 22px 16px;
+            }
+
+            .description p,
+            .description li{
+                font-size: 15px;
+                line-height: 1.7;
+            }
+
+            .controls{
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .emu-btn{
+                width: 100%;
+                max-width: 320px;
+            }
+        }
+
+        @media (max-width: 480px){
+            .select-bar-list li a{
+                min-width: 120px;
+                height: 40px;
+                font-size: 9px;
+            }
+
+            .hero-title h1{
+                font-size: 20px;
+            }
+
+            .description h2,
+            .panel-title{
+                font-size: 16px;
+            }
+
+            .switches,
+            .lights,
+            .bit-labels{
+                gap: 8px;
+            }
+
+            .switch,
+            .light{
+                width: 34px;
+                height: 60px;
+            }
+
+            .switch::before{
+                width: 24px;
+                height: 24px;
+                left: 4px;
+            }
+
+            .switch.on::before{
+                top: 32px;
+            }
+
+            .bit-label{
+                width: 34px;
+                font-size: 9px;
+            }
+
+            .register-value{
+                font-size: 12px;
+            }
+        }
+        .select-bar.expanded,
+        .select-bar:hover {
+            max-height: 220px;
+        }
+
+        .select-bar.expanded .select-bar-list,
+        .select-bar:hover .select-bar-list {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        @media (max-width: 768px) {
+            .select-bar.expanded,
+            .select-bar:hover {
+                max-height: 320px;
+            }
+        }
+        .select-bar-list li a.active {
+            position: relative;
+            background: linear-gradient(180deg, #ff6a6a 0%, #c73b3b 100%) !important;
+            color: #fff !important;
+            border: 1px solid rgba(255,255,255,0.18);
+            box-shadow:
+                    0 0 0 1px rgba(255,255,255,0.05) inset,
+                    0 8px 24px rgba(199, 59, 59, 0.35),
+                    0 0 18px rgba(223, 80, 80, 0.22);
+            transform: translateY(-2px) scale(1.02);
+        }
+
+        .select-bar-list li a.active::after {
+            content: "●";
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            font-size: 8px;
+            color: #ffd6d6;
+            text-shadow: 0 0 8px rgba(255,255,255,0.45);
+        }
+
+        .select-bar-list li a.active:hover {
+            background: linear-gradient(180deg, #ff7474 0%, #cf3d3d 100%) !important;
         }
     </style>
 </head>
 <body>
 
-<!-- СЕЛЕКТ-БАР -->
 <div class="select-bar">
     <div class="select-bar-toggle">☰ История IT в СССР и России</div>
     <ul class="select-bar-list">
@@ -213,66 +571,133 @@
     </ul>
 </div>
 
+<div class="page-wrap">
+    <section class="hero-title">
+        <h1>Виртуальный музей-эмулятор Урал-1</h1>
+    </section>
 
-<!-- Описание эмулятора -->
-<section class="description" id="description">
-    <h1>Что такое эмулятор Урал-1?</h1>
-    <p>Эмулятор представляет собой упрощённую модель малой ламповой ЭВМ «Урал-1», разработанной в Пензе в 1956 году. В оригинале машина использовала 1024 слов памяти и декодировала программы с помощью переключателей и ламп для отображения результатов.</p>
-    <h2>Как пользоваться</h2>
-    <ul>
-        <li>Установите нужный набор бит переключателями: щёлкните по переключателю, чтобы включить (нижнее положение) или выключить (верхнее).</li>
-        <li>Нажмите «Загрузить в регистр», чтобы перевести состояние переключателей в регистр ЭВМ.</li>
-        <li>Нажмите «Инкремент», чтобы увеличить значение регистра на 1 (с учётом 8-битного переполнения).</li>
-        <li>Наблюдайте за лампочками: каждая лампочка соответствует одному биту регистра и загорается при значении 1.</li>
-    </ul>
-    <div class="terms">
-        <h2>Термины</h2>
+    <section class="description" id="description">
+        <h2>Что такое эмулятор Урал-1?</h2>
+        <p>
+            Эмулятор представляет собой упрощённую модель малой ламповой ЭВМ «Урал-1»,
+            разработанной в Пензе в 1956 году. В оригинале машина использовала 1024 слова
+            памяти и декодировала программы с помощью переключателей и ламп для отображения результатов.
+        </p>
+
+        <h2>Как пользоваться</h2>
         <ul>
-            <li><strong>Регистр</strong> – элемент памяти, хранящий число в двоичном формате.</li>
-            <li><strong>Переключатель (Switch)</strong> – входной элемент для установки битов.</li>
-            <li><strong>Лампочка (Light)</strong> – индикатор вывода: светится, если бит = 1.</li>
-            <li><strong>Инкремент</strong> – операция увеличения числа на единицу.</li>
+            <li>Установите нужный набор бит переключателями: щёлкните по переключателю, чтобы включить нижнее положение или выключить верхнее.</li>
+            <li>Нажмите «Загрузить в регистр», чтобы перевести состояние переключателей в регистр ЭВМ.</li>
+            <li>Нажмите «Инкремент», чтобы увеличить значение регистра на 1 с учётом 8-битного переполнения.</li>
+            <li>Наблюдайте за лампочками: каждая лампочка соответствует одному биту регистра и загорается при значении 1.</li>
         </ul>
-    </div>
-</section>
 
-<!-- Панель эмулятора -->
-<div class="panel" id="emulator">
-    <div class="switches" id="switches">
-        <div class="switch" data-bit="7"></div>
-        <div class="switch" data-bit="6"></div>
-        <div class="switch" data-bit="5"></div>
-        <div class="switch" data-bit="4"></div>
-        <div class="switch" data-bit="3"></div>
-        <div class="switch" data-bit="2"></div>
-        <div class="switch" data-bit="1"></div>
-        <div class="switch" data-bit="0"></div>
-    </div>
-    <div style="text-align: center; margin-bottom: 20px;">
-        <button id="loadBtn">Загрузить в регистр</button>
-        <button id="incBtn">Инкремент</button>
-    </div>
-    <div class="lights" id="lights">
-        <div class="light" data-bit="7"></div>
-        <div class="light" data-bit="6"></div>
-        <div class="light" data-bit="5"></div>
-        <div class="light" data-bit="4"></div>
-        <div class="light" data-bit="3"></div>
-        <div class="light" data-bit="2"></div>
-        <div class="light" data-bit="1"></div>
-        <div class="light" data-bit="0"></div>
+        <div class="terms">
+            <h2>Термины</h2>
+            <ul>
+                <li><strong>Регистр</strong> — элемент памяти, хранящий число в двоичном формате.</li>
+                <li><strong>Переключатель</strong> — входной элемент для установки битов.</li>
+                <li><strong>Лампочка</strong> — индикатор вывода: светится, если бит равен 1.</li>
+                <li><strong>Инкремент</strong> — операция увеличения числа на единицу.</li>
+            </ul>
+        </div>
+    </section>
+
+    <div class="panel" id="emulator">
+        <h2 class="panel-title">Панель управления</h2>
+
+        <div class="emu-grid">
+            <div class="emu-row">
+                <h3>Переключатели</h3>
+                <div class="switches" id="switches">
+                    <div class="switch" data-bit="7"></div>
+                    <div class="switch" data-bit="6"></div>
+                    <div class="switch" data-bit="5"></div>
+                    <div class="switch" data-bit="4"></div>
+                    <div class="switch" data-bit="3"></div>
+                    <div class="switch" data-bit="2"></div>
+                    <div class="switch" data-bit="1"></div>
+                    <div class="switch" data-bit="0"></div>
+                </div>
+                <div class="bit-labels">
+                    <div class="bit-label">7</div>
+                    <div class="bit-label">6</div>
+                    <div class="bit-label">5</div>
+                    <div class="bit-label">4</div>
+                    <div class="bit-label">3</div>
+                    <div class="bit-label">2</div>
+                    <div class="bit-label">1</div>
+                    <div class="bit-label">0</div>
+                </div>
+            </div>
+
+            <div class="emu-row">
+                <div class="controls">
+                    <button class="emu-btn" id="loadBtn">Загрузить в регистр</button>
+                    <button class="emu-btn" id="incBtn">Инкремент</button>
+                </div>
+            </div>
+
+            <div class="emu-row">
+                <h3>Лампочки</h3>
+                <div class="lights" id="lights">
+                    <div class="light" data-bit="7"></div>
+                    <div class="light" data-bit="6"></div>
+                    <div class="light" data-bit="5"></div>
+                    <div class="light" data-bit="4"></div>
+                    <div class="light" data-bit="3"></div>
+                    <div class="light" data-bit="2"></div>
+                    <div class="light" data-bit="1"></div>
+                    <div class="light" data-bit="0"></div>
+                </div>
+                <div class="bit-labels">
+                    <div class="bit-label">7</div>
+                    <div class="bit-label">6</div>
+                    <div class="bit-label">5</div>
+                    <div class="bit-label">4</div>
+                    <div class="bit-label">3</div>
+                    <div class="bit-label">2</div>
+                    <div class="bit-label">1</div>
+                    <div class="bit-label">0</div>
+                </div>
+            </div>
+
+            <div class="register-box">
+                <div class="register-label">Текущее значение регистра</div>
+                <div class="register-value" id="registerValue">00000000 (0)</div>
+            </div>
+        </div>
     </div>
 </div>
 
-<!-- Скрипты -->
 <script>
-    // Меню-бар
     document.addEventListener('DOMContentLoaded', () => {
         const bar = document.querySelector('.select-bar');
         const toggle = document.querySelector('.select-bar-toggle');
+
+        const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+        const navLinks = document.querySelectorAll('.select-bar-list a');
+
+        navLinks.forEach(link => {
+            const href = link.getAttribute('href');
+            if (!href) return;
+
+            const cleanHref = href.split('#')[0].split('/').pop();
+
+            if (
+                (currentPage === 'index.html' && cleanHref === 'index.html' && !href.includes('#')) ||
+                (currentPage === 'itmo.html' && cleanHref === 'itmo.html') ||
+                (currentPage === 'emulator.html' && cleanHref === 'emulator.html') ||
+                (currentPage === 'quiz.html' && cleanHref === 'quiz.html')
+            ) {
+                link.classList.add('active');
+            }
+        });
+
         toggle.addEventListener('click', () => {
             bar.classList.toggle('expanded');
         });
+
         document.addEventListener('click', (e) => {
             if (!bar.contains(e.target) && e.target !== toggle) {
                 bar.classList.remove('expanded');
@@ -282,6 +707,7 @@
 
     const switches = document.querySelectorAll('.switch');
     const lights = document.querySelectorAll('.light');
+    const registerValue = document.getElementById('registerValue');
     let register = 0;
 
     switches.forEach(sw => {
@@ -294,14 +720,19 @@
         register = 0;
         switches.forEach(sw => {
             const bit = Number(sw.dataset.bit);
-            if (sw.classList.contains('on')) register |= (1 << bit);
+            if (sw.classList.contains('on')) {
+                register |= (1 << bit);
+            }
         });
         updateLights();
+        updateRegisterValue();
     });
 
     document.getElementById('incBtn').addEventListener('click', () => {
         register = (register + 1) & 0xFF;
         updateLights();
+        updateRegisterValue();
+
         switches.forEach(sw => {
             const bit = Number(sw.dataset.bit);
             if (register & (1 << bit)) sw.classList.add('on');
@@ -316,6 +747,13 @@
             else lt.classList.remove('on');
         });
     }
+
+    function updateRegisterValue() {
+        const binary = register.toString(2).padStart(8, '0');
+        registerValue.textContent = `${binary} (${register})`;
+    }
+
+    updateRegisterValue();
 </script>
 
 </body>

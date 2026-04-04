@@ -1,161 +1,449 @@
 ﻿<!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <title>Квиз – История IT в СССР и России</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link
-            href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
-            rel="stylesheet"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap" rel="stylesheet" />
+
     <style>
-        /* ===== ГЛОБАЛЬНЫЕ СБРОСЫ ===== */
-        * {
-            box-sizing: border-box;
-            margin: 0px;
-            padding: 0;
-            font-family: 'Press Start 2P', monospace;
-        }
-        body {
-            background: #c73b3b;
-            color: #333;
-            margin: 0;
-            padding: 100px 20px 20px; /* отступ под select-bar */
-            display: flex;
-            justify-content: center;
+        :root{
+            --accent: #c73b3b;
+            --accent-hover: #df5050;
+            --accent-dark: #9f2f2f;
+            --bg-red: #c73b3b;
+            --panel-light: #f3f3f3;
+            --panel-border: rgba(0,0,0,0.08);
+            --text-dark: #2d2d2d;
+            --text-soft-dark: #505050;
+            --text-dim: #9ea4ad;
+            --nav-height: 64px;
+            --shadow: 0 12px 30px rgba(0,0,0,0.18);
+            --shadow-hover: 0 18px 38px rgba(0,0,0,0.22);
         }
 
-        /* ===== СТИЛИ SELECT-БАРА ===== */
+        *{
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html{
+            scroll-behavior: smooth;
+        }
+
+        body{
+            min-height: 100vh;
+            padding: calc(var(--nav-height) + 36px) 20px 32px;
+            background:
+                    radial-gradient(circle at top, rgba(255,255,255,0.08), transparent 25%),
+                    var(--bg-red);
+            color: var(--text-dark);
+            font-family: 'Rubik', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3,
+        .select-bar-toggle,
+        .select-bar-list a,
+        .quiz-btn,
+        .options button,
+        .question-number{
+            font-family: 'Press Start 2P', monospace;
+        }
+
+        /* ===== SELECT BAR ===== */
         .select-bar {
             position: fixed;
-            top: 0; left: 0;
+            top: 0;
+            left: 0;
             width: 100%;
-            background-color: #333;
-            overflow: hidden;
-            max-height: 50px;
-            transition: max-height 0.5s ease-out;
             z-index: 1500;
+            overflow: hidden;
+            max-height: var(--nav-height);
+            padding-bottom: 10px;
+            background: rgba(17, 19, 24, 0.94);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+            transition: max-height 0.35s ease, background 0.25s ease;
         }
-        .select-bar.expanded {
-            max-height: 200px;
+
+        .select-bar.expanded,
+        .select-bar:hover {
+            max-height: 220px;
         }
+
         .select-bar-toggle {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            min-height: var(--nav-height);
+            padding: 0 22px;
             color: #fff;
-            padding: 15px;
+            font-size: 18px;
+            line-height: 1;
             cursor: pointer;
             user-select: none;
-            font-size: 12px;
         }
+
         .select-bar-list {
             list-style: none;
+            margin: 0;
+            padding: 6px 16px 14px;
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
+            gap: 12px;
             opacity: 0;
-            transform: translateY(-10px);
-            transition: opacity 0.5s ease-out 0.2s, transform 0.5s ease-out 0.2s;
+            transform: translateY(-8px);
             pointer-events: none;
-            margin-bottom: 10px;
+            transition: opacity 0.28s ease, transform 0.28s ease;
         }
-        .select-bar.expanded .select-bar-list {
+
+        .select-bar.expanded .select-bar-list,
+        .select-bar:hover .select-bar-list {
             opacity: 1;
             transform: translateY(0);
             pointer-events: auto;
         }
+
         .select-bar-list li {
-            margin: 5px;
-        }
-        .select-bar-list li a {
-            display: inline-block;
-            padding: 6px 12px;
-            background-color: #c73b3b;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 4px;
-            font-size: 10px;
-            transition: background-color 0.3s, color 0.3s;
-        }
-        .select-bar-list li a:hover {
-            background-color: #fff;
-            color: #333;
+            margin: 0;
         }
 
-        /* ===== СТИЛИ КВИЗА ===== */
-        .container {
-            max-width: 500px;
-            width: 100%;
-            background: #fff;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-        h1 {
-            margin-top: 0;
-            font-size: 18px;
+        .select-bar-list li a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 170px;
+            height: 46px;
+            padding: 0 16px;
             text-align: center;
-            color: #c73b3b;
+            text-decoration: none;
+            font-size: 12px;
+            line-height: 1.2;
+            border-radius: 10px;
+            background: linear-gradient(180deg, var(--accent) 0%, #b33232 100%);
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.08);
+            box-shadow: 0 6px 14px rgba(199, 59, 59, 0.18);
+            transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+            position: relative;
         }
-        .question-number {
-            font-weight: bold;
-            margin-bottom: 10px;
+
+        .select-bar-list li a:hover {
+            background: linear-gradient(180deg, var(--accent-hover) 0%, #c73b3b 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(199, 59, 59, 0.22);
         }
-        .question-text {
-            margin-bottom: 20px;
+
+        .select-bar-list li a.active {
+            background: linear-gradient(180deg, #ff6a6a 0%, #c73b3b 100%) !important;
+            color: #fff !important;
+            border: 1px solid rgba(255,255,255,0.18);
+            box-shadow:
+                    0 0 0 1px rgba(255,255,255,0.05) inset,
+                    0 8px 24px rgba(199, 59, 59, 0.35),
+                    0 0 18px rgba(223, 80, 80, 0.22);
+            transform: translateY(-2px) scale(1.02);
+        }
+
+        .select-bar-list li a.active::after {
+            content: "●";
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            font-size: 8px;
+            color: #ffd6d6;
+            text-shadow: 0 0 8px rgba(255,255,255,0.45);
+        }
+
+        .select-bar-list li a.active:hover {
+            background: linear-gradient(180deg, #ff7474 0%, #cf3d3d 100%) !important;
+        }
+
+        /* ===== PAGE ===== */
+        .page-wrap{
+            max-width: 640px;
+            margin: 0 auto;
+        }
+
+        .quiz-shell{
+            background: rgba(255,255,255,0.92);
+            color: var(--text-dark);
+            border: 1px solid rgba(255,255,255,0.28);
+            border-radius: 14px;
+            box-shadow: var(--shadow);
+            padding: 26px 24px 24px;
+            transition: box-shadow 0.25s ease, transform 0.25s ease;
+        }
+
+        .quiz-shell:hover{
+            box-shadow: var(--shadow-hover);
+            transform: translateY(-2px);
+        }
+
+        .hero-title{
+            text-align: center;
+            margin-bottom: 14px;
+        }
+
+        .hero-title h1{
+            font-size: clamp(20px, 3vw, 30px);
+            line-height: 1.35;
+            margin: 0;
+            color: var(--accent);
+        }
+
+        .quiz-header{
+            text-align: center;
+            margin-bottom: 22px;
+        }
+
+        .quiz-header p{
+            color: var(--text-soft-dark);
             font-size: 14px;
+            line-height: 1.7;
+            max-width: 520px;
+            margin: 0 auto;
         }
-        .options {
+
+        .question-card{
+            background: transparent;
+        }
+
+        .question-number{
+            color: var(--text-dark);
+            font-size: 12px;
+            margin-bottom: 16px;
+            text-align: left;
+            letter-spacing: 0.3px;
+        }
+
+        .question-text{
+            color: var(--text-dark);
+            font-family: 'Rubik', sans-serif;
+            font-weight: 700;
+            font-size: 19px;
+            line-height: 1.45;
+            margin-bottom: 22px;
+        }
+
+        .options{
             list-style: none;
-            padding: 0;
+            display: grid;
+            gap: 10px;
+            margin-bottom: 22px;
+        }
+
+        .options li{
+            margin: 0;
+        }
+
+        .options button{
+            width: 100%;
+            min-height: 54px;
+            padding: 10px 14px;
+            border: 2px solid var(--accent);
+            border-radius: 8px;
+            background: rgba(255,255,255,0.75);
+            color: var(--accent);
+            font-size: 10px;
+            line-height: 1.45;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease, color 0.18s ease;
+        }
+
+        .options button:hover{
+            transform: translateY(-2px);
+            background: #fff;
+            box-shadow: 0 8px 16px rgba(199,59,59,0.12);
+        }
+
+        .options button.selected{
+            background: linear-gradient(180deg, var(--accent) 0%, #b33232 100%);
+            color: #fff;
+            box-shadow: 0 10px 20px rgba(199,59,59,0.22);
+        }
+
+        .options button:disabled{
+            cursor: default;
+            opacity: 1;
+        }
+
+        .actions{
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        .quiz-btn{
+            min-width: 180px;
+            height: 44px;
+            padding: 0 16px;
+            border: none;
+            border-radius: 8px;
+            background: linear-gradient(180deg, var(--accent) 0%, #b33232 100%);
+            color: #fff;
+            font-size: 10px;
+            cursor: pointer;
+            box-shadow: 0 6px 14px rgba(199, 59, 59, 0.18);
+            transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease, opacity 0.18s ease;
+        }
+
+        .quiz-btn:hover{
+            background: linear-gradient(180deg, var(--accent-hover) 0%, #c73b3b 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(199, 59, 59, 0.22);
+        }
+
+        .quiz-btn:disabled{
+            opacity: 0.45;
+            cursor: default;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .result{
+            text-align: center;
+            padding: 8px 0 4px;
+        }
+
+        .result p{
+            color: var(--text-dark);
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 18px;
+            font-family: 'Rubik', sans-serif;
+            font-weight: 700;
+        }
+
+        .result-meta{
+            color: var(--text-soft-dark);
+            font-size: 14px;
+            line-height: 1.7;
             margin-bottom: 20px;
         }
-        .options li {
-            margin-bottom: 10px;
+
+        .result-actions{
+            display: flex;
+            justify-content: center;
         }
-        .options button {
-            width: 100%;
-            padding: 8px 12px;
-            font-size: 12px;
-            border: 2px solid #c73b3b;
-            background: #fff;
-            color: #c73b3b;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background 0.2s, color 0.2s;
+
+        @media (max-width: 992px){
+            .select-bar-list li a{
+                min-width: 150px;
+                font-size: 11px;
+            }
         }
-        .options button.selected {
-            background: #c73b3b;
-            color: #fff;
+
+        @media (max-width: 768px){
+            body{
+                padding: calc(var(--nav-height) + 18px) 14px 16px;
+            }
+
+            .select-bar{
+                max-height: 58px;
+            }
+
+            .select-bar.expanded,
+            .select-bar:hover{
+                max-height: 320px;
+            }
+
+            .select-bar-toggle{
+                min-height: 58px;
+                font-size: 15px;
+                padding: 0 16px;
+            }
+
+            .select-bar-list{
+                gap: 10px;
+                padding: 4px 12px 14px;
+            }
+
+            .select-bar-list li a{
+                min-width: 138px;
+                height: 42px;
+                font-size: 10px;
+                padding: 0 10px;
+            }
+
+            .quiz-shell{
+                padding: 22px 16px 20px;
+            }
+
+            .hero-title h1{
+                font-size: 22px;
+            }
+
+            .question-text{
+                font-size: 16px;
+            }
+
+            .options button{
+                min-height: 50px;
+                font-size: 9px;
+            }
+
+            .actions{
+                justify-content: center;
+            }
+
+            .quiz-btn{
+                width: 100%;
+                max-width: 280px;
+            }
         }
-        .options button:disabled {
-            cursor: default;
-            opacity: 0.6;
-        }
-        .actions {
-            text-align: right;
-        }
-        .actions button {
-            padding: 6px 12px;
-            font-size: 12px;
-            background: #c73b3b;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-        .actions button:disabled {
-            opacity: 0.5;
-            cursor: default;
-        }
-        .result {
-            text-align: center;
-            font-size: 14px;
+
+        @media (max-width: 480px){
+            .select-bar-list li a{
+                min-width: 120px;
+                height: 40px;
+                font-size: 9px;
+            }
+
+            .hero-title h1{
+                font-size: 18px;
+            }
+
+            .question-number{
+                font-size: 10px;
+            }
+
+            .question-text{
+                font-size: 14px;
+            }
+
+            .options button{
+                font-size: 8px;
+                line-height: 1.4;
+                padding: 10px;
+            }
+
+            .quiz-btn{
+                font-size: 9px;
+            }
+
+            .result p{
+                font-size: 15px;
+            }
+
+            .quiz-header p,
+            .result-meta{
+                font-size: 13px;
+            }
         }
     </style>
 </head>
 <body>
 
-<!-- SELECT-BAR -->
 <div class="select-bar">
     <div class="select-bar-toggle">☰ История IT в СССР и России</div>
     <ul class="select-bar-list">
@@ -164,22 +452,37 @@
         <li><a href="../index.html#timeline">Достижения</a></li>
         <li><a href="itmo.html">ИТМО</a></li>
         <li><a href="emulator.html">Эмулятор ЭВМ</a></li>
-        <li><a href="quiz.html">Квиз</a></li>
+        <li><a href="quiz.html" class="active">Квиз</a></li>
         <li><a href="../index.html#timeline-slider">Разное</a></li>
     </ul>
 </div>
 
-<div class="container">
-    <h1>Квиз: Проверь свои знания</h1>
-    <div id="quiz"></div>
+<div class="page-wrap">
+    <div class="quiz-shell">
+        <section class="hero-title">
+            <h1>Квиз: Проверь свои знания</h1>
+        </section>
+
+        <div class="quiz-header">
+            <p>
+                Небольшой тест по истории IT в СССР и России. Выбери вариант ответа,
+                пройди все вопросы и посмотри итоговый результат.
+            </p>
+        </div>
+
+        <div id="quiz"></div>
+    </div>
 </div>
 
 <script>
-    // Select-bar toggle
     document.addEventListener('DOMContentLoaded', () => {
-        const bar    = document.querySelector('.select-bar');
+        const bar = document.querySelector('.select-bar');
         const toggle = document.querySelector('.select-bar-toggle');
-        toggle.addEventListener('click', () => bar.classList.toggle('expanded'));
+
+        toggle.addEventListener('click', () => {
+            bar.classList.toggle('expanded');
+        });
+
         document.addEventListener('click', e => {
             if (!bar.contains(e.target) && e.target !== toggle) {
                 bar.classList.remove('expanded');
@@ -187,7 +490,6 @@
         });
     });
 
-    // Quiz logic
     const quizData = [
         {
             question: 'В каком году была разработана ЭВМ «Урал-1»?',
@@ -211,25 +513,30 @@
         }
     ];
 
-    let currentIndex = 0, score = 0, selectedOption = null;
+    let currentIndex = 0;
+    let score = 0;
+    let selectedOption = null;
     const quizEl = document.getElementById('quiz');
 
     function renderQuestion() {
         const q = quizData[currentIndex];
+
         quizEl.innerHTML = `
+            <div class="question-card">
                 <div class="question-number">Вопрос ${currentIndex + 1} из ${quizData.length}</div>
                 <div class="question-text">${q.question}</div>
                 <ul class="options">
-                  ${q.options.map((opt, idx) => `
-                    <li><button data-index="${idx}">${opt}</button></li>
-                  `).join('')}
+                    ${q.options.map((opt, idx) => `
+                        <li><button data-index="${idx}">${opt}</button></li>
+                    `).join('')}
                 </ul>
                 <div class="actions">
-                  <button id="nextBtn" disabled>
-                    ${currentIndex + 1 < quizData.length ? 'Дальше' : 'Завершить'}
-                  </button>
+                    <button class="quiz-btn" id="nextBtn" disabled>
+                        ${currentIndex + 1 < quizData.length ? 'Дальше' : 'Завершить'}
+                    </button>
                 </div>
-            `;
+            </div>
+        `;
 
         document.querySelectorAll('.options button').forEach(btn => {
             btn.addEventListener('click', () => {
@@ -241,27 +548,51 @@
         });
 
         document.getElementById('nextBtn').addEventListener('click', () => {
-            if (selectedOption === quizData[currentIndex].correct) score++;
+            if (selectedOption === quizData[currentIndex].correct) {
+                score++;
+            }
+
             selectedOption = null;
             currentIndex++;
-            currentIndex < quizData.length ? renderQuestion() : renderResult();
+
+            if (currentIndex < quizData.length) {
+                renderQuestion();
+            } else {
+                renderResult();
+            }
         });
     }
 
     function renderResult() {
+        const percent = Math.round((score / quizData.length) * 100);
+
+        let message = 'Неплохое начало!';
+        if (percent >= 75) message = 'Очень достойный результат!';
+        if (percent === 100) message = 'Идеально, ты реально шаришь.';
+
         quizEl.innerHTML = `
+            <div class="question-card">
                 <div class="result">
-                  <p>Вы правильно ответили на ${score} из ${quizData.length} вопросов.</p>
-                  <button id="restartBtn">Пройти ещё раз</button>
+                    <p>Вы правильно ответили на ${score} из ${quizData.length} вопросов.</p>
+                    <div class="result-meta">${message}</div>
+                    <div class="result-actions">
+                        <button class="quiz-btn" id="restartBtn">Пройти ещё раз</button>
+                    </div>
                 </div>
-            `;
+            </div>
+        `;
+
         document.getElementById('restartBtn').addEventListener('click', () => {
-            currentIndex = 0; score = 0; selectedOption = null;
+            currentIndex = 0;
+            score = 0;
+            selectedOption = null;
             renderQuestion();
         });
     }
 
     renderQuestion();
+
+
 </script>
 </body>
 </html>
