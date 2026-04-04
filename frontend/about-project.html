@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>О проекте — История IT в СССР и России</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap" rel="stylesheet" />
+    <style>
+        :root{--bg:#0d0f12;--panel:#1a1d22;--text:#f2f2f2;--soft:#c9c9c9;--accent:#c73b3b;--accent-hover:#df5050;--border:rgba(255,255,255,0.08);--nav-height:64px;--shadow:0 10px 30px rgba(0,0,0,0.35);}*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Rubik',sans-serif;background:linear-gradient(180deg,#111317,#0c0e12);color:var(--text);padding:calc(var(--nav-height) + 28px) 20px 30px}h1,h2,h3,.select-bar-toggle,.select-bar-list a,.btn{font-family:'Press Start 2P',monospace}.select-bar{position:fixed;top:0;left:0;width:100%;z-index:1500;overflow:hidden;max-height:var(--nav-height);padding-bottom:10px;background:rgba(17,19,24,.94);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.06);box-shadow:0 6px 18px rgba(0,0,0,.25);transition:max-height .35s ease}.select-bar.expanded,.select-bar:hover{max-height:220px}.select-bar-toggle{display:flex;align-items:center;width:100%;min-height:var(--nav-height);padding:0 22px;color:#fff;font-size:18px;cursor:pointer}.select-bar-list{list-style:none;padding:6px 16px 14px;display:flex;flex-wrap:wrap;justify-content:center;gap:12px;opacity:0;transform:translateY(-8px);pointer-events:none;transition:.28s ease}.select-bar.expanded .select-bar-list,.select-bar:hover .select-bar-list{opacity:1;transform:translateY(0);pointer-events:auto}.select-bar-list a{display:inline-flex;align-items:center;justify-content:center;min-width:170px;height:46px;padding:0 16px;text-decoration:none;font-size:12px;border-radius:10px;background:linear-gradient(180deg,var(--accent),#b33232);color:#fff;border:1px solid rgba(255,255,255,.08)}.wrap{max-width:1100px;margin:0 auto}.hero{background:var(--accent);padding:26px 18px;text-align:center;box-shadow:var(--shadow);margin-bottom:24px}.hero h1{font-size:clamp(20px,3vw,30px)}.section{background:linear-gradient(180deg,rgba(27,30,37,.92),rgba(19,21,27,.96));border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow);padding:24px 20px;margin-bottom:18px}.section h2{color:var(--accent-hover);font-size:18px;line-height:1.5;margin-bottom:16px}.section p,.section li{color:var(--soft);font-size:16px;line-height:1.8}.section ul{margin-left:20px}.actions{text-align:center;margin-top:26px}.btn{display:inline-flex;align-items:center;justify-content:center;min-width:240px;height:48px;padding:0 18px;border-radius:10px;text-decoration:none;font-size:11px;background:linear-gradient(180deg,var(--accent),#b33232);color:#fff;border:1px solid rgba(255,255,255,.08)}@media(max-width:768px){.select-bar{max-height:58px}.select-bar.expanded,.select-bar:hover{max-height:320px}.select-bar-toggle{min-height:58px;font-size:15px;padding:0 16px}.section p,.section li{font-size:15px}}
+        .select-bar-list li a.active {
+            position: relative;
+            background: linear-gradient(180deg, #ff6a6a 0%, #c73b3b 100%) !important;
+            color: #fff !important;
+            border: 1px solid rgba(255,255,255,0.18);
+            box-shadow:
+                    0 0 0 1px rgba(255,255,255,0.05) inset,
+                    0 8px 24px rgba(199, 59, 59, 0.35),
+                    0 0 18px rgba(223, 80, 80, 0.22);
+            transform: translateY(-2px) scale(1.02);
+        }
+
+        .select-bar-list li a.active::after {
+            content: "●";
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            font-size: 8px;
+            color: #ffd6d6;
+            text-shadow: 0 0 8px rgba(255,255,255,0.45);
+        }
+
+        .select-bar-list li a.active:hover {
+            background: linear-gradient(180deg, #ff7474 0%, #cf3d3d 100%) !important;
+        }
+    </style>
+</head>
+<body>
+<div class="select-bar">
+    <div class="select-bar-toggle">☰ История IT в СССР и России</div>
+    <ul class="select-bar-list">
+        <li><a href="../index.html">Главная</a></li>
+        <!--            <li><a href="#map">Карта</a></li>-->
+        <!--            <li><a href="#timeline">Достижения</a></li>-->
+        <li><a href="itmo.html">ИТМО</a></li>
+        <li><a href="build-evm.html">Собери ЭВМ</a></li>
+        <li><a href="emulator.html">Эмулятор ЭВМ</a></li>
+        <li><a href="quiz.html">Квиз</a></li>
+        <li><a href="achievements.html">Ачивки</a></li>
+        <li><a href="about-project.html">О проекте</a></li>
+    </ul>
+</div>
+<div class="wrap">
+    <section class="hero">
+        <h1>О проекте</h1>
+    </section>
+    <section class="section">
+        <h2>Идея проекта</h2>
+        <p>Этот сайт посвящён истории IT в СССР и России: от первых ламповых ЭВМ до современных технологий, компаний, языков программирования и инженерных школ. Проект объединяет карту регионов, образовательный квиз, эмулятор ЭВМ и тематические страницы.</p>
+    </section>
+    <section class="section">
+        <h2>Что уже есть на сайте</h2>
+        <ul>
+            <li>интерактивная карта регионов;</li>
+            <li>квиз с несколькими уровнями сложности;</li>
+            <li>виртуальный эмулятор ЭВМ;</li>
+            <li>страница про ИТМО;</li>
+            <li>таймлайн достижений отечественного IT.</li>
+        </ul>
+    </section>
+    <section class="section">
+        <h2>Что хотим развивать дальше</h2>
+        <ul>
+            <li>привязку данных из базы к регионам карты;</li>
+            <li>разделы про людей, ЭВМ и компании;</li>
+            <li>систему ачивок и прогресса пользователя;</li>
+            <li>новые интерактивные фичи и мини-игры.</li>
+        </ul>
+    </section>
+    <section class="section">
+        <h2>Авторы</h2>
+        <p>Еремин Вячеслав, Прокофьев Егор, Пивнев Захар.</p>
+    </section>
+    <div class="actions"><a class="btn" href="../index.html">Вернуться на главную</a></div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded',()=>{const bar=document.querySelector('.select-bar');const toggle=document.querySelector('.select-bar-toggle');toggle.addEventListener('click',()=>bar.classList.toggle('expanded'));document.addEventListener('click',e=>{if(!bar.contains(e.target)&&e.target!==toggle)bar.classList.remove('expanded');});});
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const bar = document.querySelector('.select-bar');
+        const toggle = document.querySelector('.select-bar-toggle');
+        const navLinks = document.querySelectorAll('.select-bar-list a');
+
+        const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+
+            const href = link.getAttribute('href');
+            if (!href) return;
+
+            const cleanHref = href.split('#')[0].split('/').pop();
+
+            if (currentPage === 'about-project.html' && cleanHref === 'about-project.html') {
+                link.classList.add('active');
+            }
+        });
+
+        toggle.addEventListener('click', () => {
+            bar.classList.toggle('expanded');
+        });
+
+        document.addEventListener('click', e => {
+            if (!bar.contains(e.target)) {
+                bar.classList.remove('expanded');
+            }
+        });
+    });
+</script>
+</body>
+</html>

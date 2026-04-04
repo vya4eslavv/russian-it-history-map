@@ -45,12 +45,14 @@
         <div class="select-bar-toggle">☰ История IT в СССР и России</div>
         <ul class="select-bar-list">
             <li><a href="index.html">Главная</a></li>
-            <li><a href="#map">Карта</a></li>
-            <li><a href="#timeline">Достижения</a></li>
+            <!--            <li><a href="#map">Карта</a></li>-->
+            <!--            <li><a href="#timeline">Достижения</a></li>-->
             <li><a href="frontend/itmo.html">ИТМО</a></li>
+            <li><a href="frontend/build-evm.html">Собери ЭВМ</a></li>
             <li><a href="frontend/emulator.html">Эмулятор ЭВМ</a></li>
             <li><a href="frontend/quiz.html">Квиз</a></li>
-            <li><a href="#timeline-slider">Разное</a></li>
+            <li><a href="frontend/achievements.html">Ачивки</a></li>
+            <li><a href="frontend/about-project.html">О проекте</a></li>
         </ul>
     </div>
 
@@ -286,8 +288,39 @@
     <h2>Дата выпуска - 15.05.2004</h2>
     <h2>Создание и разработка - Еремин Вячеслав, Прокофьев Егор, Пивнев Захар.</h2>
 </section>
+<!--<script>-->
+<!--    document.addEventListener('DOMContentLoaded', () => {-->
+<!--        const navLinks = document.querySelectorAll('.select-bar-list a');-->
+<!--        const currentPage = window.location.pathname.split('/').pop() || 'index.html';-->
+
+<!--        navLinks.forEach(link => {-->
+<!--            const href = link.getAttribute('href');-->
+<!--            const cleanHref = href.split('#')[0].split('/').pop();-->
+
+<!--            if (currentPage === 'index.html' && link.textContent.trim() === 'Главная') {-->
+<!--                link.classList.add('active');-->
+<!--            }-->
+
+<!--            if (currentPage === 'itmo.html' && cleanHref === 'itmo.html') {-->
+<!--                link.classList.add('active');-->
+<!--            }-->
+
+<!--            if (currentPage === 'emulator.html' && cleanHref === 'emulator.html') {-->
+<!--                link.classList.add('active');-->
+<!--            }-->
+
+<!--            if (currentPage === 'quiz.html' && cleanHref === 'quiz.html') {-->
+<!--                link.classList.add('active');-->
+<!--            }-->
+<!--        });-->
+<!--    });-->
+<!--</script>-->
+
+<script src="js/scripts.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', () => {
+        saveProgress({ mapOpened: true });
+
         const navLinks = document.querySelectorAll('.select-bar-list a');
         const currentPage = window.location.pathname.split('/').pop() || 'index.html';
 
@@ -313,5 +346,4 @@
         });
     });
 </script>
-<script src="js/scripts.js"></script>
 </html>

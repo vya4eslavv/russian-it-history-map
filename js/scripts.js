@@ -1,3 +1,50 @@
+const defaultProgress = {
+  quizPlayed: false,
+  quizEasy: false,
+  quizMedium: false,
+  quizHard: false,
+  quizHighScore: false,
+  quizPerfect: false,
+
+  mapOpened: false,
+  regionsViewed: 0,
+  viewedRegions: [],
+
+  itmoVisited: false,
+  emulatorVisited: false,
+
+  evmBuiltBasic: false,
+  evmBuiltAdvanced: false
+};
+
+function getProgress() {
+  try {
+    const raw = JSON.parse(localStorage.getItem('siteProgress') || '{}');
+    return { ...defaultProgress, ...raw };
+  } catch (e) {
+    return { ...defaultProgress };
+  }
+}
+
+function saveProgress(nextData) {
+  const current = getProgress();
+  const updated = { ...current, ...nextData };
+  localStorage.setItem('siteProgress', JSON.stringify(updated));
+  return updated;
+}
+
+function markRegionViewed(regionName) {
+  const progress = getProgress();
+  const viewed = Array.isArray(progress.viewedRegions) ? progress.viewedRegions : [];
+
+  if (!viewed.includes(regionName)) {
+    viewed.push(regionName);
+    saveProgress({
+      viewedRegions: viewed,
+      regionsViewed: viewed.length
+    });
+  }
+}
 document.addEventListener('DOMContentLoaded', () => {
   // ===== Timeline cards reveal =====
   const cards = Array.from(document.querySelectorAll('.timeline-card'));
@@ -93,6 +140,4 @@ document.addEventListener('DOMContentLoaded', () => {
       feedback.style.color = '#f44336';
     });
   }
-
 });
-

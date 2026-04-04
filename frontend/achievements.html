@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ачивки — История IT в СССР и России</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap" rel="stylesheet" />
+
+    <style>
+        :root{
+            --bg-main:#0d0f12;
+            --panel:#1a1d22;
+            --panel-soft:#20242b;
+            --text-main:#f2f2f2;
+            --text-soft:#c9c9c9;
+            --text-dim:#9ea4ad;
+            --accent:#c73b3b;
+            --accent-hover:#df5050;
+            --ok:#22b36a;
+            --lock:#67707a;
+            --border:rgba(255,255,255,0.08);
+            --shadow:0 10px 30px rgba(0,0,0,0.35);
+            --nav-height:64px;
+        }
+
+        *{box-sizing:border-box;margin:0;padding:0}
+        body{
+            min-height:100vh;
+            padding:calc(var(--nav-height) + 28px) 20px 30px;
+            background:linear-gradient(180deg,#111317,#0c0e12);
+            color:var(--text-main);
+            font-family:'Rubik',sans-serif;
+        }
+
+        h1,h2,h3,.select-bar-toggle,.select-bar-list a,.badge-title,.summary-pill{
+            font-family:'Press Start 2P',monospace;
+        }
+
+        .select-bar{
+            position:fixed;
+            top:0;left:0;width:100%;
+            z-index:1500;
+            overflow:hidden;
+            max-height:var(--nav-height);
+            padding-bottom:10px;
+            background:rgba(17,19,24,.94);
+            backdrop-filter:blur(12px);
+            border-bottom:1px solid rgba(255,255,255,.06);
+            box-shadow:0 6px 18px rgba(0,0,0,.25);
+            transition:max-height .35s ease;
+        }
+        .select-bar.expanded,.select-bar:hover{max-height:220px}
+        .select-bar-toggle{
+            display:flex;align-items:center;
+            width:100%;min-height:var(--nav-height);
+            padding:0 22px;color:#fff;font-size:18px;cursor:pointer;
+        }
+        .select-bar-list{
+            list-style:none;
+            padding:6px 16px 14px;
+            display:flex;flex-wrap:wrap;justify-content:center;gap:12px;
+            opacity:0;transform:translateY(-8px);pointer-events:none;
+            transition:.28s ease;
+        }
+        .select-bar.expanded .select-bar-list,
+        .select-bar:hover .select-bar-list{
+            opacity:1;transform:translateY(0);pointer-events:auto;
+        }
+        .select-bar-list a{
+            display:inline-flex;align-items:center;justify-content:center;
+            min-width:170px;height:46px;padding:0 16px;
+            text-decoration:none;font-size:12px;line-height:1.2;
+            border-radius:10px;
+            background:linear-gradient(180deg,var(--accent),#b33232);
+            color:#fff;border:1px solid rgba(255,255,255,.08);
+        }
+
+        .wrap{max-width:1240px;margin:0 auto}
+        .hero{
+            background:var(--accent);
+            text-align:center;
+            padding:26px 18px;
+            margin-bottom:22px;
+            box-shadow:var(--shadow);
+        }
+        .hero h1{font-size:clamp(20px,3vw,30px);line-height:1.4}
+        .hero p{margin-top:14px;font-size:16px;font-family:'Rubik',sans-serif}
+
+        .summary{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            gap:16px;
+            flex-wrap:wrap;
+            background:linear-gradient(180deg,rgba(27,30,37,.92),rgba(19,21,27,.96));
+            border:1px solid var(--border);
+            border-radius:18px;
+            padding:18px 20px;
+            box-shadow:var(--shadow);
+            margin-bottom:20px;
+        }
+        .summary p{color:var(--text-soft);font-size:15px;line-height:1.7}
+        .summary-pill{
+            padding:12px 16px;
+            border-radius:999px;
+            background:rgba(199,59,59,.16);
+            border:1px solid rgba(199,59,59,.3);
+            color:#ffdada;
+            font-size:10px;
+        }
+
+        .grid{
+            display:grid;
+            grid-template-columns:repeat(3,minmax(220px,1fr));
+            gap:20px;
+        }
+
+        .card{
+            background:linear-gradient(180deg,rgba(27,30,37,.92),rgba(19,21,27,.96));
+            border:1px solid var(--border);
+            border-radius:18px;
+            padding:22px;
+            box-shadow:var(--shadow);
+            position:relative;
+            overflow:hidden;
+        }
+        .card::before{
+            content:'';
+            position:absolute;
+            top:0;left:0;width:100%;height:4px;
+        }
+        .card.unlocked::before{background:linear-gradient(90deg,#57e692,var(--ok))}
+        .card.locked::before{background:linear-gradient(90deg,#6c7681,var(--lock))}
+
+        .badge-title{
+            color:var(--accent-hover);
+            font-size:12px;
+            line-height:1.5;
+            margin-bottom:14px;
+        }
+        .card p{
+            color:var(--text-soft);
+            font-size:15px;
+            line-height:1.7;
+            margin-bottom:14px;
+        }
+        .status{
+            display:inline-block;
+            padding:8px 12px;
+            border-radius:999px;
+            font-size:12px;
+        }
+        .status.ok{
+            background:rgba(34,179,106,.14);
+            border:1px solid rgba(34,179,106,.26);
+            color:#bbffd8;
+        }
+        .status.lock{
+            background:rgba(103,112,122,.18);
+            border:1px solid rgba(103,112,122,.26);
+            color:#d9dfe5;
+        }
+
+        .bar{
+            margin-top:12px;
+            height:10px;
+            background:rgba(255,255,255,.08);
+            border-radius:999px;
+            overflow:hidden;
+        }
+        .bar span{
+            display:block;
+            height:100%;
+            background:linear-gradient(90deg,#ff8f8f,var(--accent));
+        }
+
+        @media (max-width: 900px){
+            .grid{grid-template-columns:repeat(2,1fr)}
+        }
+        @media (max-width: 768px){
+            body{padding:calc(var(--nav-height) + 18px) 14px 16px}
+            .select-bar{max-height:58px}
+            .select-bar.expanded,.select-bar:hover{max-height:320px}
+            .select-bar-toggle{min-height:58px;font-size:15px;padding:0 16px}
+            .grid{grid-template-columns:1fr}
+        }
+        .select-bar-list li a.active {
+            position: relative;
+            background: linear-gradient(180deg, #ff6a6a 0%, #c73b3b 100%) !important;
+            color: #fff !important;
+            border: 1px solid rgba(255,255,255,0.18);
+            box-shadow:
+                    0 0 0 1px rgba(255,255,255,0.05) inset,
+                    0 8px 24px rgba(199, 59, 59, 0.35),
+                    0 0 18px rgba(223, 80, 80, 0.22);
+            transform: translateY(-2px) scale(1.02);
+        }
+
+        .select-bar-list li a.active::after {
+            content: "●";
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            font-size: 8px;
+            color: #ffd6d6;
+            text-shadow: 0 0 8px rgba(255,255,255,0.45);
+        }
+
+        .select-bar-list li a.active:hover {
+            background: linear-gradient(180deg, #ff7474 0%, #cf3d3d 100%) !important;
+        }
+    </style>
+</head>
+<body>
+
+<div class="select-bar">
+    <div class="select-bar-toggle">☰ История IT в СССР и России</div>
+    <ul class="select-bar-list">
+        <li><a href="../index.html">Главная</a></li>
+        <!--            <li><a href="#map">Карта</a></li>-->
+        <!--            <li><a href="#timeline">Достижения</a></li>-->
+        <li><a href="itmo.html">ИТМО</a></li>
+        <li><a href="build-evm.html">Собери ЭВМ</a></li>
+        <li><a href="emulator.html">Эмулятор ЭВМ</a></li>
+        <li><a href="quiz.html">Квиз</a></li>
+        <li><a href="achievements.html">Ачивки</a></li>
+        <li><a href="about-project.html">О проекте</a></li>
+    </ul>
+</div>
+
+<div class="wrap">
+    <section class="hero">
+        <h1>Ачивки исследователя</h1>
+        <p>Здесь отображаются реальные достижения, сохранённые в браузере.</p>
+    </section>
+
+    <section class="summary">
+        <p id="summaryText">Загрузка прогресса...</p>
+        <div class="summary-pill" id="summaryPill">0 / 0</div>
+    </section>
+
+    <section class="grid" id="badgesGrid"></section>
+</div>
+
+<script>
+    const defaultProgress = {
+        quizPlayed: false,
+        quizEasy: false,
+        quizMedium: false,
+        quizHard: false,
+        quizHighScore: false,
+        quizPerfect: false,
+        mapOpened: false,
+        regionsViewed: 0,
+        viewedRegions: [],
+        itmoVisited: false,
+        emulatorVisited: false,
+        evmBuiltBasic: false,
+        evmBuiltAdvanced: false
+    };
+
+    function getProgress() {
+        try {
+            const raw = JSON.parse(localStorage.getItem('siteProgress') || '{}');
+            return { ...defaultProgress, ...raw };
+        } catch {
+            return { ...defaultProgress };
+        }
+    }
+
+    const badges = [
+        {
+            title: 'Первый запуск',
+            desc: 'Открой сайт и начни исследование.',
+            check: p => p.quizPlayed || p.mapOpened || p.itmoVisited || p.emulatorVisited || p.evmBuiltBasic
+        },
+        {
+            title: 'Исследователь карты',
+            desc: 'Открой минимум 5 регионов на карте.',
+            check: p => (p.regionsViewed || 0) >= 5,
+            progress: p => Math.min(((p.regionsViewed || 0) / 5) * 100, 100)
+        },
+        {
+            title: 'Любитель ИТМО',
+            desc: 'Открой страницу ИТМО.',
+            check: p => p.itmoVisited
+        },
+        {
+            title: 'Оператор ЭВМ',
+            desc: 'Открой страницу эмулятора.',
+            check: p => p.emulatorVisited
+        },
+        {
+            title: 'Базовый инженер',
+            desc: 'Собери базовую конфигурацию ЭВМ.',
+            check: p => p.evmBuiltBasic
+        },
+        {
+            title: 'Главный инженер',
+            desc: 'Собери продвинутую совместимую конфигурацию ЭВМ.',
+            check: p => p.evmBuiltAdvanced
+        },
+        {
+            title: 'Первый квиз',
+            desc: 'Пройди квиз хотя бы один раз.',
+            check: p => p.quizPlayed
+        },
+        {
+            title: 'Уверенный результат',
+            desc: 'Набери 75% и выше в квизе.',
+            check: p => p.quizHighScore
+        },
+        {
+            title: 'Идеальный результат',
+            desc: 'Пройди хард-режим квиза на 100%.',
+            check: p => p.quizPerfect
+        },
+        {
+            title: 'Лёгкий режим',
+            desc: 'Пройди лёгкий режим квиза.',
+            check: p => p.quizEasy
+        },
+        {
+            title: 'Средний режим',
+            desc: 'Пройди средний режим квиза.',
+            check: p => p.quizMedium
+        },
+        {
+            title: 'Хард режим',
+            desc: 'Пройди сложный режим квиза.',
+            check: p => p.quizHard
+        }
+    ];
+
+    function renderBadges() {
+        const progress = getProgress();
+        const grid = document.getElementById('badgesGrid');
+        const unlockedCount = badges.filter(b => b.check(progress)).length;
+
+        document.getElementById('summaryText').textContent =
+            `Открыто ${unlockedCount} достижений. Прогресс хранится в localStorage.`;
+
+        document.getElementById('summaryPill').textContent =
+            `${unlockedCount} / ${badges.length}`;
+
+        grid.innerHTML = badges.map(badge => {
+            const unlocked = badge.check(progress);
+            const percent = badge.progress
+                ? Math.round(badge.progress(progress))
+                : (unlocked ? 100 : 0);
+
+            return `
+            <article class="card ${unlocked ? 'unlocked' : 'locked'}">
+                <div class="badge-title">${badge.title}</div>
+                <p>${badge.desc}</p>
+                <div class="status ${unlocked ? 'ok' : 'lock'}">
+                    ${unlocked ? 'Открыто' : 'Закрыто'}
+                </div>
+                <div class="bar"><span style="width:${percent}%"></span></div>
+            </article>
+        `;
+        }).join('');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const bar = document.querySelector('.select-bar');
+        const toggle = document.querySelector('.select-bar-toggle');
+
+        toggle.addEventListener('click', () => {
+            bar.classList.toggle('expanded');
+        });
+
+        document.addEventListener('click', e => {
+            if (!bar.contains(e.target) && e.target !== toggle) {
+                bar.classList.remove('expanded');
+            }
+        });
+
+        renderBadges();
+    });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const bar = document.querySelector('.select-bar');
+        const toggle = document.querySelector('.select-bar-toggle');
+        const navLinks = document.querySelectorAll('.select-bar-list a');
+
+        const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+
+            const href = link.getAttribute('href');
+            if (!href) return;
+
+            const cleanHref = href.split('#')[0].split('/').pop();
+
+            if (currentPage === 'achievements.html' && cleanHref === 'achievements.html') {
+                link.classList.add('active');
+            }
+        });
+
+        toggle.addEventListener('click', () => {
+            bar.classList.toggle('expanded');
+        });
+
+        document.addEventListener('click', e => {
+            if (!bar.contains(e.target)) {
+                bar.classList.remove('expanded');
+            }
+        });
+    });
+</script>
+</body>
+</html>

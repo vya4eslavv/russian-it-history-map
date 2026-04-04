@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Собери ЭВМ — История IT в СССР и России</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap" rel="stylesheet" />
+
+    <style>
+        :root{
+            --bg:#0d0f12;
+            --panel:#1a1d22;
+            --panel-soft:#20242b;
+            --text:#f2f2f2;
+            --soft:#c9c9c9;
+            --dim:#9ea4ad;
+            --accent:#c73b3b;
+            --accent-hover:#df5050;
+            --ok:#27b166;
+            --bad:#cf5a5a;
+            --border:rgba(255,255,255,0.08);
+            --shadow:0 10px 30px rgba(0,0,0,0.35);
+            --nav-height:64px;
+        }
+
+        *{box-sizing:border-box;margin:0;padding:0}
+        body{
+            min-height:100vh;
+            padding:calc(var(--nav-height) + 28px) 20px 30px;
+            background:linear-gradient(180deg,#111317,#0c0e12);
+            color:var(--text);
+            font-family:'Rubik',sans-serif;
+        }
+
+        h1,h2,h3,.select-bar-toggle,.select-bar-list a,.module-title,.btn,.tag,.spec-label{
+            font-family:'Press Start 2P',monospace;
+        }
+
+        .select-bar{
+            position:fixed;top:0;left:0;width:100%;
+            z-index:1500;overflow:hidden;max-height:var(--nav-height);
+            padding-bottom:10px;background:rgba(17,19,24,.94);
+            backdrop-filter:blur(12px);
+            border-bottom:1px solid rgba(255,255,255,.06);
+            box-shadow:0 6px 18px rgba(0,0,0,.25);
+            transition:max-height .35s ease;
+        }
+        .select-bar.expanded,.select-bar:hover{max-height:220px}
+        .select-bar-toggle{
+            display:flex;align-items:center;width:100%;min-height:var(--nav-height);
+            padding:0 22px;color:#fff;font-size:18px;cursor:pointer;
+        }
+        .select-bar-list{
+            list-style:none;padding:6px 16px 14px;
+            display:flex;flex-wrap:wrap;justify-content:center;gap:12px;
+            opacity:0;transform:translateY(-8px);pointer-events:none;transition:.28s ease;
+        }
+        .select-bar.expanded .select-bar-list,
+        .select-bar:hover .select-bar-list{
+            opacity:1;transform:translateY(0);pointer-events:auto;
+        }
+        .select-bar-list a{
+            display:inline-flex;align-items:center;justify-content:center;
+            min-width:170px;height:46px;padding:0 16px;text-decoration:none;
+            font-size:12px;line-height:1.2;border-radius:10px;
+            background:linear-gradient(180deg,var(--accent),#b33232);
+            color:#fff;border:1px solid rgba(255,255,255,.08);
+        }
+
+        .wrap{max-width:1400px;margin:0 auto}
+        .hero{
+            background:var(--accent);
+            text-align:center;
+            padding:26px 18px;
+            margin-bottom:22px;
+            box-shadow:var(--shadow);
+        }
+        .hero h1{font-size:clamp(20px,3vw,30px);line-height:1.4}
+        .hero p{margin-top:14px;font-size:16px;font-family:'Rubik',sans-serif}
+
+        .layout{
+            display:grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap:20px;
+            align-items:start;
+        }
+
+        .builder-panel,
+        .result-panel,
+        .info-panel{
+            background:linear-gradient(180deg,rgba(27,30,37,.92),rgba(19,21,27,.96));
+            border:1px solid var(--border);
+            border-radius:18px;
+            box-shadow:var(--shadow);
+            padding:22px;
+        }
+
+        .builder-grid{
+            display:grid;
+            grid-template-columns:repeat(2,1fr);
+            gap:16px;
+        }
+
+        .module{
+            background:rgba(255,255,255,0.03);
+            border:1px solid rgba(255,255,255,0.06);
+            border-radius:16px;
+            padding:16px;
+        }
+
+        .module-title{
+            color:var(--accent-hover);
+            font-size:11px;
+            line-height:1.5;
+            margin-bottom:12px;
+        }
+
+        label{
+            display:block;
+            color:var(--soft);
+            font-size:14px;
+            margin-bottom:8px;
+            line-height:1.6;
+        }
+
+        select{
+            width:100%;
+            height:44px;
+            border-radius:10px;
+            border:1px solid rgba(255,255,255,.08);
+            background:#12151a;
+            color:#fff;
+            padding:0 12px;
+            font-size:14px;
+        }
+
+        .actions{
+            margin-top:18px;
+            display:flex;
+            gap:12px;
+            flex-wrap:wrap;
+        }
+
+        .btn{
+            min-width:220px;
+            height:46px;
+            border:none;
+            border-radius:10px;
+            background:linear-gradient(180deg,var(--accent),#b33232);
+            color:#fff;
+            font-size:10px;
+            cursor:pointer;
+            padding:0 16px;
+        }
+
+        .status{
+            margin-bottom:16px;
+            padding:14px 16px;
+            border-radius:12px;
+            font-size:15px;
+            line-height:1.7;
+            background:rgba(255,255,255,.04);
+            border:1px solid rgba(255,255,255,.08);
+        }
+        .status.ok{
+            background:rgba(39,177,102,.12);
+            border-color:rgba(39,177,102,.26);
+            color:#caffde;
+        }
+        .status.bad{
+            background:rgba(207,90,90,.12);
+            border-color:rgba(207,90,90,.26);
+            color:#ffd2d2;
+        }
+
+        .specs{
+            display:grid;
+            gap:10px;
+        }
+
+        .spec{
+            background:rgba(255,255,255,0.03);
+            border:1px solid rgba(255,255,255,.06);
+            border-radius:12px;
+            padding:12px 14px;
+        }
+
+        .spec-label{
+            font-size:9px;
+            color:var(--accent-hover);
+            margin-bottom:8px;
+            line-height:1.5;
+        }
+
+        .spec-value{
+            color:var(--soft);
+            font-size:14px;
+            line-height:1.7;
+        }
+
+        .tags{
+            margin-top:12px;
+            display:flex;
+            gap:10px;
+            flex-wrap:wrap;
+        }
+
+        .tag{
+            padding:10px 12px;
+            border-radius:999px;
+            font-size:9px;
+            line-height:1.4;
+            background:rgba(199,59,59,.12);
+            border:1px solid rgba(199,59,59,.22);
+            color:#ffd6d6;
+        }
+
+        .info-panel{
+            margin-top:20px;
+        }
+
+        .info-panel h2{
+            color:var(--accent-hover);
+            font-size:14px;
+            line-height:1.6;
+            margin-bottom:16px;
+        }
+
+        .info-panel p,
+        .info-panel li{
+            color:var(--soft);
+            font-size:15px;
+            line-height:1.75;
+        }
+
+        .info-panel ul{
+            margin-left:20px;
+            display:grid;
+            gap:8px;
+        }
+
+        @media (max-width: 1100px){
+            .layout{grid-template-columns:1fr}
+        }
+
+        @media (max-width: 768px){
+            body{padding:calc(var(--nav-height) + 18px) 14px 16px}
+            .select-bar{max-height:58px}
+            .select-bar.expanded,.select-bar:hover{max-height:320px}
+            .select-bar-toggle{min-height:58px;font-size:15px;padding:0 16px}
+            .builder-grid{grid-template-columns:1fr}
+            .actions{justify-content:center}
+            .btn{width:100%}
+        }
+        .select-bar-list li a.active {
+            position: relative;
+            background: linear-gradient(180deg, #ff6a6a 0%, #c73b3b 100%) !important;
+            color: #fff !important;
+            border: 1px solid rgba(255,255,255,0.18);
+            box-shadow:
+                    0 0 0 1px rgba(255,255,255,0.05) inset,
+                    0 8px 24px rgba(199, 59, 59, 0.35),
+                    0 0 18px rgba(223, 80, 80, 0.22);
+            transform: translateY(-2px) scale(1.02);
+        }
+
+        .select-bar-list li a.active::after {
+            content: "●";
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            font-size: 8px;
+            color: #ffd6d6;
+            text-shadow: 0 0 8px rgba(255,255,255,0.45);
+        }
+
+        .select-bar-list li a.active:hover {
+            background: linear-gradient(180deg, #ff7474 0%, #cf3d3d 100%) !important;
+        }
+    </style>
+</head>
+<body>
+
+<div class="select-bar">
+    <div class="select-bar-toggle">☰ История IT в СССР и России</div>
+    <ul class="select-bar-list">
+        <li><a href="../index.html">Главная</a></li>
+        <!--            <li><a href="#map">Карта</a></li>-->
+        <!--            <li><a href="#timeline">Достижения</a></li>-->
+        <li><a href="itmo.html">ИТМО</a></li>
+        <li><a href="build-evm.html">Собери ЭВМ</a></li>
+        <li><a href="emulator.html">Эмулятор ЭВМ</a></li>
+        <li><a href="quiz.html">Квиз</a></li>
+        <li><a href="achievements.html">Ачивки</a></li>
+        <li><a href="about-project.html">О проекте</a></li>
+    </ul>
+</div>
+
+<div class="wrap">
+    <section class="hero">
+        <h1>Собери ЭВМ</h1>
+        <p>Выбери модель машины, аппаратные платы, память, накопители, ОС и окружение. Система проверит совместимость.</p>
+    </section>
+
+    <div class="layout">
+        <section class="builder-panel">
+            <div class="builder-grid">
+                <div class="module">
+                    <div class="module-title">Модель ЭВМ</div>
+                    <label for="machine">Выбери платформу</label>
+                    <select id="machine"></select>
+                </div>
+
+                <div class="module">
+                    <div class="module-title">Процессорная плата</div>
+                    <label for="cpuBoard">ЦП / вычислительный модуль</label>
+                    <select id="cpuBoard"></select>
+                </div>
+
+                <div class="module">
+                    <div class="module-title">Плата памяти</div>
+                    <label for="memoryBoard">ОЗУ / тип памяти</label>
+                    <select id="memoryBoard"></select>
+                </div>
+
+                <div class="module">
+                    <div class="module-title">Системная шина</div>
+                    <label for="bus">Архитектура обмена</label>
+                    <select id="bus"></select>
+                </div>
+
+                <div class="module">
+                    <div class="module-title">Накопитель</div>
+                    <label for="storage">Хранение программ и данных</label>
+                    <select id="storage"></select>
+                </div>
+
+                <div class="module">
+                    <div class="module-title">Плата ввода-вывода</div>
+                    <label for="ioBoard">Перфокарты / терминал / сеть</label>
+                    <select id="ioBoard"></select>
+                </div>
+
+                <div class="module">
+                    <div class="module-title">Графика / вывод</div>
+                    <label for="display">Монитор или консоль</label>
+                    <select id="display"></select>
+                </div>
+
+                <div class="module">
+                    <div class="module-title">Операционная система</div>
+                    <label for="os">Системное ПО</label>
+                    <select id="os"></select>
+                </div>
+
+                <div class="module">
+                    <div class="module-title">ПО / назначение</div>
+                    <label for="software">Прикладной сценарий</label>
+                    <select id="software"></select>
+                </div>
+
+                <div class="module">
+                    <div class="module-title">Питание</div>
+                    <label for="power">Источник питания</label>
+                    <select id="power"></select>
+                </div>
+
+                <div class="module">
+                    <div class="module-title">Охлаждение</div>
+                    <label for="cooling">Тепловой режим</label>
+                    <select id="cooling"></select>
+                </div>
+
+                <div class="module">
+                    <div class="module-title">Сетевой модуль</div>
+                    <label for="network">Связь с внешним миром</label>
+                    <select id="network"></select>
+                </div>
+            </div>
+
+            <div class="actions">
+                <button class="btn" id="checkBtn">Проверить сборку</button>
+                <button class="btn" id="presetBtn">Собрать пример</button>
+                <button class="btn" id="resetBtn">Сбросить всё</button>
+            </div>
+        </section>
+
+        <section class="result-panel">
+            <div id="buildStatus" class="status">Собери конфигурацию и нажми «Проверить сборку».</div>
+            <div class="specs" id="specs"></div>
+            <div class="tags" id="tags"></div>
+        </section>
+    </div>
+
+    <section class="info-panel">
+        <h2>Что здесь происходит</h2>
+        <ul>
+            <li>Базовая сборка — совместимая машина с рабочим процессором, памятью, вводом-выводом и системой хранения.</li>
+            <li>Продвинутая сборка — совместимая машина плюс подходящая ОС, сетевой модуль, питание и логичный сценарий использования.</li>
+            <li>Некоторые комбинации намеренно несовместимы: например, ранние машины с поздними ОС, неподходящая шина, сетевые модули не той эпохи.</li>
+            <li>После успешной проверки страница сохраняет достижения в localStorage.</li>
+        </ul>
+    </section>
+</div>
+
+<script>
+    const defaultProgress = {
+        quizPlayed: false,
+        quizEasy: false,
+        quizMedium: false,
+        quizHard: false,
+        quizHighScore: false,
+        quizPerfect: false,
+        mapOpened: false,
+        regionsViewed: 0,
+        viewedRegions: [],
+        itmoVisited: false,
+        emulatorVisited: false,
+        evmBuiltBasic: false,
+        evmBuiltAdvanced: false
+    };
+
+    function getProgress() {
+        try {
+            const raw = JSON.parse(localStorage.getItem('siteProgress') || '{}');
+            return { ...defaultProgress, ...raw };
+        } catch {
+            return { ...defaultProgress };
+        }
+    }
+
+    function saveProgress(nextData) {
+        const current = getProgress();
+        const updated = { ...current, ...nextData };
+        localStorage.setItem('siteProgress', JSON.stringify(updated));
+        return updated;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const bar = document.querySelector('.select-bar');
+        const toggle = document.querySelector('.select-bar-toggle');
+
+        toggle.addEventListener('click', () => {
+            bar.classList.toggle('expanded');
+        });
+
+        document.addEventListener('click', e => {
+            if (!bar.contains(e.target) && e.target !== toggle) {
+                bar.classList.remove('expanded');
+            }
+        });
+    });
+
+    const data = {
+        machines: [
+            {
+                id: 'ural1',
+                name: 'Урал-1',
+                era: '1956',
+                type: 'ламповая ЭВМ',
+                bus: ['parallel-basic'],
+                cpuBoard: ['vacuum-arithmetic'],
+                memoryBoard: ['drum-memory', 'ferrite-basic'],
+                storage: ['paper-tape', 'magnetic-drum'],
+                ioBoard: ['switch-panel', 'punch-card-basic'],
+                display: ['lamp-console', 'print-output'],
+                os: ['none-baremetal'],
+                software: ['scientific-calc', 'ballistic-calc'],
+                power: ['tube-power'],
+                cooling: ['passive-room'],
+                network: ['none-network']
+            },
+            {
+                id: 'besm6',
+                name: 'БЭСМ-6',
+                era: '1968',
+                type: 'транзисторная ЭВМ',
+                bus: ['parallel-advanced'],
+                cpuBoard: ['transistor-mainframe'],
+                memoryBoard: ['ferrite-advanced'],
+                storage: ['magnetic-drum', 'magnetic-tape'],
+                ioBoard: ['punch-card-advanced', 'terminal-basic'],
+                display: ['print-output', 'terminal-display'],
+                os: ['dispak'],
+                software: ['scientific-calc', 'engineering-model'],
+                power: ['mainframe-power'],
+                cooling: ['forced-air'],
+                network: ['none-network']
+            },
+            {
+                id: 'es1841',
+                name: 'ЕС-1841',
+                era: '1980-е',
+                type: 'персональная ЭВМ',
+                bus: ['isa'],
+                cpuBoard: ['x86-soviet'],
+                memoryBoard: ['dram-640kb', 'dram-2mb'],
+                storage: ['floppy-525', 'hdd-20mb'],
+                ioBoard: ['keyboard-serial', 'terminal-basic'],
+                display: ['cga-monitor', 'mono-monitor'],
+                os: ['dos-compatible'],
+                software: ['office-basic', 'engineering-model'],
+                power: ['pc-at-power'],
+                cooling: ['forced-air'],
+                network: ['none-network', 'ethernet-basic']
+            },
+            {
+                id: 'elbrus',
+                name: 'Эльбрус',
+                era: '1970–1980-е',
+                type: 'высокопроизводительная вычислительная система',
+                bus: ['parallel-advanced', 'backplane-mainframe'],
+                cpuBoard: ['elbrus-compute'],
+                memoryBoard: ['ferrite-advanced', 'dram-2mb'],
+                storage: ['magnetic-tape', 'hdd-20mb'],
+                ioBoard: ['terminal-basic', 'scientific-io'],
+                display: ['terminal-display', 'print-output'],
+                os: ['elbrus-os'],
+                software: ['scientific-calc', 'defense-sim'],
+                power: ['mainframe-power'],
+                cooling: ['forced-air', 'liquid-cooling'],
+                network: ['none-network', 'local-link']
+            },
+            {
+                id: 'baikal',
+                name: 'Baikal-M',
+                era: '2016–2018+',
+                type: 'современная отечественная платформа',
+                bus: ['pcie-modern'],
+                cpuBoard: ['arm-baikal'],
+                memoryBoard: ['ddr4-8gb', 'ddr4-16gb'],
+                storage: ['ssd-sata', 'ssd-nvme'],
+                ioBoard: ['usb-modern', 'ethernet-modern'],
+                display: ['hdmi-modern'],
+                os: ['astra-linux', 'alt-linux'],
+                software: ['office-modern', 'dev-workstation'],
+                power: ['atx-modern'],
+                cooling: ['forced-air', 'tower-cooling'],
+                network: ['ethernet-modern']
+            }
+        ],
+
+        cpuBoard: [
+            { id:'vacuum-arithmetic', name:'Ламповый арифметический блок', desc:'Логика на электронных лампах, низкая надёжность, высокая тепловая нагрузка.' },
+            { id:'transistor-mainframe', name:'Транзисторный вычислительный модуль', desc:'Следующее поколение после ламповых машин, выше надёжность и скорость.' },
+            { id:'x86-soviet', name:'Совместимая x86-плата', desc:'Плата для советских и постсоветских IBM PC-совместимых машин.' },
+            { id:'elbrus-compute', name:'Плата вычислительных процессоров «Эльбрус»', desc:'Многомодульная вычислительная архитектура для сложных задач.' },
+            { id:'arm-baikal', name:'Плата на базе Baikal-M', desc:'Современная отечественная плата на ARM-архитектуре.' }
+        ],
+
+        memoryBoard: [
+            { id:'drum-memory', name:'Барабанная память', desc:'Раннее массовое хранение и псевдо-оперативная память.' },
+            { id:'ferrite-basic', name:'Ферритовая память (базовая)', desc:'Память на магнитных сердечниках.' },
+            { id:'ferrite-advanced', name:'Ферритовая память (расширенная)', desc:'Более крупные объёмы для машин 1960–1970-х.' },
+            { id:'dram-640kb', name:'DRAM 640 KB', desc:'Классический объём ранних персональных систем.' },
+            { id:'dram-2mb', name:'DRAM 2 MB', desc:'Расширенная память для рабочих станций и персональных систем.' },
+            { id:'ddr4-8gb', name:'DDR4 8 GB', desc:'Современная оперативная память.' },
+            { id:'ddr4-16gb', name:'DDR4 16 GB', desc:'Расширенная современная память.' }
+        ],
+
+        bus: [
+            { id:'parallel-basic', name:'Базовая параллельная шина', desc:'Простейшая организация обмена ранних ЭВМ.' },
+            { id:'parallel-advanced', name:'Расширенная параллельная шина', desc:'Более развитый межмодульный обмен.' },
+            { id:'backplane-mainframe', name:'Магистральная backplane-шина', desc:'Стоечная архитектура крупных вычислительных систем.' },
+            { id:'isa', name:'ISA', desc:'Классическая шина ПК.' },
+            { id:'pcie-modern', name:'PCI Express', desc:'Современная высокоскоростная шина.' }
+        ],
+
+        storage: [
+            { id:'paper-tape', name:'Перфолента', desc:'Ранний способ хранения и загрузки программ.' },
+            { id:'magnetic-drum', name:'Магнитный барабан', desc:'Хранение программ и данных в ранних системах.' },
+            { id:'magnetic-tape', name:'Магнитная лента', desc:'Последовательный доступ, архивирование и пакетная обработка.' },
+            { id:'floppy-525', name:'Дискета 5.25"', desc:'Типичный носитель для ПК 1980-х.' },
+            { id:'hdd-20mb', name:'Жёсткий диск 20 MB', desc:'Ранний HDD для персональных машин.' },
+            { id:'ssd-sata', name:'SATA SSD', desc:'Современный твердотельный накопитель.' },
+            { id:'ssd-nvme', name:'NVMe SSD', desc:'Быстрый современный накопитель.' }
+        ],
+
+        ioBoard: [
+            { id:'switch-panel', name:'Пульт переключателей', desc:'Ручной ввод битов и команд.' },
+            { id:'punch-card-basic', name:'Устройство перфокарт', desc:'Пакетный ввод данных.' },
+            { id:'punch-card-advanced', name:'Усовершенствованный ввод перфокарт', desc:'Для развитых вычислительных центров.' },
+            { id:'terminal-basic', name:'Терминальный контроллер', desc:'Работа через терминал.' },
+            { id:'scientific-io', name:'Научный I/O-модуль', desc:'Связь с измерительными установками и датчиками.' },
+            { id:'keyboard-serial', name:'Клавиатурно-последовательный модуль', desc:'Базовый пользовательский ввод.' },
+            { id:'usb-modern', name:'USB-контроллер', desc:'Современные периферийные устройства.' },
+            { id:'ethernet-modern', name:'Ethernet I/O-контроллер', desc:'Сетевой обмен и внешние сервисы.' }
+        ],
+
+        display: [
+            { id:'lamp-console', name:'Ламповая панель', desc:'Индикация состояния по лампочкам.' },
+            { id:'print-output', name:'Печатающее устройство', desc:'Вывод результатов на бумагу.' },
+            { id:'terminal-display', name:'Терминальный экран', desc:'Текстовый интерактивный интерфейс.' },
+            { id:'mono-monitor', name:'Монохромный монитор', desc:'Одноцветный экран для ранних ПК.' },
+            { id:'cga-monitor', name:'CGA-монитор', desc:'Ранняя цветная графика ПК.' },
+            { id:'hdmi-modern', name:'HDMI-монитор', desc:'Современный дисплей.' }
+        ],
+
+        os: [
+            { id:'none-baremetal', name:'Без ОС / прямое управление', desc:'Программы запускаются напрямую.' },
+            { id:'dispak', name:'ДИСПАК', desc:'Операционная система для БЭСМ-6.' },
+            { id:'dos-compatible', name:'DOS-совместимая ОС', desc:'Для PC-совместимых систем.' },
+            { id:'elbrus-os', name:'ОС «Эльбрус»', desc:'Системное ПО для одноимённой вычислительной платформы.' },
+            { id:'astra-linux', name:'Astra Linux', desc:'Современная российская ОС.' },
+            { id:'alt-linux', name:'ALT Linux', desc:'Современная отечественная Linux-платформа.' }
+        ],
+
+        software: [
+            { id:'scientific-calc', name:'Научные расчёты', desc:'Инженерные и физико-математические вычисления.' },
+            { id:'ballistic-calc', name:'Баллистические расчёты', desc:'Военно-прикладные расчёты.' },
+            { id:'engineering-model', name:'Инженерное моделирование', desc:'Сложные прикладные вычисления.' },
+            { id:'defense-sim', name:'Оборонное моделирование', desc:'Специализированные вычислительные задачи.' },
+            { id:'office-basic', name:'Офисная работа', desc:'Документы, таблицы, базовые прикладные задачи.' },
+            { id:'office-modern', name:'Современный офисный пакет', desc:'Рабочее место пользователя.' },
+            { id:'dev-workstation', name:'Рабочая станция разработчика', desc:'Программирование, сборка, тестирование.' }
+        ],
+
+        power: [
+            { id:'tube-power', name:'Ламповый силовой блок', desc:'Тяжёлое питание с большой теплоотдачей.' },
+            { id:'mainframe-power', name:'Стоечное питание вычислительного центра', desc:'Промышленное питание для больших систем.' },
+            { id:'pc-at-power', name:'AT-блок питания', desc:'Классическое питание для ПК.' },
+            { id:'atx-modern', name:'ATX-питание', desc:'Современный блок питания.' }
+        ],
+
+        cooling: [
+            { id:'passive-room', name:'Пассивное / помещение', desc:'Охлаждение за счёт среды и вентиляции зала.' },
+            { id:'forced-air', name:'Принудительное воздушное охлаждение', desc:'Вентиляторы и продувка корпусов.' },
+            { id:'liquid-cooling', name:'Жидкостное охлаждение', desc:'Для мощных и плотных конфигураций.' },
+            { id:'tower-cooling', name:'Башенное охлаждение', desc:'Современный кулер.' }
+        ],
+
+        network: [
+            { id:'none-network', name:'Без сети', desc:'Автономная вычислительная система.' },
+            { id:'local-link', name:'Локальная вычислительная связь', desc:'Внутренний обмен в вычислительном центре.' },
+            { id:'ethernet-basic', name:'Базовый Ethernet', desc:'Ранняя локальная сеть для ПК.' },
+            { id:'ethernet-modern', name:'Gigabit Ethernet', desc:'Современная сеть.' }
+        ]
+    };
+
+    const ids = ['machine','cpuBoard','memoryBoard','bus','storage','ioBoard','display','os','software','power','cooling','network'];
+    const labels = {
+        machine:'Модель ЭВМ',
+        cpuBoard:'Процессорная плата',
+        memoryBoard:'Плата памяти',
+        bus:'Шина',
+        storage:'Накопитель',
+        ioBoard:'Плата ввода-вывода',
+        display:'Вывод',
+        os:'ОС',
+        software:'Назначение',
+        power:'Питание',
+        cooling:'Охлаждение',
+        network:'Сеть'
+    };
+
+    function fillSelect(id, items, placeholder) {
+        const select = document.getElementById(id);
+        select.innerHTML = `<option value="">${placeholder}</option>` +
+            items.map(item => `<option value="${item.id}">${item.name}</option>`).join('');
+    }
+
+    function findItem(group, id) {
+        return data[group].find(item => item.id === id);
+    }
+
+    function findMachine(id) {
+        return data.machines.find(m => m.id === id);
+    }
+
+    function init() {
+        fillSelect('machine', data.machines, 'Выбери машину');
+        fillSelect('cpuBoard', data.cpuBoard, 'Выбери плату');
+        fillSelect('memoryBoard', data.memoryBoard, 'Выбери память');
+        fillSelect('bus', data.bus, 'Выбери шину');
+        fillSelect('storage', data.storage, 'Выбери накопитель');
+        fillSelect('ioBoard', data.ioBoard, 'Выбери I/O');
+        fillSelect('display', data.display, 'Выбери вывод');
+        fillSelect('os', data.os, 'Выбери ОС');
+        fillSelect('software', data.software, 'Выбери сценарий');
+        fillSelect('power', data.power, 'Выбери питание');
+        fillSelect('cooling', data.cooling, 'Выбери охлаждение');
+        fillSelect('network', data.network, 'Выбери сеть');
+    }
+
+    function currentBuild() {
+        const result = {};
+        ids.forEach(id => result[id] = document.getElementById(id).value);
+        return result;
+    }
+
+    function checkCompatibility(build) {
+        const problems = [];
+        const machine = findMachine(build.machine);
+
+        if (!machine) {
+            return { ok:false, advanced:false, title:'Сначала выбери модель ЭВМ.', problems:['Не выбрана базовая платформа.'] };
+        }
+
+        const requiredFields = ['cpuBoard','memoryBoard','bus','storage','ioBoard','display','power','cooling'];
+        for (const field of requiredFields) {
+            if (!build[field]) problems.push(`Не выбран модуль: ${labels[field]}.`);
+        }
+
+        const mustMatch = ['cpuBoard','memoryBoard','bus','storage','ioBoard','display','os','software','power','cooling','network'];
+        mustMatch.forEach(field => {
+            if (build[field] && !machine[field].includes(build[field])) {
+                problems.push(`${labels[field]} не подходит для машины ${machine.name}.`);
+            }
+        });
+
+        if (build.machine === 'ural1' && build.os && build.os !== 'none-baremetal') {
+            problems.push('Для Урал-1 не подходит полноценная ОС.');
+        }
+
+        if (build.machine === 'baikal' && build.storage === 'paper-tape') {
+            problems.push('Современная платформа не работает с перфолентой как основным накопителем.');
+        }
+
+        if (build.machine === 'es1841' && build.os === 'astra-linux') {
+            problems.push('Astra Linux не соответствует уровню и архитектуре ЕС-1841.');
+        }
+
+        if (build.machine === 'elbrus' && build.cooling === 'passive-room') {
+            problems.push('Для мощной системы Эльбрус пассивного охлаждения недостаточно.');
+        }
+
+        const basicOk = problems.length === 0;
+
+        const advancedNeeded = [
+            build.os,
+            build.network,
+            build.software
+        ].every(Boolean);
+
+        const advancedOk = basicOk && advancedNeeded;
+
+        return {
+            ok: basicOk,
+            advanced: advancedOk,
+            title: basicOk
+                ? (advancedOk ? 'Продвинутая сборка успешно завершена.' : 'Базовая сборка рабочая.')
+                : 'Сборка несовместима.',
+            problems
+        };
+    }
+
+    function renderSpecs(build) {
+        const specsEl = document.getElementById('specs');
+        const tagsEl = document.getElementById('tags');
+
+        const machine = findMachine(build.machine);
+
+        const rows = [];
+        if (machine) {
+            rows.push({
+                label:'ЭВМ',
+                value:`${machine.name} — ${machine.type}, эпоха: ${machine.era}.`
+            });
+        }
+
+        [
+            ['cpuBoard','cpuBoard'],
+            ['memoryBoard','memoryBoard'],
+            ['bus','bus'],
+            ['storage','storage'],
+            ['ioBoard','ioBoard'],
+            ['display','display'],
+            ['os','os'],
+            ['software','software'],
+            ['power','power'],
+            ['cooling','cooling'],
+            ['network','network']
+        ].forEach(([field, group]) => {
+            if (build[field]) {
+                const item = findItem(group, build[field]);
+                if (item) {
+                    rows.push({
+                        label: labels[field],
+                        value: `${item.name}. ${item.desc}`
+                    });
+                }
+            }
+        });
+
+        specsEl.innerHTML = rows.map(row => `
+        <div class="spec">
+            <div class="spec-label">${row.label}</div>
+            <div class="spec-value">${row.value}</div>
+        </div>
+    `).join('');
+
+        tagsEl.innerHTML = machine ? `
+        <div class="tag">${machine.name}</div>
+        <div class="tag">${machine.type}</div>
+        <div class="tag">${machine.era}</div>
+    ` : '';
+    }
+
+    function renderStatus(result) {
+        const statusEl = document.getElementById('buildStatus');
+
+        if (result.ok) {
+            statusEl.className = result.advanced ? 'status ok' : 'status ok';
+            statusEl.innerHTML = `
+            <strong>${result.title}</strong><br>
+            ${result.advanced
+                ? 'Ты собрал расширенную совместимую конфигурацию с аппаратной и программной логикой.'
+                : 'Минимальная рабочая конфигурация существует, но её ещё можно углубить ОС, сетью и назначением.'}
+        `;
+        } else {
+            statusEl.className = 'status bad';
+            statusEl.innerHTML = `
+            <strong>${result.title}</strong><br>
+            ${result.problems.map(p => `• ${p}`).join('<br>')}
+        `;
+        }
+    }
+
+    function saveAchievements(result) {
+        if (!result.ok) return;
+
+        const update = {};
+        update.evmBuiltBasic = true;
+        if (result.advanced) update.evmBuiltAdvanced = true;
+        saveProgress(update);
+    }
+
+    document.getElementById('checkBtn').addEventListener('click', () => {
+        const build = currentBuild();
+        const result = checkCompatibility(build);
+        renderSpecs(build);
+        renderStatus(result);
+        saveAchievements(result);
+    });
+
+    document.getElementById('resetBtn').addEventListener('click', () => {
+        ids.forEach(id => document.getElementById(id).value = '');
+        document.getElementById('buildStatus').className = 'status';
+        document.getElementById('buildStatus').textContent = 'Собери конфигурацию и нажми «Проверить сборку».';
+        document.getElementById('specs').innerHTML = '';
+        document.getElementById('tags').innerHTML = '';
+    });
+
+    document.getElementById('presetBtn').addEventListener('click', () => {
+        document.getElementById('machine').value = 'baikal';
+        document.getElementById('cpuBoard').value = 'arm-baikal';
+        document.getElementById('memoryBoard').value = 'ddr4-16gb';
+        document.getElementById('bus').value = 'pcie-modern';
+        document.getElementById('storage').value = 'ssd-nvme';
+        document.getElementById('ioBoard').value = 'ethernet-modern';
+        document.getElementById('display').value = 'hdmi-modern';
+        document.getElementById('os').value = 'astra-linux';
+        document.getElementById('software').value = 'dev-workstation';
+        document.getElementById('power').value = 'atx-modern';
+        document.getElementById('cooling').value = 'tower-cooling';
+        document.getElementById('network').value = 'ethernet-modern';
+    });
+
+    init();
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const bar = document.querySelector('.select-bar');
+        const toggle = document.querySelector('.select-bar-toggle');
+        const navLinks = document.querySelectorAll('.select-bar-list a');
+
+        const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+
+            const href = link.getAttribute('href');
+            if (!href) return;
+
+            const cleanHref = href.split('#')[0].split('/').pop();
+
+            if (currentPage === 'build-evm.html' && cleanHref === 'build-evm.html') {
+                link.classList.add('active');
+            }
+        });
+
+        toggle.addEventListener('click', () => {
+            bar.classList.toggle('expanded');
+        });
+
+        document.addEventListener('click', e => {
+            if (!bar.contains(e.target)) {
+                bar.classList.remove('expanded');
+            }
+        });
+    });
+</script>
+</body>
+</html>

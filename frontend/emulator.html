@@ -554,6 +554,32 @@
         .select-bar-list li a.active:hover {
             background: linear-gradient(180deg, #ff7474 0%, #cf3d3d 100%) !important;
         }
+        .select-bar-list li a.active {
+            position: relative;
+            background: linear-gradient(180deg, #ff6a6a 0%, #c73b3b 100%) !important;
+            color: #fff !important;
+            border: 1px solid rgba(255,255,255,0.18);
+            box-shadow:
+                    0 0 0 1px rgba(255,255,255,0.05) inset,
+                    0 8px 24px rgba(199, 59, 59, 0.35),
+                    0 0 18px rgba(223, 80, 80, 0.22);
+            transform: translateY(-2px) scale(1.02);
+        }
+
+        .select-bar-list li a.active::after {
+            content: "●";
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            font-size: 8px;
+            color: #ffd6d6;
+            text-shadow: 0 0 8px rgba(255,255,255,0.45);
+        }
+
+        .select-bar-list li a.active:hover {
+            background: linear-gradient(180deg, #ff7474 0%, #cf3d3d 100%) !important;
+        }
     </style>
 </head>
 <body>
@@ -562,12 +588,14 @@
     <div class="select-bar-toggle">☰ История IT в СССР и России</div>
     <ul class="select-bar-list">
         <li><a href="../index.html">Главная</a></li>
-        <li><a href="../index.html#map">Карта</a></li>
-        <li><a href="../index.html#timeline">Достижения</a></li>
+        <!--            <li><a href="#map">Карта</a></li>-->
+        <!--            <li><a href="#timeline">Достижения</a></li>-->
         <li><a href="itmo.html">ИТМО</a></li>
+        <li><a href="build-evm.html">Собери ЭВМ</a></li>
         <li><a href="emulator.html">Эмулятор ЭВМ</a></li>
         <li><a href="quiz.html">Квиз</a></li>
-        <li><a href="../index.html#timeline-slider">Разное</a></li>
+        <li><a href="achievements.html">Ачивки</a></li>
+        <li><a href="about-project.html">О проекте</a></li>
     </ul>
 </div>
 
@@ -755,6 +783,42 @@
 
     updateRegisterValue();
 </script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        saveProgress({ itmoVisited: true });
+    });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const bar = document.querySelector('.select-bar');
+        const toggle = document.querySelector('.select-bar-toggle');
+        const navLinks = document.querySelectorAll('.select-bar-list a');
 
+        const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+
+            const href = link.getAttribute('href');
+            if (!href) return;
+
+            const cleanHref = href.split('#')[0].split('/').pop();
+
+            if (currentPage === 'emulator.html' && cleanHref === 'emulator.html') {
+                link.classList.add('active');
+            }
+        });
+
+        toggle.addEventListener('click', () => {
+            bar.classList.toggle('expanded');
+        });
+
+        document.addEventListener('click', e => {
+            if (!bar.contains(e.target)) {
+                bar.classList.remove('expanded');
+            }
+        });
+    });
+</script>
 </body>
 </html>

@@ -18,6 +18,8 @@
             --text-dark: #2d2d2d;
             --text-soft-dark: #505050;
             --text-dim: #9ea4ad;
+            --success: #1f9d55;
+            --error: #b83232;
             --nav-height: 64px;
             --shadow: 0 12px 30px rgba(0,0,0,0.18);
             --shadow-hover: 0 18px 38px rgba(0,0,0,0.22);
@@ -50,11 +52,14 @@
         .select-bar-list a,
         .quiz-btn,
         .options button,
-        .question-number{
+        .question-number,
+        .progress-label,
+        .difficulty-btn,
+        .badge,
+        .fact-title{
             font-family: 'Press Start 2P', monospace;
         }
 
-        /* ===== SELECT BAR ===== */
         .select-bar {
             position: fixed;
             top: 0;
@@ -111,10 +116,6 @@
             pointer-events: auto;
         }
 
-        .select-bar-list li {
-            margin: 0;
-        }
-
         .select-bar-list li a {
             display: inline-flex;
             align-items: center;
@@ -163,13 +164,8 @@
             text-shadow: 0 0 8px rgba(255,255,255,0.45);
         }
 
-        .select-bar-list li a.active:hover {
-            background: linear-gradient(180deg, #ff7474 0%, #cf3d3d 100%) !important;
-        }
-
-        /* ===== PAGE ===== */
         .page-wrap{
-            max-width: 640px;
+            max-width: 760px;
             margin: 0 auto;
         }
 
@@ -209,12 +205,72 @@
             color: var(--text-soft-dark);
             font-size: 14px;
             line-height: 1.7;
-            max-width: 520px;
+            max-width: 580px;
             margin: 0 auto;
         }
 
-        .question-card{
-            background: transparent;
+        .difficulty-row{
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin: 0 0 22px;
+        }
+
+        .difficulty-btn{
+            border: 2px solid var(--accent);
+            background: #fff;
+            color: var(--accent);
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-size: 9px;
+            cursor: pointer;
+            transition: 0.18s ease;
+        }
+
+        .difficulty-btn.active,
+        .difficulty-btn:hover{
+            background: var(--accent);
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+        .progress-wrap{
+            margin-bottom: 22px;
+        }
+
+        .progress-top{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        .progress-label{
+            font-size: 9px;
+            color: var(--accent-dark);
+        }
+
+        .progress-percent{
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-soft-dark);
+        }
+
+        .progress-bar{
+            width: 100%;
+            height: 14px;
+            border-radius: 999px;
+            background: rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        .progress-fill{
+            height: 100%;
+            width: 0;
+            background: linear-gradient(90deg, #ff7a7a 0%, var(--accent) 100%);
+            transition: width 0.3s ease;
         }
 
         .question-number{
@@ -238,11 +294,7 @@
             list-style: none;
             display: grid;
             gap: 10px;
-            margin-bottom: 22px;
-        }
-
-        .options li{
-            margin: 0;
+            margin-bottom: 18px;
         }
 
         .options button{
@@ -257,7 +309,7 @@
             line-height: 1.45;
             text-align: center;
             cursor: pointer;
-            transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease, color 0.18s ease;
+            transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
         }
 
         .options button:hover{
@@ -272,15 +324,48 @@
             box-shadow: 0 10px 20px rgba(199,59,59,0.22);
         }
 
-        .options button:disabled{
-            cursor: default;
-            opacity: 1;
+        .options button.correct{
+            background: linear-gradient(180deg, #2eb872 0%, var(--success) 100%);
+            border-color: var(--success);
+            color: #fff;
+        }
+
+        .options button.wrong{
+            background: linear-gradient(180deg, #e25d5d 0%, var(--error) 100%);
+            border-color: var(--error);
+            color: #fff;
+        }
+
+        .fact-box{
+            display: none;
+            margin: 10px 0 22px;
+            padding: 14px 14px 12px;
+            border-radius: 10px;
+            background: rgba(0,0,0,0.04);
+            border-left: 4px solid var(--accent);
+        }
+
+        .fact-box.show{
+            display: block;
+        }
+
+        .fact-title{
+            font-size: 9px;
+            color: var(--accent-dark);
+            margin-bottom: 8px;
+        }
+
+        .fact-text{
+            font-size: 14px;
+            line-height: 1.7;
+            color: var(--text-soft-dark);
         }
 
         .actions{
             display: flex;
-            justify-content: flex-end;
+            justify-content: space-between;
             gap: 12px;
+            flex-wrap: wrap;
         }
 
         .quiz-btn{
@@ -310,6 +395,14 @@
             box-shadow: none;
         }
 
+        .secondary-btn{
+            background: linear-gradient(180deg, #4b4b4b 0%, #2f2f2f 100%);
+        }
+
+        .secondary-btn:hover{
+            background: linear-gradient(180deg, #5b5b5b 0%, #3a3a3a 100%);
+        }
+
         .result{
             text-align: center;
             padding: 8px 0 4px;
@@ -331,114 +424,59 @@
             margin-bottom: 20px;
         }
 
+        .badges{
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin: 14px 0 22px;
+        }
+
+        .badge{
+            background: rgba(199,59,59,0.1);
+            color: var(--accent-dark);
+            border: 1px solid rgba(199,59,59,0.25);
+            padding: 10px 12px;
+            border-radius: 10px;
+            font-size: 8px;
+            line-height: 1.5;
+        }
+
         .result-actions{
             display: flex;
             justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
         }
 
         @media (max-width: 992px){
-            .select-bar-list li a{
-                min-width: 150px;
-                font-size: 11px;
-            }
+            .select-bar-list li a{ min-width: 150px; font-size: 11px; }
         }
 
         @media (max-width: 768px){
-            body{
-                padding: calc(var(--nav-height) + 18px) 14px 16px;
-            }
-
-            .select-bar{
-                max-height: 58px;
-            }
-
-            .select-bar.expanded,
-            .select-bar:hover{
-                max-height: 320px;
-            }
-
-            .select-bar-toggle{
-                min-height: 58px;
-                font-size: 15px;
-                padding: 0 16px;
-            }
-
-            .select-bar-list{
-                gap: 10px;
-                padding: 4px 12px 14px;
-            }
-
-            .select-bar-list li a{
-                min-width: 138px;
-                height: 42px;
-                font-size: 10px;
-                padding: 0 10px;
-            }
-
-            .quiz-shell{
-                padding: 22px 16px 20px;
-            }
-
-            .hero-title h1{
-                font-size: 22px;
-            }
-
-            .question-text{
-                font-size: 16px;
-            }
-
-            .options button{
-                min-height: 50px;
-                font-size: 9px;
-            }
-
-            .actions{
-                justify-content: center;
-            }
-
-            .quiz-btn{
-                width: 100%;
-                max-width: 280px;
-            }
+            body{ padding: calc(var(--nav-height) + 18px) 14px 16px; }
+            .select-bar{ max-height: 58px; }
+            .select-bar.expanded, .select-bar:hover{ max-height: 320px; }
+            .select-bar-toggle{ min-height: 58px; font-size: 15px; padding: 0 16px; }
+            .select-bar-list{ gap: 10px; padding: 4px 12px 14px; }
+            .select-bar-list li a{ min-width: 138px; height: 42px; font-size: 10px; padding: 0 10px; }
+            .quiz-shell{ padding: 22px 16px 20px; }
+            .hero-title h1{ font-size: 22px; }
+            .question-text{ font-size: 16px; }
+            .options button{ min-height: 50px; font-size: 9px; }
+            .actions, .result-actions{ justify-content: center; }
+            .quiz-btn{ width: 100%; max-width: 320px; }
         }
 
         @media (max-width: 480px){
-            .select-bar-list li a{
-                min-width: 120px;
-                height: 40px;
-                font-size: 9px;
-            }
-
-            .hero-title h1{
-                font-size: 18px;
-            }
-
-            .question-number{
-                font-size: 10px;
-            }
-
-            .question-text{
-                font-size: 14px;
-            }
-
-            .options button{
-                font-size: 8px;
-                line-height: 1.4;
-                padding: 10px;
-            }
-
-            .quiz-btn{
-                font-size: 9px;
-            }
-
-            .result p{
-                font-size: 15px;
-            }
-
-            .quiz-header p,
-            .result-meta{
-                font-size: 13px;
-            }
+            .select-bar-list li a{ min-width: 120px; height: 40px; font-size: 9px; }
+            .hero-title h1{ font-size: 18px; }
+            .question-number{ font-size: 10px; }
+            .question-text{ font-size: 14px; }
+            .options button{ font-size: 8px; line-height: 1.4; padding: 10px; }
+            .quiz-btn{ font-size: 9px; }
+            .result p{ font-size: 15px; }
+            .quiz-header p, .result-meta, .fact-text{ font-size: 13px; }
         }
     </style>
 </head>
@@ -448,12 +486,14 @@
     <div class="select-bar-toggle">☰ История IT в СССР и России</div>
     <ul class="select-bar-list">
         <li><a href="../index.html">Главная</a></li>
-        <li><a href="../index.html#map">Карта</a></li>
-        <li><a href="../index.html#timeline">Достижения</a></li>
+        <!--            <li><a href="#map">Карта</a></li>-->
+        <!--            <li><a href="#timeline">Достижения</a></li>-->
         <li><a href="itmo.html">ИТМО</a></li>
+        <li><a href="build-evm.html">Собери ЭВМ</a></li>
         <li><a href="emulator.html">Эмулятор ЭВМ</a></li>
-        <li><a href="quiz.html" class="active">Квиз</a></li>
-        <li><a href="../index.html#timeline-slider">Разное</a></li>
+        <li><a href="quiz.html">Квиз</a></li>
+        <li><a href="achievements.html">Ачивки</a></li>
+        <li><a href="about-project.html">О проекте</a></li>
     </ul>
 </div>
 
@@ -465,9 +505,25 @@
 
         <div class="quiz-header">
             <p>
-                Небольшой тест по истории IT в СССР и России. Выбери вариант ответа,
-                пройди все вопросы и посмотри итоговый результат.
+                Тест по истории IT в СССР и России. Выбирай уровень сложности,
+                отвечай на вопросы, получай пояснения и открывай мини-ачивки.
             </p>
+        </div>
+
+        <div class="difficulty-row" id="difficultyRow">
+            <button class="difficulty-btn active" data-level="easy">Лёгкий</button>
+            <button class="difficulty-btn" data-level="medium">Средний</button>
+            <button class="difficulty-btn" data-level="hard">Хард</button>
+        </div>
+
+        <div class="progress-wrap">
+            <div class="progress-top">
+                <div class="progress-label">Прогресс</div>
+                <div class="progress-percent" id="progressPercent">0%</div>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
         </div>
 
         <div id="quiz"></div>
@@ -490,35 +546,162 @@
         });
     });
 
-    const quizData = [
-        {
-            question: 'В каком году была разработана ЭВМ «Урал-1»?',
-            options: ['1950', '1956', '1962', '1968'],
-            correct: 1
-        },
-        {
-            question: 'Кто считается создателем первой советской ЭВМ «Стрела»?',
-            options: ['А. А. Ляпунов', 'С. А. Лебедев', 'Н. Е. Бирман', 'В. М. Глушков'],
-            correct: 2
-        },
-        {
-            question: 'Какая отечественная СУБД основана на PostgreSQL и появилась в 2015 году?',
-            options: ['Линукс Про', 'Postgres Pro', 'Mongo Pro', 'АЗБУКА'],
-            correct: 1
-        },
-        {
-            question: 'В каком периоде разрабатывался процессор Baikal-M?',
-            options: ['2010–2012', '2013–2015', '2016–2018', '2019–2021'],
-            correct: 2
-        }
-    ];
+    const defaultProgress = {
+        quizPlayed: false,
+        quizEasy: false,
+        quizMedium: false,
+        quizHard: false,
+        quizHighScore: false,
+        quizPerfect: false,
 
+        mapOpened: false,
+        regionsViewed: 0,
+        viewedRegions: [],
+
+        itmoVisited: false,
+        emulatorVisited: false,
+
+        evmBuiltBasic: false,
+        evmBuiltAdvanced: false
+    };
+
+    function getProgress() {
+        try {
+            const raw = JSON.parse(localStorage.getItem('siteProgress') || '{}');
+            return { ...defaultProgress, ...raw };
+        } catch (e) {
+            return { ...defaultProgress };
+        }
+    }
+
+    function saveProgress(nextData) {
+        const current = getProgress();
+        const updated = { ...current, ...nextData };
+        localStorage.setItem('siteProgress', JSON.stringify(updated));
+        return updated;
+    }
+
+    function markQuizAchievements(level, score, total) {
+        const percent = Math.round((score / total) * 100);
+        const updates = {
+            quizPlayed: true
+        };
+
+        if (level === 'easy') updates.quizEasy = true;
+        if (level === 'medium') updates.quizMedium = true;
+        if (level === 'hard') updates.quizHard = true;
+        if (percent >= 75) updates.quizHighScore = true;
+        if (percent === 100) updates.quizPerfect = true;
+
+        saveProgress(updates);
+    }
+
+    saveProgress({ quizPlayed: true });
+
+    const quizSets = {
+        easy: [
+            {
+                question: 'В каком году была разработана ЭВМ «Урал-1»?',
+                options: ['1950', '1956', '1962', '1968'],
+                correct: 1,
+                fact: '«Урал-1» была разработана в 1956 году в Пензе и стала одной из первых серийных советских ЭВМ.'
+            },
+            {
+                question: 'Какой российский университет известен сильной школой программирования и ICPC?',
+                options: ['МГУ', 'ИТМО', 'МАИ', 'МИСИС'],
+                correct: 1,
+                fact: 'ИТМО стал известен во всём мире благодаря сильнейшей школе спортивного программирования и победам в ICPC.'
+            },
+            {
+                question: 'Какая российская компания известна антивирусными решениями?',
+                options: ['Selectel', 'Astra Linux', 'Касперский', 'Postgres Pro'],
+                correct: 2,
+                fact: '«Лаборатория Касперского» — один из самых известных российских брендов в сфере кибербезопасности.'
+            },
+            {
+                question: 'Какой язык программирования связан с российской инженерной школой?',
+                options: ['Kotlin', 'Swift', 'Go', 'Rust'],
+                correct: 0,
+                fact: 'Kotlin разрабатывался под руководством Андрея Бреслава и назван в честь острова Котлин.'
+            }
+        ],
+        medium: [
+            {
+                question: 'Какая отечественная СУБД основана на PostgreSQL и появилась в 2015 году?',
+                options: ['Линукс Про', 'Postgres Pro', 'Mongo Pro', 'АЗБУКА'],
+                correct: 1,
+                fact: 'Postgres Pro — российская СУБД, развивающая идеи PostgreSQL и адаптированная под корпоративные задачи.'
+            },
+            {
+                question: 'В каком периоде разрабатывался процессор Baikal-M?',
+                options: ['2010–2012', '2013–2015', '2016–2018', '2019–2021'],
+                correct: 2,
+                fact: 'Baikal-M относится к волне отечественных попыток развивать собственную процессорную архитектуру в 2016–2018 годах.'
+            },
+            {
+                question: 'Какая компания связана с разработкой супер-ЭВМ «Эльбрус» и процессоров?',
+                options: ['MCST', 'Yandex', 'Selectel', 'VK'],
+                correct: 0,
+                fact: 'МЦСТ — одна из ключевых российских компаний, связанных с архитектурой «Эльбрус» и собственными процессорами.'
+            },
+            {
+                question: 'Какая операционная система используется как российская альтернатива Windows в госсекторе?',
+                options: ['Arch Russia', 'Astra Linux', 'ITMO OS', 'Red Kernel'],
+                correct: 1,
+                fact: 'Astra Linux активно внедряется в государственных структурах как защищённая отечественная ОС.'
+            }
+        ],
+        hard: [
+            {
+                question: 'Кто считается основоположником советской школы вычислительной техники и создателем БЭСМ?',
+                options: ['В. М. Глушков', 'С. А. Лебедев', 'А. П. Ершов', 'М. В. Келдыш'],
+                correct: 1,
+                fact: 'Сергей Алексеевич Лебедев сыграл огромную роль в создании первых советских ЭВМ, включая БЭСМ.'
+            },
+            {
+                question: 'Кто считается создателем первой советской ЭВМ «Стрела»?',
+                options: ['А. А. Ляпунов', 'С. А. Лебедев', 'Ю. Я. Базилевский', 'В. М. Глушков'],
+                correct: 2,
+                fact: '«Стрела» создавалась под руководством Юрия Яковлевича Базилевского и стала одной из первых серийных ЭВМ СССР.'
+            },
+            {
+                question: 'Какой учёный продвигал идею общегосударственной автоматизированной системы управления — ОГАС?',
+                options: ['А. П. Ершов', 'В. М. Глушков', 'С. А. Лебедев', 'А. А. Дородницын'],
+                correct: 1,
+                fact: 'Виктор Глушков развивал идеи цифрового управления экономикой и предлагал масштабный проект ОГАС.'
+            },
+            {
+                question: 'Что из перечисленного относится к отечественной линии суперкомпьютеров?',
+                options: ['Cray', 'Эльбрус', 'IBM System/360', 'ENIAC'],
+                correct: 1,
+                fact: 'Линейка «Эльбрус» — один из самых известных отечественных проектов в области вычислительных систем и супер-ЭВМ.'
+            }
+        ]
+    };
+
+    let currentLevel = 'easy';
+    let quizData = [...quizSets[currentLevel]];
     let currentIndex = 0;
     let score = 0;
     let selectedOption = null;
+    let answered = false;
+
     const quizEl = document.getElementById('quiz');
+    const progressFill = document.getElementById('progressFill');
+    const progressPercent = document.getElementById('progressPercent');
+
+    function shuffleQuestions(data) {
+        return [...data].sort(() => Math.random() - 0.5);
+    }
+
+    function updateProgress() {
+        const percent = Math.round((currentIndex / quizData.length) * 100);
+        progressFill.style.width = `${percent}%`;
+        progressPercent.textContent = `${percent}%`;
+    }
 
     function renderQuestion() {
+        updateProgress();
         const q = quizData[currentIndex];
 
         quizEl.innerHTML = `
@@ -530,7 +713,12 @@
                         <li><button data-index="${idx}">${opt}</button></li>
                     `).join('')}
                 </ul>
+                <div class="fact-box" id="factBox">
+                    <div class="fact-title">Пояснение</div>
+                    <div class="fact-text" id="factText"></div>
+                </div>
                 <div class="actions">
+                    <button class="quiz-btn secondary-btn" id="restartInlineBtn">С начала</button>
                     <button class="quiz-btn" id="nextBtn" disabled>
                         ${currentIndex + 1 < quizData.length ? 'Дальше' : 'Завершить'}
                     </button>
@@ -540,19 +728,30 @@
 
         document.querySelectorAll('.options button').forEach(btn => {
             btn.addEventListener('click', () => {
-                if (selectedOption !== null) return;
+                if (answered) return;
+
                 selectedOption = Number(btn.dataset.index);
-                btn.classList.add('selected');
+                answered = true;
+
+                const buttons = document.querySelectorAll('.options button');
+                buttons.forEach((button, idx) => {
+                    button.disabled = true;
+                    if (idx === q.correct) button.classList.add('correct');
+                    if (idx === selectedOption && idx !== q.correct) button.classList.add('wrong');
+                    if (idx === selectedOption) button.classList.add('selected');
+                });
+
+                if (selectedOption === q.correct) score++;
+
+                document.getElementById('factText').textContent = q.fact;
+                document.getElementById('factBox').classList.add('show');
                 document.getElementById('nextBtn').disabled = false;
             });
         });
 
         document.getElementById('nextBtn').addEventListener('click', () => {
-            if (selectedOption === quizData[currentIndex].correct) {
-                score++;
-            }
-
             selectedOption = null;
+            answered = false;
             currentIndex++;
 
             if (currentIndex < quizData.length) {
@@ -561,20 +760,46 @@
                 renderResult();
             }
         });
+
+        document.getElementById('restartInlineBtn').addEventListener('click', resetQuiz);
+    }
+
+    function getMessage(percent) {
+        if (percent === 100) return 'Идеально. Ты реально шаришь в истории отечественного IT.';
+        if (percent >= 75) return 'Очень достойный результат. Ты хорошо ориентируешься в теме.';
+        if (percent >= 50) return 'Хорошая база уже есть. Ещё немного — и будет топ.';
+        if (percent >= 25) return 'Неплохое начало. Есть что прокачать.';
+        return 'Это только старт. Зато теперь будет интереснее изучать тему.';
+    }
+
+    function getBadges(percent) {
+        const badges = [];
+        badges.push(currentLevel === 'easy' ? 'Лёгкий режим' : currentLevel === 'medium' ? 'Средний режим' : 'Хард режим');
+        if (percent === 100) badges.push('Архивариус IT');
+        if (score >= 3) badges.push('Знаток фактов');
+        if (currentLevel === 'hard' && percent >= 50) badges.push('Хардкор-исследователь');
+        if (percent < 50) badges.push('Начинающий исследователь');
+        return badges;
     }
 
     function renderResult() {
+        progressFill.style.width = '100%';
+        progressPercent.textContent = '100%';
+
         const percent = Math.round((score / quizData.length) * 100);
 
-        let message = 'Неплохое начало!';
-        if (percent >= 75) message = 'Очень достойный результат!';
-        if (percent === 100) message = 'Идеально, ты реально шаришь.';
+        markQuizAchievements(currentLevel, score, quizData.length);
+
+        const badges = getBadges(percent);
 
         quizEl.innerHTML = `
             <div class="question-card">
                 <div class="result">
                     <p>Вы правильно ответили на ${score} из ${quizData.length} вопросов.</p>
-                    <div class="result-meta">${message}</div>
+                    <div class="result-meta">${getMessage(percent)}</div>
+                    <div class="badges">
+                        ${badges.map(badge => `<div class="badge">${badge}</div>`).join('')}
+                    </div>
                     <div class="result-actions">
                         <button class="quiz-btn" id="restartBtn">Пройти ещё раз</button>
                     </div>
@@ -582,17 +807,60 @@
             </div>
         `;
 
-        document.getElementById('restartBtn').addEventListener('click', () => {
-            currentIndex = 0;
-            score = 0;
-            selectedOption = null;
-            renderQuestion();
-        });
+        document.getElementById('restartBtn').addEventListener('click', resetQuiz);
     }
 
-    renderQuestion();
+    function resetQuiz() {
+        currentIndex = 0;
+        score = 0;
+        selectedOption = null;
+        answered = false;
+        quizData = shuffleQuestions(quizSets[currentLevel]);
+        renderQuestion();
+    }
 
+    document.querySelectorAll('.difficulty-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.difficulty-btn').forEach(item => item.classList.remove('active'));
+            btn.classList.add('active');
+            currentLevel = btn.dataset.level;
+            resetQuiz();
+        });
+    });
 
+    resetQuiz();
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const bar = document.querySelector('.select-bar');
+        const toggle = document.querySelector('.select-bar-toggle');
+        const navLinks = document.querySelectorAll('.select-bar-list a');
+
+        const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+
+            const href = link.getAttribute('href');
+            if (!href) return;
+
+            const cleanHref = href.split('#')[0].split('/').pop();
+
+            if (currentPage === 'quiz.html' && cleanHref === 'quiz.html') {
+                link.classList.add('active');
+            }
+        });
+
+        toggle.addEventListener('click', () => {
+            bar.classList.toggle('expanded');
+        });
+
+        document.addEventListener('click', e => {
+            if (!bar.contains(e.target)) {
+                bar.classList.remove('expanded');
+            }
+        });
+    });
 </script>
 </body>
 </html>
