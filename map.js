@@ -282,13 +282,13 @@ function openAchievementModal(item) {
     const descText = item.full_description || '';
 
     if (typeof typeText === 'function') {
-        typeText(titleEl, titleText, 22).then(() => {
+        typeText(titleEl, titleText, 60).then(() => {
             if (metaText) {
-                return typeText(metaEl, metaText, 5);
+                return typeText(metaEl, metaText, 40);
             }
-        }).then(() => {
-            return typeText(descEl, descText, 5);
         });
+
+        descEl.textContent = descText;
     } else {
         titleEl.textContent = titleText;
         metaEl.textContent = metaText;
