@@ -225,15 +225,15 @@
         <li><a href="build-evm.html">Собери ЭВМ</a></li>
         <li><a href="emulator.html">Эмулятор ЭВМ</a></li>
         <li><a href="quiz.html">Квиз</a></li>
-        <li><a href="achievements.html">Ачивки</a></li>
+        <li><a href="achievements.html">Достижения</a></li>
         <li><a href="about-project.html">О проекте</a></li>
     </ul>
 </div>
 
 <div class="wrap">
     <section class="hero">
-        <h1>Ачивки исследователя</h1>
-        <p>Здесь отображаются реальные достижения, сохранённые в браузере.</p>
+        <h1>Достижения исследователя</h1>
+        <p>Здесь отображаются ваши достижения, полученные на сайте.</p>
     </section>
 
     <section class="summary">
@@ -340,7 +340,7 @@
         const unlockedCount = badges.filter(b => b.check(progress)).length;
 
         document.getElementById('summaryText').textContent =
-            `Открыто ${unlockedCount} достижений. Прогресс хранится в localStorage.`;
+            `Открыто ${unlockedCount} достижений.`;
 
         document.getElementById('summaryPill').textContent =
             `${unlockedCount} / ${badges.length}`;
