@@ -14,13 +14,13 @@ func main() {
 
 	muxRouter := mux.NewRouter()
 	muxRouter.StrictSlash(true)
-	muxRouter.HandleFunc("/api/invention/get/{id:[0-9]+}", handlers.GetInventionHandler).Methods("GET")
+	muxRouter.HandleFunc("/api/regions/{regionCode}/achievements", handlers.GetRegionInventionHandler).Methods("GET")
 
 	corsObj := ghandlers.AllowedOrigins([]string{"*"})
 	corsMethods := ghandlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE", "OPTIONS"})
 	corsHeaders := ghandlers.AllowedHeaders([]string{"Content-Type", "Authorization"})
 
-	serErr := http.ListenAndServe("localhost:8080", ghandlers.CORS(corsObj, corsMethods, corsHeaders)(muxRouter))
+	serErr := http.ListenAndServe(":8080", ghandlers.CORS(corsObj, corsMethods, corsHeaders)(muxRouter))
 	if serErr != nil {
 		panic(serErr)
 	}

@@ -1,10 +1,4 @@
-﻿/* =========================================================
-   FINAL PATCH — ВСТАВЬ В САМЫЙ КОНЕЦ CSS
-   Ничего в HTML менять не нужно
-   ========================================================= */
-
-/* ---------- БАЗА ---------- */
-:root{
+﻿:root{
     --bg-main: #0d0f12;
     --bg-soft: #15181d;
     --panel: rgba(23, 25, 31, 0.88);
@@ -74,6 +68,16 @@ h1, h2, h3,
     background-position: top center !important;
     background-size: cover !important;
     background-blend-mode: multiply;
+}
+
+.cursor::after {
+    content: "_";
+    animation: blink 1s infinite;
+    margin-left: 4px;
+}
+
+@keyframes blink {
+    50% { opacity: 0; }
 }
 
 /* Если есть обычный текстовый контент */
@@ -285,11 +289,6 @@ h3{
     -webkit-backdrop-filter: blur(10px);
     opacity: 0;
     transform: translateY(28px);
-    transition:
-            transform 0.28s ease,
-            box-shadow 0.28s ease,
-            border-color 0.28s ease,
-            background 0.28s ease;
 }
 
 .timeline-card.visible{
@@ -491,8 +490,8 @@ h3{
 }
 
 svg path{
-    fill: var(--accent) !important;
-    stroke: #181818 !important;
+    fill: var(--accent);
+    stroke: rgba(18, 20, 26, 0.94) !important;
     stroke-width: 1px;
     transition:
             fill 0.2s ease,
@@ -503,7 +502,13 @@ svg path{
 svg path:hover{
     fill: #e46a6a !important;
     cursor: pointer;
-    filter: drop-shadow(0 4px 10px rgba(0,0,0,0.32));
+    filter: drop-shadow(0 4px 10px #e46a6a) brightness(1.3);
+}
+
+svg path.active {
+    fill: #e46a6a !important;
+    cursor: pointer;
+    filter: drop-shadow(0 4px 10px #e46a6a) brightness(1.3);
 }
 
 /* ---------- МЕЛКИЕ КАРТЫ / РЕГИОНЫ ---------- */
@@ -597,13 +602,6 @@ svg path:hover{
     cursor: default;
 }
 
-/* ---------- РЕГИОНАЛЬНЫЙ ЛЭЙАУТ ---------- */
-.region-layout{
-    display: grid;
-    grid-template-columns: 1fr 1.2fr;
-    gap: 18px;
-    align-items: start;
-}
 
 .region-left,
 .region-right{
@@ -645,6 +643,13 @@ svg path:hover{
     border-radius: 12px;
     background: rgba(255,255,255,0.04);
     border: 1px solid rgba(255,255,255,0.06);
+    cursor: pointer;
+    transition: all .2s;
+}
+
+.achievement:hover {
+    transform: translateY(-3px);
+    border: 1px solid rgba(255, 255, 255, 0.514);
 }
 
 .achievement .top{
@@ -653,11 +658,54 @@ svg path:hover{
     gap: 10px;
     align-items: baseline;
     margin-bottom: 6px;
+    font-family: 'Press Start 2P', monospace !important;
+    color: #df5050;
 }
 
 .achievement .year{
     opacity: 0.75;
     font-size: 0.95em;
+}
+
+
+#timeline {
+    padding-top: 25px !important;
+}
+
+.region-hover-label {
+    position: fixed;
+    pointer-events: none;
+    padding: 6px 10px;
+    font-size: 13px;
+    color: #fff;
+    z-index: 9999;
+    opacity: 0;
+    font-family: 'Press Start 2P', monospace !important;
+    white-space: wrap;
+    transform: translateY(5px);
+
+    background: rgba(18, 20, 26, 0.82) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+}
+
+/* когда виден */
+.region-hover-label.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.region-hover-label.typing::after {
+    content: "_";
+    margin-left: 2px;
+    animation: blink 0.8s step-end infinite;
+}
+
+@keyframes blink {
+    50% {
+        opacity: 0;
+    }
 }
 
 /* ---------- ФОРМЫ / QUIZ ---------- */
@@ -838,4 +886,132 @@ svg path:hover{
     .select-bar-list li a.active:hover {
         background: linear-gradient(180deg, #ff7474 0%, #cf3d3d 100%) !important;
     }
+}
+
+
+
+.region-layout {
+    display: flex;
+    gap: 24px;
+    align-items: stretch;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.region-left {
+    flex: 0 1 40%;
+    max-width: 40%;
+    min-width: 280px;
+    display: flex;
+    flex-direction: column;
+    height: 600px;
+}
+
+.region-right {
+    flex: 0 1 60%;
+    max-width: 60%;
+    min-width: 320px;
+    display: flex;
+    flex-direction: column;
+    height: 600px; /* фиксированная высота области с достижениями */
+    min-height: 0;
+}
+
+.region-right h3 {
+    margin: 0 0 16px;
+    flex-shrink: 0;
+}
+
+#regionAchievements {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: 8px;
+    scrollbar-width: thin;                         /* Firefox */
+    scrollbar-color: rgba(255,255,255,0.35) transparent;
+    padding-top: 10px;
+}
+
+.region-preview {
+    max-width: 100%;
+    max-height: 80%;
+    aspect-ratio: 1 / 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#regionPreviewSvg {
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+}
+
+/* карточка прочтения */
+.achievement-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 20000;
+    display: none;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+}
+
+.achievement-modal.active {
+    display: block;
+    opacity: 1;
+}
+
+/* затемнение */
+.achievement-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(6px);
+}
+
+/* окно */
+
+.achievement-modal-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.96);
+    width: min(700px, 92vw);
+    max-height: 85vh;
+    overflow-y: auto;
+
+    background: rgba(18, 20, 26, 0.82) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+
+    color: #fff;
+    border-radius: 16px;
+    padding: 24px;
+
+    box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+    transition: transform 0.2s ease, opacity 0.2s ease;
+    opacity: 0;
+}
+
+.achievement-modal.active .achievement-modal-content {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+}
+
+.achievement-modal-close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    font-size: 26px;
+    background: none;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+}
+
+body.modal-open {
+    overflow: hidden;
+    touch-action: none;
 }

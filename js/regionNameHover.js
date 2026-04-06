@@ -1,69 +1,50 @@
-function ensureHoverLabel() {
-  let el = document.getElementById('regionHoverLabel');
-  if (el) return el;
-
-  el = document.createElement('div');
-  el.id = 'regionHoverLabel';
-  document.body.appendChild(el);
-  return el;
-}
-
 function setupRegionHoverLabel(svg) {
-  const label = ensureHoverLabel();
+    if (!svg) return;
 
-  function show(text) {
-    if (!text) return;
-    label.textContent = text;
-    label.style.display = 'block';
-  }
+    // создаём tooltip
+    let tooltip = document.getElementById('regionHoverLabel');
 
-  function hide() {
-    label.style.display = 'none';
-  }
-
-  function move(e) {
-    // чуть смещаем, чтобы не закрывать курсор
-    const offset = 12;
-    let x = e.clientX + offset;
-    let y = e.clientY + offset;
-
-    // чтобы не вылезало за края окна
-    const rect = label.getBoundingClientRect();
-    const pad = 8;
-
-    if (x + rect.width > window.innerWidth - pad) {
-      x = e.clientX - rect.width - offset;
-    }
-    if (y + rect.height > window.innerHeight - pad) {
-      y = e.clientY - rect.height - offset;
+    if (!tooltip) {
+        tooltip = document.createElement('div');
+        tooltip.id = 'regionHoverLabel';
+        document.body.appendChild(tooltip);
+        tooltip.className = 'region-hover-label'
     }
 
-    label.style.left = `${Math.max(pad, x)}px`;
-    label.style.top = `${Math.max(pad, y)}px`;
-  }
+    const paths = svg.querySelectorAll('path');
 
-  svg.addEventListener('pointerover', (e) => {
-    const p = e.target.closest?.('path');
-    if (!p || !svg.contains(p)) return;
+    paths.forEach((path) => {
 
-    const title = p.dataset?.title?.trim();
-    if (!title) return;
+        path.addEventListener('mouseenter', (e) => {
+            const name =
+                path.dataset.title ||
+                path.dataset.region ||
+                path.getAttribute('title') ||
+                path.getAttribute('aria-label') ||
+                '';
 
-    show(title);
-    move(e);
-  });
+            if (!name) return;
 
-  svg.addEventListener('pointermove', (e) => {
-    if (label.style.display === 'none') return;
-    move(e);
-  });
+            if (typeof typeText === 'function') {
+                tooltip.classList.add('typing');
 
-  svg.addEventListener('pointerout', (e) => {
-    const p = e.target.closest?.('path');
-    if (!p) return;
-    hide();
-  });
+                typeText(tooltip, name, 18).finally(() => {
+                    tooltip.classList.remove('typing');
+                });
+            } else {
+                tooltip.textContent = name;
+            }
+            tooltip.style.opacity = '1';
 
-  // если курсор ушёл из окна — тоже спрячем
-  window.addEventListener('blur', hide);
+        });
+
+        path.addEventListener('mousemove', (e) => {
+            tooltip.style.left = `${e.clientX + 12}px`;
+            tooltip.style.top = `${e.clientY + 12}px`;
+        });
+
+        path.addEventListener('mouseleave', () => {
+            tooltip.style.opacity = '0';
+        });
+    });
 }

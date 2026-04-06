@@ -2,9 +2,9 @@
 <head>
     <meta charset="UTF-8">
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
-    <script src="js/backendFetches.js"></script>
-    <script src="map.js"></script>
     <script src="js/regionNameHover.js"></script>
+    <script src="js/typeWriter.js"></script>
+    <script src="map.js"></script>
     <link rel="stylesheet" href="frontend/style.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"/>
     <style>
@@ -278,7 +278,15 @@
         </div>
     </section>
 
+<div id="achievementModal" class="achievement-modal">
+    <div class="achievement-modal-backdrop"></div>
 
+    <div class="achievement-modal-content">
+        <button class="achievement-modal-close" data-action="close-modal">×</button>
+
+        <div id="achievementModalBody"></div>
+    </div>
+</div>
 
 </body>
 
@@ -317,6 +325,7 @@
 <!--</script>-->
 
 <script src="js/scripts.js"></script>
+
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         saveProgress({ mapOpened: true });
