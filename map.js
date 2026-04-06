@@ -1,5 +1,5 @@
 const MAP_SVG_SELECTOR = '#svg-ussr';
-const REGION_API_BASE = 'http://localhost:8080/api/regions';
+const REGION_API_BASE = '/api/regions';
 const IMAGE_SRC = '/images/final/'
 
 // ===== helpers =====
